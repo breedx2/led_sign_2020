@@ -27,13 +27,13 @@ $EndComp
 $Comp
 L Connector:Conn_01x02_Male PWR_CONN1
 U 1 1 5FF19694
-P 1500 2075
-F 0 "PWR_CONN1" H 1550 1900 50  0000 C CNN
-F 1 "Conn_01x02_Male" H 1608 2165 50  0001 C CNN
-F 2 "" H 1500 2075 50  0001 C CNN
-F 3 "~" H 1500 2075 50  0001 C CNN
-	1    1500 2075
-	1    0    0    -1  
+P 1125 1900
+F 0 "PWR_CONN1" V 1050 1875 50  0000 C CNN
+F 1 "Conn_01x02_Male" H 1233 1990 50  0001 C CNN
+F 2 "" H 1125 1900 50  0001 C CNN
+F 3 "~" H 1125 1900 50  0001 C CNN
+	1    1125 1900
+	0    1    1    0   
 $EndComp
 $Comp
 L custom:ESP32-DevKitC U1
@@ -390,12 +390,6 @@ F 3 "~" H 2200 2100 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	2200 1950 1850 1950
-Wire Wire Line
-	1850 1950 1850 2075
-Wire Wire Line
-	1850 2075 1950 2075
-Wire Wire Line
 	2200 2250 2200 3050
 Wire Wire Line
 	2200 3050 2200 4225
@@ -639,7 +633,6 @@ Wire Wire Line
 Wire Wire Line
 	3900 4525 3900 4725
 Connection ~ 4050 4525
-Connection ~ 2200 1950
 Wire Wire Line
 	1950 2500 1950 2525
 Wire Wire Line
@@ -715,19 +708,92 @@ Wire Wire Line
 Wire Wire Line
 	2200 3050 2550 3050
 Wire Wire Line
-	1700 2175 1850 2175
-Wire Wire Line
-	1850 2175 1850 2825
-Wire Wire Line
-	1850 2825 1950 2825
-Wire Wire Line
 	1950 2825 1950 3050
 Wire Wire Line
 	1950 3050 2200 3050
-Connection ~ 1950 2825
 Wire Wire Line
-	1950 2300 1950 2075
-Connection ~ 1850 2075
+	1950 2300 1950 2100
+$Comp
+L custom:STD26P3LLH6 Q?
+U 1 1 5FF8708A
+P 1450 2625
+F 0 "Q?" V 1792 2625 50  0000 C CNN
+F 1 "STD26P3LLH6" V 1701 2625 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:TO-252-2" H 1645 2550 50  0001 L CIN
+F 3 "https://www.vishay.com/docs/69253/sud19p06.pdf" H 1450 2625 50  0001 C CNN
+	1    1450 2625
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R_Small_US R?
+U 1 1 5FF884EC
+P 1450 3000
+F 0 "R?" H 1600 3000 50  0000 R CNN
+F 1 "100k" H 1518 2955 50  0001 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" H 1450 3000 50  0001 C CNN
+F 3 "~" H 1450 3000 50  0001 C CNN
+	1    1450 3000
+	-1   0    0    1   
+$EndComp
 Wire Wire Line
-	1850 2075 1700 2075
+	1450 2825 1450 2900
+$Comp
+L Device:D_Zener D?
+U 1 1 5FFCF8DA
+P 1775 2675
+F 0 "D?" V 1775 2525 50  0000 L CNN
+F 1 "D_Zener" V 1820 2755 50  0001 L CNN
+F 2 "" H 1775 2675 50  0001 C CNN
+F 3 "~" H 1775 2675 50  0001 C CNN
+	1    1775 2675
+	0    1    1    0   
+$EndComp
+$Comp
+L Jumper:Jumper_2_Open JP?
+U 1 1 5FFD197E
+P 1450 2100
+F 0 "JP?" H 1400 2250 50  0000 L CNN
+F 1 "Jumper_2_Open" H 1450 2244 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 1450 2100 50  0001 C CNN
+F 3 "~" H 1450 2100 50  0001 C CNN
+	1    1450 2100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1650 2525 1775 2525
+Wire Wire Line
+	1775 2825 1450 2825
+Connection ~ 1450 2825
+Wire Wire Line
+	1450 3100 1450 5500
+Wire Wire Line
+	1450 5500 2200 5500
+Wire Wire Line
+	1250 2100 1175 2100
+Wire Wire Line
+	1175 2100 1175 2525
+Wire Wire Line
+	1175 2525 1250 2525
+Wire Wire Line
+	1650 2100 1775 2100
+Wire Wire Line
+	1775 2100 1775 2525
+Connection ~ 1775 2525
+Wire Wire Line
+	1125 2100 1175 2100
+Connection ~ 1175 2100
+Wire Wire Line
+	1775 2100 1950 2100
+Connection ~ 1775 2100
+Connection ~ 1950 2100
+Wire Wire Line
+	1950 1950 2200 1950
+Wire Wire Line
+	1950 1950 1950 2100
+Connection ~ 2200 1950
+Wire Wire Line
+	1025 2100 1025 5500
+Wire Wire Line
+	1025 5500 1450 5500
+Connection ~ 1450 5500
 $EndSCHEMATC
