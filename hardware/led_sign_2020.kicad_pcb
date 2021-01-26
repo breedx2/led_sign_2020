@@ -2775,7 +2775,7 @@
   (gr_poly (pts (xy 110.4 95.8) (xy 106.6 95.8) (xy 106.6 95) (xy 110.4 95)) (layer F.SilkS) (width 0.1))
   (gr_poly (pts (xy 107.4 95.8) (xy 106.6 95.8) (xy 106.6 92.8) (xy 102 92.8) (xy 102 95.8) (xy 99 95.8) (xy 99 100.4) (xy 102 100.4) (xy 102 103.4) (xy 106.6 103.4) (xy 106.6 100.4) (xy 109.6 100.4) (xy 109.6 95.8) (xy 110.4 95.8) (xy 110.4 101.2) (xy 107.4 101.2) (xy 107.4 104.2) (xy 101.4 104.2) (xy 101.4 101.2) (xy 98.2 101.2) (xy 98.2 95) (xy 101.2 95) (xy 101.2 92) (xy 107.4 92)) (layer F.SilkS) (width 0.1))
   (gr_poly (pts (xy 105.8 96.6) (xy 108.8 96.6) (xy 108.8 99.6) (xy 105.8 99.6) (xy 105.8 102.6) (xy 102.8 102.6) (xy 102.8 99.6) (xy 99.8 99.6) (xy 99.8 96.6) (xy 102.8 96.6) (xy 102.8 93.6) (xy 105.8 93.6)) (layer F.SilkS) (width 0.1))
-  (gr_text !bypass! (at 126.1 67.9 90) (layer F.SilkS) (tstamp 600FB973)
+  (gr_text !bypass! (at 127.4 65.2) (layer F.SilkS) (tstamp 600FB973)
     (effects (font (size 1 1) (thickness 0.15)))
   )
   (gr_text "ESP32 ext pwr" (at 126.1 119.2) (layer F.SilkS) (tstamp 600FB91D)
