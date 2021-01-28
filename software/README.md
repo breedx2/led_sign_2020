@@ -3,6 +3,9 @@
 
 This is the software side of the vintage LED sign refresh.
 
+Going to try using [micropython](https://micropython.org/) for starters, if
+it doesn't work out we'll try something lower level.
+
 # setup
 
 ```
