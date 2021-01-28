@@ -1,5 +1,5 @@
 
-# LEDSIGN_2020
+# software for the led_sign_2020
 
 This is the software side of the vintage LED sign refresh.
 
