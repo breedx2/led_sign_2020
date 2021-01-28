@@ -1,2 +1,5 @@
 fp-info-cache
 *.sch-bak
+software/env
+wifi_env.py
+__pycache__
