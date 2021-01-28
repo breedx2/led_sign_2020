@@ -1,13 +1,16 @@
 import network
 import wifi_env
 
-wlan = network.WLAN(network.STA_IF)
+_wlan = network.WLAN(network.STA_IF)
 
 def up():
     env = wifi_env.get()
-    wlan.active(True)
-    wlan.connect(env['ssid'], env['password'])
-    wlan.ifconfig()
+    _wlan.active(True)
+    _wlan.connect(env['ssid'], env['password'])
+    return _wlan.ifconfig()
 
 def connected():
-    wlan.isconnected()
+    return _wlan.isconnected()
+
+def info():
+    return _wlan.ifconfig()
