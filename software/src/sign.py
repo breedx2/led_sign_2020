@@ -40,10 +40,20 @@ class Sign:
         return self
 
     def roll_down(self):
-        pass
+        self.memory = list(map(self._bitrot_left, self.memory))
+        return self
 
     def roll_up(self):
-        pass
+        self.memory = list(map(self._bitrot_right, self.memory))
+        return self
+
+    def _bitrot_left(self, x):
+        b = 1 if (x & 0b01000000 == 0b01000000) else 0
+        return ((x << 1) + b) & 0x7F
+
+    def _bitrot_right(self, x):
+        b = 0b01000000 if (x & 0b00000001 == 0b00000001) else 0
+        return ((x >> 1) | b) & 0x7F
 
     def print(self):
         for row in range(0,7):
