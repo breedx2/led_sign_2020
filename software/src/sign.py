@@ -13,6 +13,12 @@ class Sign:
         self.memory[index] = value
         return self
 
+    def blit(self, index, cols):
+        """copies some columns in at an index"""
+        for i,col in enumerate(cols):
+            self.col(index+i, col)
+        return self
+
     def on(self, col, row):
         """turns on a bit at col,row"""
         self.memory[col] = self.memory[col] | (1<<row)
@@ -32,11 +38,11 @@ class Sign:
         return self
 
     def rot_left(self):
-        self.memory.insert(0, self.memory.pop(len(self.memory)-1))
+        self.memory.append(self.memory.pop(0))
         return self
 
     def rot_right(self):
-        self.memory.append(self.memory.pop(0))
+        self.memory.insert(0, self.memory.pop(len(self.memory)-1))
         return self
 
     def roll_down(self):
@@ -62,7 +68,7 @@ class Sign:
 
     def _buildPrintRow(self, row):
         r = ''
-        for col in range(COLS-1,-1,-1):
+        for col in range(0, COLS):
             ch = ' '
             if(self.memory[col] & (1<<row)):
                 ch = '*'
