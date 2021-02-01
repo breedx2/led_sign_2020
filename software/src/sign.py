@@ -1,12 +1,12 @@
 
-COLS = 145
-
 class Sign:
     """A low level memory representation of the sign"""
 
+    COLS = 145
+
     def __init__(self):
         # byte per column
-        self.memory = [0x00] * COLS
+        self.memory = [0x00] * Sign.COLS
 
     def col(self, index, value):
         """sets an entire column value """
@@ -30,7 +30,7 @@ class Sign:
         return self
 
     def clear(self):
-        self.memory = [0x00] * COLS
+        self.memory = [0x00] * Sign.COLS
         return self
 
     def invert(self):
@@ -68,7 +68,7 @@ class Sign:
 
     def _buildPrintRow(self, row):
         r = ''
-        for col in range(0, COLS):
+        for col in range(0, Sign.COLS):
             ch = ' '
             if(self.memory[col] & (1<<row)):
                 ch = '*'
