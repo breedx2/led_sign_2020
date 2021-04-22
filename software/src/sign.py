@@ -4,9 +4,9 @@ class Sign:
 
     COLS = 145
 
-    def __init__(self):
+    def __init__(self, memory = [0x00] * Sign.COLS):
         # byte per column
-        self.memory = [0x00] * Sign.COLS
+        self.memory = memory
 
     def col(self, index, value):
         """sets an entire column value """
