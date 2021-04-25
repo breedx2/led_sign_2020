@@ -14,8 +14,6 @@ C6    = 17
 C7    = 18
 
 COLS = 145
-# 25 fps = 40ms/frame => 40/7 => 5.xx ms
-ROW_SLEEP_MS = 5
 
 class SignHardware:
     """Sign hardware abstraction"""
@@ -55,7 +53,7 @@ class SignHardware:
 
     def clk_pulse(self):
         self.cclk.on()
-        time.sleep_us(10)
+        # time.sleep_us(1)
         self.cclk.off()
 
     # memory should be of size COLS
@@ -66,6 +64,6 @@ class SignHardware:
             v = 1 if (memory[col] & mask) else 0
             self.data_out(v)
             self.clk_pulse()
-        self.row_on(rownum)
-        time.sleep_us(ROW_SLEEP_MS)
-        self.row_off(rownum)
+        # self.row_on(rownum)
+        # time.sleep_us(ROW_SLEEP_MS)
+        # self.row_off(rownum)

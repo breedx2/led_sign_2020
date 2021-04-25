@@ -30,10 +30,12 @@ class Sign:
         return self
 
     def clear(self):
-        self.memory = [0x00] * Sign.COLS
+        for i in range(0, Sign.COLS):
+            self.memory[i] = 0x00
         return self
 
     def invert(self):
+        # TODO: Don't ever reassign this memory
         self.memory = list(map(lambda x: x ^ 0xFF, self.memory))
         return self
 
@@ -46,10 +48,12 @@ class Sign:
         return self
 
     def roll_down(self):
+        # TODO: Don't ever reassign this memory
         self.memory = list(map(self._bitrot_left, self.memory))
         return self
 
     def roll_up(self):
+        # TODO: Don't ever reassign this memory
         self.memory = list(map(self._bitrot_right, self.memory))
         return self
 
@@ -61,16 +65,16 @@ class Sign:
         b = 0b01000000 if (x & 0b00000001 == 0b00000001) else 0
         return ((x >> 1) | b) & 0x7F
 
-    def print(self):
-        for row in range(0,7):
-            r = self._buildPrintRow(row)
-            print(r)
-
-    def _buildPrintRow(self, row):
-        r = ''
-        for col in range(0, Sign.COLS):
-            ch = ' '
-            if(self.memory[col] & (1<<row)):
-                ch = '*'
-            r = r + ch
-        return r
+    # def print(self):
+    #     for row in range(0,7):
+    #         r = self._buildPrintRow(row)
+    #         print(r)
+    #
+    # def _buildPrintRow(self, row):
+    #     r = ''
+    #     for col in range(0, Sign.COLS):
+    #         ch = ' '
+    #         if(self.memory[col] & (1<<row)):
+    #             ch = '*'
+    #         r = r + ch
+    #     return r
