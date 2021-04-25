@@ -4,7 +4,7 @@ class Sign:
 
     COLS = 145
 
-    def __init__(self, memory = [0x00] * Sign.COLS):
+    def __init__(self, memory = [0x00] * COLS):
         # byte per column
         self.memory = memory
 
