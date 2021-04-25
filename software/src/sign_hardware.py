@@ -24,7 +24,7 @@ class SignHardware:
 
     def __init__(self):
         # self.spi = SoftSPI(baudrate=100000, polarity=1, phase=0, sck=Pin(CCLK), mosi=Pin(CDATA), miso=Pin(BS_IN))
-        self.spi = SPI(1, baudrate=5000000, polarity=1, phase=0, bits=8, firstbit=SPI.LSB, sck=Pin(CCLK), mosi=Pin(CDATA), miso=Pin(BS_IN))
+        self.spi = SPI(1, baudrate=5000000, polarity=1, phase=0, bits=8, firstbit=SPI.LSB, sck=Pin(CCLK), mosi=Pin(CDATA))
         self.en = Pin(EN, Pin.OUT, value=0)
         self.rows = [
             Pin(C1, Pin.OUT, value=0),
