@@ -13,7 +13,7 @@ class SignPrinter:
 
     def left(self, msg):
         buff = self._buff(msg)
-        self._print(buff, 0)
+        self._print(buff, 2) # first 2 columns are unaddressable
 
     def center(self, msg):
         buff = self._buff(msg)
@@ -29,8 +29,9 @@ class SignPrinter:
 
     def _buff(self, msg):
         buff = []
-        for ch in msg:
+        for i,ch in enumerate(msg):
             glyph = font[ ord(ch) - ord(' ')]
             buff.extend(glyph)
-            buff.append(0)
+            if(i < len(msg)-1):
+                buff.append(0)
         return buff

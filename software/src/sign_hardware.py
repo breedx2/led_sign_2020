@@ -24,7 +24,7 @@ class SignHardware:
 
     def __init__(self):
         # self.spi = SoftSPI(baudrate=100000, polarity=1, phase=0, sck=Pin(CCLK), mosi=Pin(CDATA), miso=Pin(BS_IN))
-        self.spi = SPI(1, baudrate=3000000, polarity=1, phase=0, bits=8, firstbit=SPI.LSB, sck=Pin(CCLK), mosi=Pin(CDATA), miso=Pin(BS_IN))
+        self.spi = SPI(1, baudrate=5000000, polarity=1, phase=0, bits=8, firstbit=SPI.LSB, sck=Pin(CCLK), mosi=Pin(CDATA), miso=Pin(BS_IN))
         self.en = Pin(EN, Pin.OUT, value=0)
         self.rows = [
             Pin(C1, Pin.OUT, value=0),
@@ -42,9 +42,11 @@ class SignHardware:
     def disable_output(self):
         self.en.off()
 
+    @micropython.native
     def row_on(self, num):
         self.rows[num].on()
 
+    @micropython.native
     def row_off(self, num):
         self.rows[num].off()
 
@@ -66,10 +68,10 @@ class SignHardware:
         mask = (1 << rownum)
         while col >= 0:
             bit_value = 1 if (memory[col] & mask) else 0
-            # jib = col + 3
-            i = int(col / 8)
+            realigned_col = col + 6
+            i = int(realigned_col / 8)
             if(bit_value):
-                bit_num = (col % 8) # firstbit LSB
+                bit_num = (realigned_col % 8) # firstbit LSB
                 rowbuff[i] = rowbuff[i] | (1 << bit_num)
             # print("col = %d, mask = 0x%02x, bit_value = %d, i = %d, bit_num = %d, rowbuff[i] = 0x%02x" %(col, mask, bit_value, i, bit_num, rowbuff[i]))
             col = col - 1

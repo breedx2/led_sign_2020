@@ -30,7 +30,7 @@ class SignUpdater:
         while(True):
             hw.shift_row(rownum, mem)
             hw.row_on(rownum)
-            time.sleep_ms(3)
+            time.sleep_ms(5)
             hw.row_off(rownum)
             rownum = 0 if rownum == 6 else rownum + 1
 
