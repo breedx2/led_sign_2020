@@ -13,15 +13,17 @@ C5    = 16
 C6    = 17
 C7    = 18
 
+COLS = 145
+# 25 fps = 40ms/frame => 40/7 => 5.xx ms
+ROW_SLEEP_MS = 5
+
 class SignHardware:
     """Sign hardware abstraction"""
 
-    COLS = 145
-
     def __init__(self):
-        self.en =    Pin(CLK,   Pin.OUT, value=0)
+        self.en    = Pin(EN,    Pin.OUT, value=0)
         self.cdata = Pin(CDATA, Pin.OUT, value=0)
-        self.clk =   Pin(CDATA, Pin.OUT, value=0)
+        self.cclk  = Pin(CCLK,  Pin.OUT, value=0)
         self.rows = [
             Pin(C1, Pin.OUT, value=0),
             Pin(C2, Pin.OUT, value=0),
@@ -43,3 +45,27 @@ class SignHardware:
 
     def row_off(self, num):
         self.rows[num].off()
+
+    def all_rows_off(self):
+        for row in self.rows:
+            row.off()
+
+    def data_out(self, value):
+        self.cdata.value(0 if value == 0 else 1)
+
+    def clk_pulse(self):
+        self.cclk.on()
+        time.sleep_us(10)
+        self.cclk.off()
+
+    # memory should be of size COLS
+    def shift_row(self, rownum, memory):
+        self.all_rows_off()
+        mask = (1<<rownum)
+        for col in range(0, COLS):
+            v = 1 if (memory[col] & mask) else 0
+            self.data_out(v)
+            self.clk_pulse()
+        self.row_on(rownum)
+        time.sleep_us(ROW_SLEEP_MS)
+        self.row_off(rownum)
