@@ -15,10 +15,24 @@ class SignUpdater:
         self.rownum = 0
         self.rowtimer = 0
 
-    def start(self):
+    def xstart(self):
         self.hw.enable_output()
         self.rowtimer = Timer(0);
         self.rowtimer.init(period=5, mode=Timer.PERIODIC, callback=self.row_cb)
+
+    @micropython.native
+    def start(self):
+        hw = self.hw
+        mem = self.mem
+        rownum = 0
+        hw.enable_output()
+        hw.all_rows_off()
+        while(True):
+            hw.shift_row(rownum, mem)
+            hw.row_on(rownum)
+            time.sleep_ms(3)
+            hw.row_off(rownum)
+            rownum = 0 if rownum == 6 else rownum + 1
 
     def stop(self):
         self.rowtimer.deinit()

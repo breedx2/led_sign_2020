@@ -2,18 +2,18 @@ from machine import Pin
 import time
 
 # pin mappings
-EN    = 21
-CDATA = 22
-CCLK  = 23
-C1    = 12
-C2    = 13
-C3    = 14
-C4    = 15
-C5    = 16
-C6    = 17
-C7    = 18
+EN    = const(21)
+CDATA = const(22)
+CCLK  = const(23)
+C1    = const(12)
+C2    = const(13)
+C3    = const(14)
+C4    = const(15)
+C5    = const(16)
+C6    = const(17)
+C7    = const(18)
 
-COLS = 145
+COLS = const(145)
 
 class SignHardware:
     """Sign hardware abstraction"""
@@ -57,13 +57,17 @@ class SignHardware:
         self.cclk.off()
 
     # memory should be of size COLS
+    @micropython.native
     def shift_row(self, rownum, memory):
-        self.all_rows_off()
+        cdata = self.cdata
+        cclk = self.cclk
         mask = (1<<rownum)
-        for col in range(0, COLS):
+        col = 0
+        while col < COLS:
             v = 1 if (memory[col] & mask) else 0
-            self.data_out(v)
-            self.clk_pulse()
-        # self.row_on(rownum)
-        # time.sleep_us(ROW_SLEEP_MS)
-        # self.row_off(rownum)
+            cdata.value(v)
+            cclk.on()
+            cclk.off()
+            # self.cdata.value(v)
+            # self.clk_pulse()
+            col = col + 1

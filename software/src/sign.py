@@ -1,10 +1,11 @@
 
+COLS = const(145)
+
 class Sign:
     """A low level memory representation of the sign"""
 
-    COLS = 145
 
-    def __init__(self, memory = [0x00] * COLS):
+    def __init__(self, memory = bytearray(COLS)):
         # byte per column
         self.memory = memory
 
@@ -30,8 +31,10 @@ class Sign:
         return self
 
     def clear(self):
-        for i in range(0, Sign.COLS):
+        i = 0
+        while(i < COLS):
             self.memory[i] = 0x00
+            i = i + 1
         return self
 
     def invert(self):
@@ -72,7 +75,7 @@ class Sign:
     #
     # def _buildPrintRow(self, row):
     #     r = ''
-    #     for col in range(0, Sign.COLS):
+    #     for col in range(0, COLS):
     #         ch = ' '
     #         if(self.memory[col] & (1<<row)):
     #             ch = '*'

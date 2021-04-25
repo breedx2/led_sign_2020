@@ -1,5 +1,6 @@
 
 from font5x7 import font
+from sign import COLS
 
 class SignPrinter:
     """Writes basic static text messages to the sign memory"""
@@ -16,12 +17,12 @@ class SignPrinter:
 
     def center(self, msg):
         buff = self._buff(msg)
-        index = int((self.sign.COLS - len(buff)) / 2)
+        index = int((COLS - len(buff)) / 2)
         self._print(buff, index)
 
     def right(self, msg):
         buff = self._buff(msg)
-        self._print(buff, self.sign.COLS-len(buff))
+        self._print(buff, COLS - len(buff))
 
     def _print(self, buff, index):
         self.sign.blit(index, buff)
