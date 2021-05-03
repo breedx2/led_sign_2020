@@ -62,7 +62,7 @@ class SignHardware:
             i = i + 1
 
     @micropython.native
-    def shift_row(self, rownum, memory):
+    def recompute_rowbuff(self, rownum, memory):
         self.clear_rowbuff()
         col = COLS - 1
         mask = (1 << rownum)
@@ -75,6 +75,23 @@ class SignHardware:
                 rowbuff[i] = rowbuff[i] | (1 << bit_num)
             # print("col = %d, mask = 0x%02x, bit_value = %d, i = %d, bit_num = %d, rowbuff[i] = 0x%02x" %(col, mask, bit_value, i, bit_num, rowbuff[i]))
             col = col - 1
+
+    @micropython.native
+    def shift_row(self, rownum, memory):
+        # self.clear_rowbuff()
+
+        # col = COLS - 1
+        # mask = (1 << rownum)
+        # while col >= 0:
+        #     bit_value = 1 if (memory[col] & mask) else 0
+        #     realigned_col = col + 6
+        #     i = int(realigned_col / 8)
+        #     if(bit_value):
+        #         bit_num = (realigned_col % 8) # firstbit LSB
+        #         rowbuff[i] = rowbuff[i] | (1 << bit_num)
+        #     # print("col = %d, mask = 0x%02x, bit_value = %d, i = %d, bit_num = %d, rowbuff[i] = 0x%02x" %(col, mask, bit_value, i, bit_num, rowbuff[i]))
+        #     col = col - 1
+        # self.recompute_rowbuff(rownum, memory)
 
         # print(rowbuff)
         self.spi.write(rowbuff)

@@ -16,13 +16,13 @@ class SignUpdater:
         self.rownum = 0
         self.rowtimer = 0
 
-    def xstart(self):
+    def xstart2(self):
         self.hw.enable_output()
         self.rowtimer = Timer(0);
         self.rowtimer.init(period=5, mode=Timer.PERIODIC, callback=self.row_cb)
 
     @micropython.native
-    def xstart(self):
+    def xstart2(self):
         hw = self.hw
         mem = self.mem
         rownum = 0
@@ -34,6 +34,7 @@ class SignUpdater:
         rowbuff[12] = 0xff
         rowbuff[14] = 0xff
         lastrow = 0
+        hw.row_on(3)
         while(True):
             # t = utime.ticks_us()
             spi.write(rowbuff)
@@ -56,7 +57,8 @@ class SignUpdater:
         while(True):
             hw.shift_row(rownum, mem)
             hw.row_on(rownum)
-            time.sleep_ms(2)
+            hw.recompute_rowbuff(0 if rownum == 6 else rownum + 1, mem)
+            time.sleep_us(300)
             hw.row_off(rownum)
             rownum = 0 if rownum == 6 else rownum + 1
 
