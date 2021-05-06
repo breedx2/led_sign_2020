@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PORT=/dev/ttyUSB1
+PORT=/dev/ttyUSB0
 
 for f in src/*.py ; do
 	echo uploading ${f}...

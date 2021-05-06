@@ -2,14 +2,22 @@ from sign import Sign
 from sign_hardware import SignHardware
 from sign_printer import SignPrinter
 from sign_updater import SignUpdater
-mem = bytearray(145)
+from sign_memory import create_memory
+mem = create_memory()
 hw = SignHardware()
 sign = Sign(mem)
 p = SignPrinter(sign)
 u = SignUpdater(hw, mem)
-p.right('hello world')
+sign.col(15, 0xff)
+# p.right('hello world')
 u.start()
 
+
+import time
+for i in range(0, 145):
+    sign.col(i, 0xff)
+    time.sleep_ms(250)
+    sign.col(i, 0x00)
 
 
 from machine import Pin, SPI, SoftSPI, Timer
