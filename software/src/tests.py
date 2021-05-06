@@ -8,9 +8,9 @@ hw = SignHardware()
 sign = Sign(mem)
 p = SignPrinter(sign)
 u = SignUpdater(hw, mem)
+u.start()
 sign.col(15, 0xff)
 # p.right('hello world')
-u.start()
 
 
 import time

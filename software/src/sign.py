@@ -9,6 +9,7 @@ class Sign:
         # byte per column
         self.memory = memory
 
+    @micropython.native
     def col(self, colnum, value):
         """sets an entire column value """
         rownum = 0
@@ -32,6 +33,7 @@ class Sign:
             rownum = rownum + 1
         return self
 
+    @micropython.native
     def _col_to_index(self, col):
         # TODO: probably nudge/offset corrections
         # maybe this should return byte offset and bit index both?
@@ -43,12 +45,15 @@ class Sign:
             self.col(index+i, col)
         return self
 
-    def on(self, col, row):
+    def on(self, col, rownum):
         """turns on a bit at col,row"""
-        row = self.memory[row]
-        index = self._col_to_index(col)
-        mask = 1 << (col % 8)
-        row[index] = row[index] | mask
+        realigned_col = col + 6
+        byteoff = self._col_to_index(realigned_col)
+        row = self.memory[rownum]
+        # mask = (1 << rownum)
+        mask = (1 << realigned_col % 8)
+        print("byteoff = %d, mask = 0x%s" % (byteoff, hex(mask)))
+        row[byteoff] = row[byteoff] | mask
         return self
 
     def off(self, col, row):
