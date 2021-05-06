@@ -15,21 +15,19 @@ class Sign:
         rownum = 0
         realigned_col = colnum + 6
         byteoff = self._col_to_index(realigned_col)
-        print("byteoff => %d" % ( byteoff))
+        # print("byteoff => %d" % ( byteoff))
         mask = (1 << realigned_col % 8)
-        print("mask = %s" %(hex(mask)))
+        # print("mask = %s" %(hex(mask)))
         rows = self.memory
         while rownum < 7:
-            # print("row => %d" %(rownum))
             row = rows[rownum]
-
-            print("before => %s" %(hex(row[byteoff])))
-            print("value & mask : %s" %(hex(value & mask)));
+            # print("before => %s" %(hex(row[byteoff])))
+            # print("value & mask : %s" %(hex(value & mask)));
             if value & (1<<rownum):
                 row[byteoff] = row[byteoff] | mask
             else:
                 row[byteoff] = row[byteoff] & ~mask
-            print("after => %s" %(hex(row[byteoff])))
+            # print("after => %s" %(hex(row[byteoff])))
             rownum = rownum + 1
         return self
 
@@ -50,18 +48,17 @@ class Sign:
         realigned_col = col + 6
         byteoff = self._col_to_index(realigned_col)
         row = self.memory[rownum]
-        # mask = (1 << rownum)
         mask = (1 << realigned_col % 8)
-        print("byteoff = %d, mask = 0x%s" % (byteoff, hex(mask)))
         row[byteoff] = row[byteoff] | mask
         return self
 
-    def off(self, col, row):
+    def off(self, col, rownum):
         """turns off a bit at row,col"""
-        row = self.memory[row]
-        index = self._col_to_index(col)
-        mask = 1 << (col % 8)
-        row[index] = row[index] & ~mask
+        realigned_col = col + 6
+        byteoff = self._col_to_index(realigned_col)
+        row = self.memory[rownum]
+        mask = ~(1 << realigned_col % 8)
+        row[byteoff] = row[byteoff] & mask
         return self
 
     def clear(self):

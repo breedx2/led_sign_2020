@@ -6,10 +6,11 @@ from sign_memory import create_memory
 mem = create_memory()
 hw = SignHardware()
 sign = Sign(mem)
-p = SignPrinter(sign)
 u = SignUpdater(hw, mem)
 u.start()
-sign.col(15, 0xff)
+p = SignPrinter(sign)
+p.left('ABCDEFGHIJKLMNOPQRSTUVWX')
+# sign.col(15, 0xff)
 # p.right('hello world')
 
 
