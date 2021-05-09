@@ -135,34 +135,24 @@ class Sign:
             r = r + 1
         return self
 
-    # def roll_down(self):
-    #     # TODO: Don't ever reassign this memory
-    #     self.memory = list(map(self._bitrot_left, self.memory))
-    #     return self
-    #
-    # def roll_up(self):
-    #     # TODO: Don't ever reassign this memory
-    #     self.memory = list(map(self._bitrot_right, self.memory))
-    #     return self
-    #
-    # def _bitrot_left(self, x):
-    #     b = 1 if (x & 0b01000000 == 0b01000000) else 0
-    #     return ((x << 1) + b) & 0x7F
-    #
-    # def _bitrot_right(self, x):
-    #     b = 0b01000000 if (x & 0b00000001 == 0b00000001) else 0
-    #     return ((x >> 1) | b) & 0x7F
+    def roll_down(self):
+        mem = self.memory
+        b = mem[6]
+        mem[6] = mem[5]
+        mem[5] = mem[4]
+        mem[4] = mem[3]
+        mem[3] = mem[2]
+        mem[2] = mem[1]
+        mem[1] = mem[0]
+        mem[0] = b
 
-    # def print(self):
-    #     for row in range(0,7):
-    #         r = self._buildPrintRow(row)
-    #         print(r)
-    #
-    # def _buildPrintRow(self, row):
-    #     r = ''
-    #     for col in range(0, COLS):
-    #         ch = ' '
-    #         if(self.memory[col] & (1<<row)):
-    #             ch = '*'
-    #         r = r + ch
-    #     return r
+    def roll_up(self):
+        mem = self.memory
+        b = mem[0]
+        mem[0] = mem[1]
+        mem[1] = mem[2]
+        mem[2] = mem[3]
+        mem[3] = mem[4]
+        mem[4] = mem[5]
+        mem[5] = mem[6]
+        mem[6] = b
