@@ -68,24 +68,25 @@ class Sign:
         return self._do_for_every_byte(lambda i,r,b: b ^ 0xFF)
 
     def rot_right(self):
-        def op(i,r,b):
-            result = b << 1
-            row = self.memory[r]
-            if b & 0x80:
-                nextindex = i+1 if i < ROWBUFF_LEN-1 else 0
-                row[nextindex] = row[nextindex] | 0x01
-            return result
+        op = self._right_op(True)
         return self._do_for_every_byte_backwards(op)
 
     def shift_right(self):
+        op = self._right_op(False)
+        return self._do_for_every_byte_backwards(op)
+
+    def _right_op(self, roll):
         def op(i,r,b):
             result = b << 1
-            row = self.memory[r]
-            if b & 0x80 and i < ROWBUFF_LEN - 1:
+            if b & 0x80: # High byte is set...
+                row = self.memory[r]
                 nextindex = i+1
-                row[nextindex] = row[nextindex] | 0x01
+                if roll and (nextindex == ROWBUFF_LEN):
+                    nextindex = 0
+                if nextindex < ROWBUFF_LEN:
+                    row[nextindex] = row[nextindex] | 0x01
             return result
-        return self._do_for_every_byte_backwards(op)
+        return op
 
     def _do_for_every_byte(self, op):
         def rowop(r, row):
