@@ -77,6 +77,16 @@ class Sign:
             return result
         return self._do_for_every_byte_backwards(op)
 
+    def shift_right(self):
+        def op(i,r,b):
+            result = b << 1
+            row = self.memory[r]
+            if b & 0x80 and i < ROWBUFF_LEN - 1:
+                nextindex = i+1
+                row[nextindex] = row[nextindex] | 0x01
+            return result
+        return self._do_for_every_byte_backwards(op)
+
     def _do_for_every_byte(self, op):
         def rowop(r, row):
             i = 0
