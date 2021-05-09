@@ -62,22 +62,35 @@ class Sign:
         return self
 
     def clear(self):
-        return self._do_for_every_byte(lambda x: 0x00)
+        return self._do_for_every_byte(lambda i,r,b: 0x00)
 
     def invert(self):
-        return self._do_for_every_byte(lambda x: x ^ 0xFF)
+        return self._do_for_every_byte(lambda i,r,b: b ^ 0xFF)
 
-    # def rot_left(self):
-    #     return self._do_for_every_byte(lambda x: pass)
-    #     self.memory.append(self.memory.pop(0))
-    #     return self
+    def rot_right(self):
+        def op(i,r,b):
+            result = b << 1
+            row = self.memory[r]
+            if b & 0x80:
+                nextindex = i+1 if i < ROWBUFF_LEN-1 else 0
+                row[nextindex] = row[nextindex] | 0x01
+            return result
+        return self._do_for_every_byte_backwards(op)
 
     def _do_for_every_byte(self, op):
         def rowop(r, row):
             i = 0
             while(i < ROWBUFF_LEN):
-                row[i] = op(row[i])
+                row[i] = op(i, r, row[i])
                 i = i + 1
+        return self._do_for_every_row(rowop)
+
+    def _do_for_every_byte_backwards(self, op):
+        def rowop(r, row):
+            i = ROWBUFF_LEN - 1
+            while(i >= 0):
+                row[i] = op(i, r, row[i])
+                i = i - 1
         return self._do_for_every_row(rowop)
 
     def _do_for_every_row(self, rowop):
