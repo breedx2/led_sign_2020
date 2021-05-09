@@ -75,18 +75,40 @@ class Sign:
         op = self._right_op(False)
         return self._do_for_every_byte_backwards(op)
 
+    def rot_left(self):
+        op = self._left_op(True)
+        return self._do_for_every_byte(op)
+
+    def shift_left(self):
+        op = self._left_op(False)
+        return self._do_for_every_byte(op)
+
+    def _left_op(self, roll):
+        def op(i,r,b):
+            result = b >> 1
+            if b & 0x01: # Low bit is set...
+                nextindex = i-1
+                if roll and (nextindex < 0):
+                    nextindex = ROWBUFF_LEN - 1
+                if nextindex >= 0:
+                    row = self.memory[r]
+                    row[nextindex] = row[nextindex] | 0x80
+            return result
+        return op
+
     def _right_op(self, roll):
         def op(i,r,b):
             result = b << 1
-            if b & 0x80: # High byte is set...
-                row = self.memory[r]
+            if b & 0x80: # High bit is set...
                 nextindex = i+1
                 if roll and (nextindex == ROWBUFF_LEN):
                     nextindex = 0
                 if nextindex < ROWBUFF_LEN:
+                    row = self.memory[r]
                     row[nextindex] = row[nextindex] | 0x01
             return result
         return op
+
 
     def _do_for_every_byte(self, op):
         def rowop(r, row):
@@ -112,7 +134,7 @@ class Sign:
             rowop(r, row)
             r = r + 1
         return self
-    #
+
     # def rot_right(self):
     #     self.memory.insert(0, self.memory.pop(len(self.memory)-1))
     #     return self
