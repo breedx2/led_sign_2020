@@ -135,10 +135,6 @@ class Sign:
             r = r + 1
         return self
 
-    # def rot_right(self):
-    #     self.memory.insert(0, self.memory.pop(len(self.memory)-1))
-    #     return self
-    #
     # def roll_down(self):
     #     # TODO: Don't ever reassign this memory
     #     self.memory = list(map(self._bitrot_left, self.memory))
