@@ -1,13 +1,11 @@
 from sign import Sign
-from sign_hardware import SignHardware
+import sign_hardware as hw
 from sign_printer import SignPrinter
-from sign_updater import SignUpdater
+import sign_updater as upd
 from sign_memory import create_memory
 mem = create_memory()
-hw = SignHardware()
 sign = Sign(mem)
-u = SignUpdater(hw, mem)
-u.start()
+upd.start(mem)
 p = SignPrinter(sign)
 p.left('ABCDEFGHIJKLMNOPQRSTUVWX')
 # sign.col(15, 0xff)
