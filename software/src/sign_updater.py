@@ -2,6 +2,7 @@
 from machine import Pin, SPI, SoftSPI, Timer
 import time
 import utime
+import sign_hardware as hw
 
 # Responsible for continuously refreshing the sign
 
@@ -18,12 +19,12 @@ def start(memory):
     hw.enable_output()
     _rowtimer.init(period=1, mode=Timer.PERIODIC, callback=_row_cb)
 
-def stop(self):
+def stop():
     global _rowtimer
     _rowtimer.deinit()
 
 @micropython.native
-def _row_cb(self, timer):
+def _row_cb(timer):
     global _rownum
     hw.row_off(_rownum)
     _rownum = 0 if _rownum == 6 else _rownum + 1
