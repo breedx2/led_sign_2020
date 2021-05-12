@@ -17,13 +17,13 @@ _C7    = const(18)
 _spi = SPI(1, baudrate=3000000, polarity=1, phase=0, bits=8, firstbit=SPI.LSB, sck=Pin(_CCLK), mosi=Pin(_CDATA))
 _en = Pin(_EN, Pin.OUT, value=0)
 _rows = [
-    Pin(C1, Pin.OUT, value=0),
-    Pin(C2, Pin.OUT, value=0),
-    Pin(C3, Pin.OUT, value=0),
-    Pin(C4, Pin.OUT, value=0),
-    Pin(C5, Pin.OUT, value=0),
-    Pin(C6, Pin.OUT, value=0),
-    Pin(C7, Pin.OUT, value=0)
+    Pin(_C1, Pin.OUT, value=0),
+    Pin(_C2, Pin.OUT, value=0),
+    Pin(_C3, Pin.OUT, value=0),
+    Pin(_C4, Pin.OUT, value=0),
+    Pin(_C5, Pin.OUT, value=0),
+    Pin(_C6, Pin.OUT, value=0),
+    Pin(_C7, Pin.OUT, value=0)
 ]
 
 def enable_output():
