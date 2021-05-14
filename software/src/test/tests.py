@@ -1,19 +1,3 @@
-from sign import Sign
-from sign_hardware import SignHardware
-from sign_printer import SignPrinter
-from sign_updater import SignUpdater
-from sign_memory import create_memory
-mem = create_memory()
-hw = SignHardware()
-sign = Sign(mem)
-u = SignUpdater(hw, mem)
-u.start()
-p = SignPrinter(sign)
-p.left('ABCDEFGHIJKLMNOPQRSTUVWX')
-# sign.col(15, 0xff)
-# p.right('hello world')
-
-
 import time
 for i in range(0, 145):
     sign.col(i, 0xff)

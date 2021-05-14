@@ -2,78 +2,54 @@ from machine import Pin, SPI, SoftSPI, Timer
 import time
 
 # pin mappings
-EN    = const(21)
-CDATA = const(22)
-CCLK  = const(23)
-BS_IN = const(34)
-C1    = const(12)
-C2    = const(13)
-C3    = const(14)
-C4    = const(15)
-C5    = const(16)
-C6    = const(17)
-C7    = const(18)
+_EN    = const(21)
+_CDATA = const(22)
+_CCLK  = const(23)
+_BS_IN = const(34)
+_C1    = const(12)
+_C2    = const(13)
+_C3    = const(14)
+_C4    = const(15)
+_C5    = const(16)
+_C6    = const(17)
+_C7    = const(18)
 
-# COLS = const(145)
+_spi = SPI(1, baudrate=3000000, polarity=1, phase=0, bits=8, firstbit=SPI.LSB, sck=Pin(_CCLK), mosi=Pin(_CDATA))
+_en = Pin(_EN, Pin.OUT, value=0)
+_rows = [
+    Pin(_C1, Pin.OUT, value=0),
+    Pin(_C2, Pin.OUT, value=0),
+    Pin(_C3, Pin.OUT, value=0),
+    Pin(_C4, Pin.OUT, value=0),
+    Pin(_C5, Pin.OUT, value=0),
+    Pin(_C6, Pin.OUT, value=0),
+    Pin(_C7, Pin.OUT, value=0)
+]
 
-class SignHardware:
-    """Sign hardware abstraction"""
+def enable_output():
+    global _en
+    _en.on()
 
-    def __init__(self):
-        # self.spi = SoftSPI(baudrate=100000, polarity=1, phase=0, sck=Pin(CCLK), mosi=Pin(CDATA), miso=Pin(BS_IN))
-        # self.spi = SPI(1, baudrate=5000000, polarity=1, phase=0, bits=8, firstbit=SPI.LSB, sck=Pin(CCLK), mosi=Pin(CDATA))
-        self.spi = SPI(1, baudrate=3000000, polarity=1, phase=0, bits=8, firstbit=SPI.LSB, sck=Pin(CCLK), mosi=Pin(CDATA))
-        self.en = Pin(EN, Pin.OUT, value=0)
-        self.rows = [
-            Pin(C1, Pin.OUT, value=0),
-            Pin(C2, Pin.OUT, value=0),
-            Pin(C3, Pin.OUT, value=0),
-            Pin(C4, Pin.OUT, value=0),
-            Pin(C5, Pin.OUT, value=0),
-            Pin(C6, Pin.OUT, value=0),
-            Pin(C7, Pin.OUT, value=0)
-        ]
+def disable_output():
+    global _en
+    _en.off()
 
-    def enable_output(self):
-        self.en.on()
+@micropython.native
+def row_on(num):
+    global _rows
+    _rows[num].on()
 
-    def disable_output(self):
-        self.en.off()
+@micropython.native
+def row_off(num):
+    global _rows
+    _rows[num].off()
 
-    @micropython.native
-    def row_on(self, num):
-        self.rows[num].on()
+def all_rows_off():
+    global _rows
+    for row in _rows:
+        row.off()
 
-    @micropython.native
-    def row_off(self, num):
-        self.rows[num].off()
-
-    def all_rows_off(self):
-        for row in self.rows:
-            row.off()
-
-    @micropython.native
-    def shift_row(self, rownum, memory):
-        self.spi.write(memory[rownum])
-
-    # @micropython.native
-    # def clear_rowbuff(self):
-    #     i = 0
-    #     while i < ROWBUFF_LEN:
-    #         rowbuff[i] = 0x00
-    #         i = i + 1
-    #
-    # @micropython.native
-    # def recompute_rowbuff(self, rownum, memory):
-    #     self.clear_rowbuff()
-    #     col = COLS - 1
-    #     mask = (1 << rownum)
-    #     while col >= 0:
-    #         bit_value = 1 if (memory[col] & mask) else 0
-    #         realigned_col = col + 6
-    #         i = int(realigned_col / 8)
-    #         if(bit_value):
-    #             bit_num = (realigned_col % 8) # firstbit LSB
-    #             rowbuff[i] = rowbuff[i] | (1 << bit_num)
-    #         # print("col = %d, mask = 0x%02x, bit_value = %d, i = %d, bit_num = %d, rowbuff[i] = 0x%02x" %(col, mask, bit_value, i, bit_num, rowbuff[i]))
-    #         col = col - 1
+@micropython.native
+def shift_row(rownum, memory):
+    global _spi
+    _spi.write(memory[rownum])

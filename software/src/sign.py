@@ -1,11 +1,11 @@
-from sign_memory import create_memory, ROWBUFF_LEN
+from sign_memory import create, ROWBUFF_LEN
 
 COLS = const(145)
 
 class Sign:
     """A low level memory representation of the sign"""
 
-    def __init__(self, memory = create_memory()):
+    def __init__(self, memory = create()):
         # byte per column
         self.memory = memory
 
