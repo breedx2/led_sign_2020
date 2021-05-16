@@ -2,6 +2,16 @@ import time
 from sign import COLS
 from sign_printer import SignPrinter
 
+# returns a columnar array with the message in the center
+def colmem_centered(msg):
+    buff = bytearray(COLS)
+    msg = SignPrinter.to_byte_array(msg)
+    # TODO: Ensure msg isn't larger than the sign
+    offset = int((COLS - len(msg))/2)
+    for i,msgcol in enumerate(msg):
+        buff[offset+i] = msgcol
+    return buff
+
 class SignCommands:
     def __init__(self, sign):
         self.sign = sign
@@ -21,6 +31,25 @@ class SignCommands:
             sign.col(i, 0x00)
             time.sleep_ms(speed)
 
+    # column-wise roll in down. clears sign first.
+    def crid(self, str, speed):
+        sign = self.sign
+        sign.clear()
+        msg_bytes = SignPrinter.to_byte_array(str)
+        offset = int((COLS - len(msg_bytes))/2)
+        for i,msgcol in enumerate(msg_bytes):
+            col = offset + i
+            inb = msg_bytes[i]
+            if inb == 0:
+                continue
+            curb = 0
+            for row in range(0, 7):
+                curb = (curb << 1)
+                if inb & ( 1 << (6-row)):
+                    curb = curb + 1
+                sign.col(col, curb)
+                time.sleep_ms(speed)
+
     # counter - count up to num with speed
     def ctr(self, num, speed = 0):
         p = self.printer
@@ -28,7 +57,3 @@ class SignCommands:
         for i in range(0,num):
             p.center(str(i))
             time.sleep_ms(speed)
-
-    # column roll in up (does this mean column-wise or all cols again?)
-    def criu(self, str, speed):
-        pass

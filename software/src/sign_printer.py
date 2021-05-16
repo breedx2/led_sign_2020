@@ -12,26 +12,26 @@ class SignPrinter:
         return self
 
     def left(self, msg):
-        buff = self._buff(msg)
+        buff = SignPrinter.to_byte_array(msg)
         self._print(buff, 2) # first 2 columns are unaddressable
 
     def center(self, msg):
-        buff = self._buff(msg)
+        buff = SignPrinter.to_byte_array(msg)
         index = int((COLS - len(buff)) / 2)
         self._print(buff, index)
 
     def right(self, msg):
-        buff = self._buff(msg)
+        buff = SignPrinter.to_byte_array(msg)
         self._print(buff, COLS - len(buff))
 
     def _print(self, buff, index):
         self.sign.blit(index, buff)
 
-    def _buff(self, msg):
+    def to_byte_array(msg):
         buff = []
         for i,ch in enumerate(msg):
             glyph = font[ ord(ch) - ord(' ')]
             buff.extend(glyph)
-            if(i < len(msg)-1):
+            if(ch != ' ' and i < len(msg)-1):
                 buff.append(0) # gap in between chars (kerning)
         return buff
