@@ -31,6 +31,20 @@ class Sign:
             rownum = rownum + 1
         return self
 
+    def get_col(self, colnum):
+        rownum = 0
+        result = 0
+        realigned_col = colnum + 6
+        byteoff = self._col_to_index(realigned_col)
+        mask = (1 << realigned_col % 8)
+        rows = self.memory
+        while rownum < 7:
+            row = rows[rownum]
+            if row[byteoff] & mask:
+                result = result | (1<<rownum)
+            rownum = rownum + 1
+        return result
+
     @micropython.native
     def _col_to_index(self, col):
         # TODO: probably nudge/offset corrections
