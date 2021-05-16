@@ -33,5 +33,5 @@ class SignPrinter:
             glyph = font[ ord(ch) - ord(' ')]
             buff.extend(glyph)
             if(i < len(msg)-1):
-                buff.append(0)
+                buff.append(0) # gap in between chars (kerning)
         return buff
