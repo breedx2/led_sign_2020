@@ -64,6 +64,13 @@ class SignCommands:
             sign.col(half+i, 0)
             time.sleep_ms(speed)
 
+    def mwoi(self, speed):
+        sign = self.sign
+        half = int(COLS/2)+1
+        for i in range(0, half):
+            sign.col(i, 0)
+            sign.col(COLS-i, 0)
+            time.sleep_ms(speed)
 
     # counter - count up to num with speed
     def ctr(self, num, speed = 0):

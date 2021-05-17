@@ -13,4 +13,4 @@ p.left('ABCDEFGHIJKLMNOPQRSTUVWX')
 
 sc = SignCommands(sign)
 # sc.criu('i am a real person!', 33)
-sc.mwoo(55)
+sc.mwoi(55)
