@@ -12,4 +12,4 @@ p = SignPrinter(sign)
 p.left('ABCDEFGHIJKLMNOPQRSTUVWX')
 
 sc = SignCommands(sign)
-sc.criu('i am a real person!', 150)
+sc.criu('i am a real person!', 33)

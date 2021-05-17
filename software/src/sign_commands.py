@@ -23,25 +23,22 @@ class SignCommands:
 
     # column-wise roll in down. clears sign first.
     def crid(self, str, speed):
-        sign = self.sign
-        sign.clear()
-        msg_bytes = SignPrinter.to_byte_array(str)
-        offset = int((COLS - len(msg_bytes))/2)
-        for i,msgcol in enumerate(msg_bytes):
-            col = offset + i
-            inb = msg_bytes[i]
-            if inb == 0:
-                continue
-            curb = 0
-            for row in range(0, 7):
-                curb = (curb << 1)
-                if inb & ( 1 << (6-row)):
-                    curb = curb + 1
-                sign.col(col, curb)
-                time.sleep_ms(speed)
+        self._cri_x(str, speed,
+            lambda: range(0, 7),
+            lambda x: x << 1,
+            lambda x: x + 1
+        )
 
     # column-wise roll in up. clears sign first.
     def criu(self, str, speed):
+        self._cri_x(str, speed,
+            lambda: range(6, -1, -1),
+            lambda x: x >> 1,
+            lambda x: x + 0x40
+        )
+
+    # column-wise roll in, handles either direction. clears sign first.
+    def _cri_x(self, str, speed, ranger, shifter, modifier):
         sign = self.sign
         sign.clear()
         msg_bytes = SignPrinter.to_byte_array(str)
@@ -52,12 +49,13 @@ class SignCommands:
             if inb == 0:
                 continue
             curb = 0
-            for row in range(6, -1, -1):
-                curb = (curb >> 1)
-                if inb & (1<< (6-row)):
-                    curb = curb + 0x40
+            for row in ranger():
+                curb = shifter(curb)
+                if inb & (1 << (6-row)):
+                    curb = modifier(curb)
                 sign.col(col, curb)
                 time.sleep_ms(speed)
+
 
     # counter - count up to num with speed
     def ctr(self, num, speed = 0):
