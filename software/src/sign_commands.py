@@ -72,6 +72,11 @@ class SignCommands:
             sign.col(COLS-i, 0)
             time.sleep_ms(speed)
 
+    def sr(self, num, speed = 0):
+        sign = self.sign
+        for i in range(0, num):
+            sign.shift_right()
+            time.sleep_ms(speed)
     # counter - count up to num with speed
     def ctr(self, num, speed = 0):
         p = self.printer
