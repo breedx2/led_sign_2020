@@ -1,5 +1,6 @@
 import time
 from sign import COLS
+from sign_memory import clear_row
 from sign_printer import SignPrinter
 
 class SignCommands:
@@ -84,6 +85,19 @@ class SignCommands:
         sign = self.sign
         for i in range(0, num):
             sign.shift_left()
+            time.sleep_ms(speed)
+
+    # roll off down
+    def rod(self, speed = 50):
+        SignCommands._all_rows(lambda: self.sign.roll_down(clear_row), speed)
+
+    # roll off down
+    def rou(self, speed = 50):
+        SignCommands._all_rows(lambda: self.sign.roll_up(clear_row), speed);
+
+    def _all_rows(fn, speed):
+        for i in range(0, 7):
+            fn()
             time.sleep_ms(speed)
 
     # counter - count up to num with speed

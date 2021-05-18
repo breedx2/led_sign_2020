@@ -149,7 +149,7 @@ class Sign:
             r = r + 1
         return self
 
-    def roll_down(self):
+    def roll_down(self, first_row_fn = lambda bot: bot):
         mem = self.memory
         b = mem[6]
         mem[6] = mem[5]
@@ -158,15 +158,15 @@ class Sign:
         mem[3] = mem[2]
         mem[2] = mem[1]
         mem[1] = mem[0]
-        mem[0] = b
+        mem[0] = first_row_fn(b)
 
-    def roll_up(self):
+    def roll_up(self, last_row_fn = lambda top: top):
         mem = self.memory
-        b = mem[0]
+        t = mem[0]
         mem[0] = mem[1]
         mem[1] = mem[2]
         mem[2] = mem[3]
         mem[3] = mem[4]
         mem[4] = mem[5]
         mem[5] = mem[6]
-        mem[6] = b
+        mem[6] = last_row_fn(t)
