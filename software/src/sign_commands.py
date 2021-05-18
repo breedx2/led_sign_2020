@@ -65,6 +65,7 @@ class SignCommands:
             sign.col(half+i, 0)
             time.sleep_ms(speed)
 
+    # message wipe out in
     def mwoi(self, speed):
         sign = self.sign
         half = int(COLS/2)+1
@@ -95,6 +96,7 @@ class SignCommands:
     def rou(self, speed = 50):
         SignCommands._all_rows(lambda row: self.sign.roll_up(clear_row), speed);
 
+    # roll message in upwards
     # TODO: should take a full size col array here instead of string or ?
     def rid(self, str, speed = 50):
         sign = self.sign
@@ -110,6 +112,7 @@ class SignCommands:
                     sign.off(col+2, 0)
             time.sleep_ms(speed)
 
+    # roll message in upwards
     def riu(self, str, speed = 50):
         sign = self.sign
         msg_bytes = SignPrinter.to_byte_array_full(str)
@@ -123,6 +126,21 @@ class SignCommands:
                 else:
                     sign.off(col+2, 6)
             time.sleep_ms(speed)
+
+    # display message word-wise in center of display
+    def mwc(self, str, speed = 50):
+        printer = self.printer
+        input_length = len(str)
+        start = 0
+        next = 0
+        while(next <= input_length):
+            if next >= input_length or str[next] == ' ':
+                word = str[start:next]
+                printer.clear()
+                printer.center(word)
+                time.sleep_ms(speed)
+                start = next + 1
+            next = next + 1
 
     def _all_rows(fn, speed):
         for i in range(0, 7):
