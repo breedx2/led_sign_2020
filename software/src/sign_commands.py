@@ -110,6 +110,20 @@ class SignCommands:
                     sign.off(col+2, 0)
             time.sleep_ms(speed)
 
+    def riu(self, str, speed = 50):
+        sign = self.sign
+        msg_bytes = SignPrinter.to_byte_array_full(str)
+        for row in range(6, -1, -1):
+            sign.roll_up(clear_row)
+            mask = 1 << ( 6 - row)
+            for col in range(0, COLS-2):
+                # print('col %d' % (col))
+                if col < len(msg_bytes) and (msg_bytes[col] & mask):
+                    sign.on(col+2, 6)
+                else:
+                    sign.off(col+2, 6)
+            time.sleep_ms(speed)
+
     def _all_rows(fn, speed):
         for i in range(0, 7):
             fn(i)
