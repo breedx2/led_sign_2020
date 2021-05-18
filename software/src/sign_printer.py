@@ -35,3 +35,18 @@ class SignPrinter:
             if(ch != ' ' and i < len(msg)-1):
                 buff.append(0) # gap in between chars (kerning)
         return buff
+
+    # Just like the above, but returns an array full sign width
+    def to_byte_array_full(msg, align = 'center'):
+        buff = []
+        for i,ch in enumerate(msg):
+            glyph = font[ ord(ch) - ord(' ')]
+            buff.extend(glyph)
+            if(ch != ' ' and i < len(msg)-1):
+                buff.append(0) # gap in between chars (kerning)
+        # TODO: Use the alignment
+        delta = (COLS - len(buff))/2
+        for i in range(0,delta):
+            buff.insert(0, 0)
+            buff.append(0)
+        return buff

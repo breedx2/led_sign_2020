@@ -89,15 +89,30 @@ class SignCommands:
 
     # roll off down
     def rod(self, speed = 50):
-        SignCommands._all_rows(lambda: self.sign.roll_down(clear_row), speed)
+        SignCommands._all_rows(lambda row: self.sign.roll_down(clear_row), speed)
 
     # roll off down
     def rou(self, speed = 50):
-        SignCommands._all_rows(lambda: self.sign.roll_up(clear_row), speed);
+        SignCommands._all_rows(lambda row: self.sign.roll_up(clear_row), speed);
+
+    # TODO: should take a full size col array here instead of string or ?
+    def rid(self, str, speed = 50):
+        sign = self.sign
+        msg_bytes = SignPrinter.to_byte_array_full(str)
+        for row in range(0, 7):
+            sign.roll_down(clear_row)
+            mask = 1 << (6 - row)
+            for col in range(0, COLS-2):
+                # print('col %d' % (col))
+                if col < len(msg_bytes) and (msg_bytes[col] & mask):
+                    sign.on(col+2, 0)
+                else:
+                    sign.off(col+2, 0)
+            time.sleep_ms(speed)
 
     def _all_rows(fn, speed):
         for i in range(0, 7):
-            fn()
+            fn(i)
             time.sleep_ms(speed)
 
     # counter - count up to num with speed
