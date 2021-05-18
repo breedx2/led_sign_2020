@@ -68,10 +68,18 @@ class SignCommands:
     # message wipe out in
     def mwoi(self, speed):
         sign = self.sign
-        half = int(COLS/2)+1
-        for i in range(0, half):
-            sign.col(i, 0)
-            sign.col(COLS-i, 0)
+        start = 2
+        end = COLS-1
+        while sign.get_col(start) == 0 and start < end:
+            start = start + 1
+        while sign.get_col(end) == 0 and end > start:
+            end = end - 1
+        print("start = %d and end = %d" % (start,end))
+        while(start <= end):
+            sign.col(start, 0)
+            sign.col(end, 0)
+            start = start + 1
+            end = end - 1
             time.sleep_ms(speed)
 
     # shift sign right num cols
