@@ -73,4 +73,8 @@ for i in [127,63,31,15,7,3,1]:
     time.sleep_ms(500)
 
 sign.clear()
+p.center('** RANDOM DISSOLVE **')
+sc.rando()
+
+sign.clear()
 p.center('_._.all done._._')

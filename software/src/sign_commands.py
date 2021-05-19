@@ -1,4 +1,5 @@
 import time
+from micropython_lib_random import shuffle
 from sign import COLS
 from sign_memory import clear_row
 from sign_printer import SignPrinter
@@ -128,6 +129,19 @@ class SignCommands:
         sign = self.sign
         for i in range(0, num):
             sign.shift_left()
+            time.sleep_ms(speed)
+
+    def rando(self, speed = 10):
+        sign = self.sign
+        remaining = []
+        for i in range(0, COLS):
+            col = sign.get_col(i)
+            for j in range(0, 7):
+                if( col & (1 << j)):
+                    remaining.append([i,j])
+        shuffle(remaining)
+        for pair in remaining:
+            sign.off(pair[0], pair[1])
             time.sleep_ms(speed)
 
     # roll off down
