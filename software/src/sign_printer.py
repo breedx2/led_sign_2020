@@ -17,7 +17,7 @@ class SignPrinter:
 
     def center(self, msg):
         buff = SignPrinter.to_byte_array(msg)
-        index = int((COLS - len(buff)) / 2)
+        index = max(0,int((COLS - len(buff)) / 2))
         self._print(buff, index)
 
     def right(self, msg):

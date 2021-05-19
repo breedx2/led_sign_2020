@@ -54,6 +54,8 @@ class Sign:
     def blit(self, index, cols):
         """copies some columns in at an index"""
         for i,col in enumerate(cols):
+            if i >= COLS:
+                return self
             self.col(index+i, col)
         return self
 
