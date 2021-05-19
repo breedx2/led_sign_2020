@@ -57,10 +57,19 @@ class SignCommands:
                 sign.col(col, curb)
                 time.sleep_ms(speed)
 
+    # column-wise wipe in message from left
     def lwipe(self, str, speed):
         sign = self.sign
         msg_bytes = SignPrinter.to_byte_array_full(str)
         for i in range(0, COLS-2):
+            sign.col(i+2, msg_bytes[i])
+            time.sleep_ms(speed)
+
+    # column-wise wipe in message from right
+    def rwipe(self, str, speed):
+        sign = self.sign
+        msg_bytes = SignPrinter.to_byte_array_full(str)
+        for i in range(COLS-2, -1, -1):
             sign.col(i+2, msg_bytes[i])
             time.sleep_ms(speed)
 
