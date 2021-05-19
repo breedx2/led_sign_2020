@@ -90,7 +90,6 @@ class SignCommands:
             start = start + 1
         while sign.get_col(end) == 0 and end > start:
             end = end - 1
-        print("start = %d and end = %d" % (start,end))
         while(start <= end):
             sign.col(start, 0)
             sign.col(end, 0)
@@ -149,6 +148,14 @@ class SignCommands:
                     sign.on(col+2, 6)
                 else:
                     sign.off(col+2, 6)
+            time.sleep_ms(speed)
+
+    def strobe(self, speed, times):
+        sign = self.sign
+        for i in range(0, times):
+            sign.all_on()
+            time.sleep_ms(speed)
+            sign.all_off()
             time.sleep_ms(speed)
 
     # display message word-wise in center of display

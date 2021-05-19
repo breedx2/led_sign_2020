@@ -99,6 +99,12 @@ class Sign:
         op = self._left_op(False)
         return self._do_for_every_byte(op)
 
+    def all_on(self):
+        self._do_for_every_byte(lambda i,r,v: 0xff)
+
+    def all_off(self):
+        self._do_for_every_byte(lambda i,r,v: 0x00)
+
     def _left_op(self, roll):
         def op(i,r,b):
             result = b >> 1
