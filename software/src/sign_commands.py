@@ -131,17 +131,36 @@ class SignCommands:
             sign.shift_left()
             time.sleep_ms(speed)
 
+    # random dissolve (fade out)
+    # basically just transition to a blank screen!
     def rando(self, speed = 10):
+        self.randt("", speed)
+
+    # random in (fade in).  Clears sign first.
+    def randi(self, str, speed = 10):
+        self.sign.clear()
+        self.randt(str, speed)
+
+    # random transition (fade in)
+    def randt(self, str, speed = 10):
         sign = self.sign
+        msg_bytes = SignPrinter.to_byte_array_full(str)
         remaining = []
         for i in range(0, COLS):
-            col = sign.get_col(i)
+            cur_col = sign.get_col(i)
+            new_col = msg_bytes[i]
             for j in range(0, 7):
-                if( col & (1 << j)):
-                    remaining.append([i,j])
+                bm = (1 << j)
+                if (cur_col & bm) and not (new_col & bm):
+                    remaining.append([i,j,0])
+                if (new_col & bm) and not (cur_col & bm):
+                    remaining.append([i,j,1])
         shuffle(remaining)
-        for pair in remaining:
-            sign.off(pair[0], pair[1])
+        for item in remaining:
+            if(item[2]):
+                sign.on(item[0], item[1])
+            else:
+                sign.off(item[0], item[1])
             time.sleep_ms(speed)
 
     # roll off down
