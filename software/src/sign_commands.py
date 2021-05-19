@@ -23,29 +23,36 @@ class SignCommands:
             time.sleep_ms(speed)
 
     # column-wise roll in down. clears sign first.
-    def crid(self, str, speed):
+    def crid(self, str, speed, direction = 'left'):
         self._cri_x(str, speed,
             lambda: range(0, 7),
             lambda x: x << 1,
-            lambda x: x + 1
+            lambda x: x + 1,
+            direction
         )
 
     # column-wise roll in up. clears sign first.
-    def criu(self, str, speed):
+    def criu(self, str, speed, direction = 'left'):
         self._cri_x(str, speed,
             lambda: range(6, -1, -1),
             lambda x: x >> 1,
-            lambda x: x + 0x40
+            lambda x: x + 0x40,
+            direction
         )
 
     # column-wise roll in, handles either direction. clears sign first.
-    def _cri_x(self, str, speed, ranger, shifter, modifier):
+    def _cri_x(self, str, speed, ranger, shifter, modifier, direction):
         sign = self.sign
         sign.clear()
         msg_bytes = SignPrinter.to_byte_array(str)
         offset = int((COLS - len(msg_bytes))/2)
+        multiplier = 1
+        if direction == 'right':
+            offset = COLS - offset
+            multiplier = -1
+            msg_bytes.reverse()
         for i,msgcol in enumerate(msg_bytes):
-            col = offset + i
+            col = offset + multiplier * i
             inb = msg_bytes[i]
             if inb == 0:
                 continue
@@ -61,16 +68,16 @@ class SignCommands:
     def lwipe(self, str, speed):
         sign = self.sign
         msg_bytes = SignPrinter.to_byte_array_full(str)
-        for i in range(0, COLS-2):
-            sign.col(i+2, msg_bytes[i])
+        for i in range(0, COLS-1):
+            sign.col(i+1, msg_bytes[i])
             time.sleep_ms(speed)
 
     # column-wise wipe in message from right
     def rwipe(self, str, speed):
         sign = self.sign
         msg_bytes = SignPrinter.to_byte_array_full(str)
-        for i in range(COLS-2, -1, -1):
-            sign.col(i+2, msg_bytes[i])
+        for i in range(COLS-1, -1, -1):
+            sign.col(i+1, msg_bytes[i])
             time.sleep_ms(speed)
 
     def mwoo(self, speed):
