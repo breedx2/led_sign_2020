@@ -57,6 +57,13 @@ class SignCommands:
                 sign.col(col, curb)
                 time.sleep_ms(speed)
 
+    def lwipe(self, str, speed):
+        sign = self.sign
+        msg_bytes = SignPrinter.to_byte_array_full(str)
+        for i in range(0, COLS-2):
+            sign.col(i+2, msg_bytes[i])
+            time.sleep_ms(speed)
+
     def mwoo(self, speed):
         sign = self.sign
         half = int(COLS/2)+1
