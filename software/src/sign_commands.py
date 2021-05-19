@@ -111,6 +111,18 @@ class SignCommands:
             sign.shift_right()
             time.sleep_ms(speed)
 
+    # shift in a byte from the left
+    def sil(self, byte_val):
+        sign = self.sign
+        sign.shift_right()
+        sign.col(2, byte_val)
+
+    # shift in a byte from the right
+    def sir(self, byte_val):
+        sign = self.sign
+        sign.shift_left()
+        sign.col(144, byte_val)
+
     # shift sign left num cols
     def sl(self, num, speed = 0):
         sign = self.sign

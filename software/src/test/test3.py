@@ -62,4 +62,15 @@ for i in range(0, 15):
     time.sleep_ms(150)
 
 sign.clear()
+p.left('shift in left')
+for i in [1,3,7,15,31,63,127]:
+    sc.sil(i)
+    time.sleep_ms(500)
+sign.clear()
+p.right('shift in right')
+for i in [127,63,31,15,7,3,1]:
+    sc.sir(i)
+    time.sleep_ms(500)
+
+sign.clear()
 p.center('_._.all done._._')
