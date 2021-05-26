@@ -1,4 +1,3 @@
-
 from font5x7 import font
 from sign import COLS
 
