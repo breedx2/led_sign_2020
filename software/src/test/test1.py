@@ -13,5 +13,6 @@ upd.start(mem)
 
 sc = SignCommands(sign)
 sc.clear()
-sc.center('hello')
-sc.dump()
+# sc.center('hello')
+# sc.dump()
+sc.krid('AND HERE COMES FUN')

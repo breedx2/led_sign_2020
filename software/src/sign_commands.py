@@ -109,6 +109,22 @@ class SignCommands:
                 offset = offset + 1
             offset = offset + len(glyph)
 
+    # char-wise roll in down at speed.
+    # TODO: add alignment, this currently assumes center.
+    def krid(self, str, speed = 35):
+        buff = SignPrinter.to_byte_array(str)
+        bufflen = len(buff)
+        sign = self.sign
+        offset = max(0,int((COLS - len(buff)) / 2))
+        for ch in str:
+            glyph = font[ ord(ch) - ord(' ')]
+            if ch is not ' ':
+                for row in range(0, 7):
+                    for glyphcol,colvalue in enumerate(glyph):
+                        sign.col(offset+glyphcol, colvalue >> (6-row))
+                    time.sleep_ms(speed)
+                offset = offset + 1
+            offset = offset + len(glyph)
 
     # column-wise wipe in message from left
     def lwipe(self, str, speed):
