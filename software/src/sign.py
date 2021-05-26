@@ -45,6 +45,9 @@ class Sign:
             rownum = rownum + 1
         return result
 
+    def get_row(self, row):
+        return self.memory[row]
+
     @micropython.native
     def _col_to_index(self, col):
         # TODO: probably nudge/offset corrections

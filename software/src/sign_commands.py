@@ -1,13 +1,29 @@
 import time
+import binascii
 from micropython_lib_random import shuffle
 from sign import COLS
-from sign_memory import clear_row
+from sign_memory import clear_row, ROWBUFF_LEN
 from sign_printer import SignPrinter
 
 class SignCommands:
     def __init__(self, sign):
         self.sign = sign
         self.printer = SignPrinter(sign)
+
+    def center(self, str):
+        self.printer.center(str)
+
+    def left(self, str):
+        self.printer.left(str)
+
+    def right(self, str):
+        self.printer.right(str)
+
+    def clear(self):
+        self.sign.clear()
+
+    def invert(self):
+        self.sign.invert()
 
     # wipe screen clear from left at speed
     def clwipe(self, speed):
@@ -64,6 +80,16 @@ class SignCommands:
                     curb = modifier(curb)
                 sign.col(col, curb)
                 time.sleep_ms(speed)
+
+    # returns a hex containing the raw sign memory
+    def dump(self):
+        result = bytearray(7*ROWBUFF_LEN)
+        sign = self.sign
+        for rownum in range(0, 7):
+            row = sign  .get_row(rownum)
+            offset = ROWBUFF_LEN*rownum
+            result[offset:offset+ROWBUFF_LEN] = row
+        return binascii.hexlify(result).decode('ascii')
 
     # column-wise wipe in message from left
     def lwipe(self, str, speed):
