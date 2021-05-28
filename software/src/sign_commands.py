@@ -127,6 +127,36 @@ class SignCommands:
                 offset = offset + 1
             offset = offset + len(glyph)
 
+    # lazer scanner baby, cheese city
+    # poorly inspired by the "TANNING INVITATIONAL" pool party lazer text in real genius
+    def lazr(self, str):
+        sign = self.sign
+        sign.clear()
+        buff = SignPrinter.to_byte_array(str)
+        bufflen = len(buff)
+        offset = max(0,int((COLS - len(buff)) / 2))
+        def swipe_pass(speed):
+            h = int(bufflen/2)
+            for i in range(0,h):
+                sign.col(offset+i, buff[i])
+                sign.col(offset+i+h, buff[i+h] ^ 0xFF)
+                sign.col(offset+bufflen-1-i, buff[bufflen-1-i])
+                sign.col(offset+bufflen-1-h-i, buff[bufflen-1-h-i] ^ 0xFF)
+                time.sleep_ms(speed)
+                sign.col(offset+i, 0)
+                sign.col(offset+i+h, 0)
+                sign.col(offset+bufflen-1-i, 0)
+                sign.col(offset+bufflen-1-h-i, 0)
+        for t in [7,7,5,5,5,3,3,2,2,1]:
+            swipe_pass(t)
+        for i in [2, 1]:
+            for j in range(0,4):
+                self.printer.center(str)
+                time.sleep_ms(13*i)
+                self.printer.clear()
+                time.sleep_ms(13*i)
+        self.printer.center(str)
+
     # column-wise wipe in message from left
     def lwipe(self, str, speed):
         sign = self.sign
