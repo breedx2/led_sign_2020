@@ -174,6 +174,7 @@ class SignCommands:
             time.sleep_ms(speed)
 
     # message shift in left (from the right)
+    # TODO: This wastes RAM, if we did it char-wise we wouldn't have to pre-buffer the whole message
     def msl(self, str, speed = 35):
         sign = self.sign
         msg_bytes = SignPrinter.to_byte_array_full(str)
