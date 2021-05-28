@@ -167,7 +167,6 @@ class SignCommands:
 
     # column-wise wipe in message from right
     def rwipe(self, str, speed):
-        sign = self.sign
         msg_bytes = SignPrinter.to_byte_array_full(str)
         for i in range(COLS-1, -1, -1):
             sign.col(i+1, msg_bytes[i])
@@ -176,29 +175,26 @@ class SignCommands:
     # message shift in left (from the right)
     # TODO: This wastes RAM, if we did it char-wise we wouldn't have to pre-buffer the whole message
     def msl(self, str, speed = 35):
-        sign = self.sign
         msg_bytes = SignPrinter.to_byte_array_full(str)
-        for col in msg_bytes:
-            sign.shift_left()
-            sign.col(COLS-1, col)
-            time.sleep_ms(speed)
-        for x in range(0, COLS):
-            sign.shift_left()
-            time.sleep_ms(speed)
+        self._message_shifter(msg_bytes, lambda sign: sign.shift_left(), COLS-1, speed)
 
     # message shift in right (from the left)
     # TODO: This wastes RAM, if we did it char-wise we wouldn't have to pre-buffer the whole message
     def msr(self, str, speed = 35):
-        sign = self.sign
         msg_bytes = SignPrinter.to_byte_array_full(str)
         msg_bytes.reverse()
+        self._message_shifter(msg_bytes, lambda sign: sign.shift_right(), 0, speed)
+
+    def _message_shifter(self, msg_bytes, shift_fn, col_addr, speed):
+        sign = self.sign
         for col in msg_bytes:
-            sign.shift_right()
-            sign.col(0, col)
+            shift_fn(sign)
+            sign.col(col_addr, col)
             time.sleep_ms(speed)
         for x in range(0, COLS):
-            sign.shift_right()
+            shift_fn(sign)
             time.sleep_ms(speed)
+
 
     def mwoo(self, speed):
         sign = self.sign
