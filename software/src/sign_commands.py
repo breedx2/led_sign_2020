@@ -93,19 +93,29 @@ class SignCommands:
         return binascii.hexlify(result).decode('ascii')
 
     # char-wise roll in up at speed.
-    # TODO: add alignment, this currently assumes center.
     def kriu(self, str, speed = 35):
-        self._kri(str, speed, lambda col,row: col << (6-row))
+        self._roll_chars(str, speed, lambda col,row: col << (6-row))
 
     # char-wise roll in down at speed.
-    # TODO: add alignment, this currently assumes center.
     def krid(self, str, speed = 35):
-        self._kri(str, speed, lambda col,row: col >> (6-row))
+        self._roll_chars(str, speed, lambda col,row: col >> (6-row))
 
-    def _kri(self, str, speed, colmaker):
+    # char-wise roll out down at speed
+    def krod(self, str, speed = 35):
+        self.printer.center(str)
+        self._roll_chars(str, speed, lambda col,row: col << (row+1))
+
+    # char-wise roll out down at speed
+    def krou(self, str, speed = 35):
+        self.printer.center(str)
+        self._roll_chars(str, speed, lambda col,row: col >> (row+1))
+
+    # Char-wise column roller.
+    # TODO: add alignment, this currently assumes center
+    def _roll_chars(self, str, speed, colmaker):
+        sign = self.sign
         buff = SignPrinter.to_byte_array(str)
         bufflen = len(buff)
-        sign = self.sign
         offset = max(0,int((COLS - len(buff)) / 2))
         for ch in str:
             glyph = font[ ord(ch) - ord(' ')]
