@@ -173,6 +173,18 @@ class SignCommands:
             sign.col(i+1, msg_bytes[i])
             time.sleep_ms(speed)
 
+    # message shift in left (from the right)
+    def msl(self, str, speed = 35):
+        sign = self.sign
+        msg_bytes = SignPrinter.to_byte_array_full(str)
+        for col in msg_bytes:
+            sign.shift_left()
+            sign.col(COLS-1, col)
+            time.sleep_ms(speed)
+        for x in range(0, COLS):
+            sign.shift_left()
+            time.sleep_ms(speed)
+
     def mwoo(self, speed):
         sign = self.sign
         half = int(COLS/2)+1
