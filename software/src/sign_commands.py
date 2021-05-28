@@ -186,6 +186,20 @@ class SignCommands:
             sign.shift_left()
             time.sleep_ms(speed)
 
+    # message shift in right (from the left)
+    # TODO: This wastes RAM, if we did it char-wise we wouldn't have to pre-buffer the whole message
+    def msr(self, str, speed = 35):
+        sign = self.sign
+        msg_bytes = SignPrinter.to_byte_array_full(str)
+        msg_bytes.reverse()
+        for col in msg_bytes:
+            sign.shift_right()
+            sign.col(0, col)
+            time.sleep_ms(speed)
+        for x in range(0, COLS):
+            sign.shift_right()
+            time.sleep_ms(speed)
+
     def mwoo(self, speed):
         sign = self.sign
         half = int(COLS/2)+1
