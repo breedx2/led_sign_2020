@@ -12,19 +12,22 @@ class SignPrinter:
         return self
 
     def left(self, msg):
-        buff = SignPrinter.to_byte_array(msg)
-        self._print(buff, 2) # first 2 columns are unaddressable
-
-    def center(self, msg):
-        # buff = SignPrinter.to_byte_array(msg)
         buff = self.screen_buff
         len = SignPrinter.write_byte_array(msg, buff)
         index = max(0,int((COLS - len) / 2))
-        self._print(buff, index, len)
+        self.sign.blit(2, buff, len) # first 2 columns are unaddressable
+
+    def center(self, msg):
+        buff = self.screen_buff
+        len = SignPrinter.write_byte_array(msg, buff)
+        index = max(0,int((COLS - len) / 2))
+        self.sign.blit(index, buff, len)
 
     def right(self, msg):
-        buff = SignPrinter.to_byte_array(msg)
-        self._print(buff, COLS - len(buff))
+        buff = self.screen_buff
+        len = SignPrinter.write_byte_array(msg, buff)
+        index = max(0,int((COLS - len) / 2))
+        self.sign.blit(COLS-len, buff, len) # first 2 columns are unaddressable
 
     def char_at_pos(self, ch, pos):
         glyph_cols = glyph(ch)
@@ -54,7 +57,7 @@ class SignPrinter:
         buff = []
         for i,ch in enumerate(msg):
             glyph_cols = glyph(ch)
-            buff.extend(cols)
+            buff.extend(glyph_cols)
             if(ch != ' ' and i < len(msg)-1):
                 buff.append(0) # gap in between chars (kerning)
         return buff
