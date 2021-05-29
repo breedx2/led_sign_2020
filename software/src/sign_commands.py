@@ -195,7 +195,6 @@ class SignCommands:
             shift_fn(sign)
             time.sleep_ms(speed)
 
-
     def mwoo(self, speed):
         sign = self.sign
         half = int(COLS/2)+1
@@ -324,6 +323,20 @@ class SignCommands:
             time.sleep_ms(speed)
             sign.all_off()
             time.sleep_ms(speed)
+
+    def throb(self, direction = 'cw', pos = int(COLS/2)-2, clear = False, speed = 50, revolutions = 10):
+        sign = self.sign
+        if clear:
+            sign.clear()
+        for ct in range(0,revolutions):
+            chars = ['|', '/', '-', '\\']
+            if direction is not 'cw':
+                chars.reverse()
+            for ch in chars:
+                glyph = font[ ord(ch) - ord(' ')]
+                sign.blit(pos, glyph)
+                time.sleep_ms(speed)
+        sign.blit(pos, font[0])
 
     # display message word-wise in center of display
     def mwc(self, str, speed = 50):
