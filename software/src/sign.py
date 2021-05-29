@@ -54,10 +54,10 @@ class Sign:
         # maybe this should return byte offset and bit index both?
         return int(col/8)
 
-    def blit(self, index, cols):
+    def blit(self, index, cols, len):
         """copies some columns in at an index"""
         for i,col in enumerate(cols):
-            if i >= COLS:
+            if i >= len:
                 return self
             self.col(index+i, col)
         return self

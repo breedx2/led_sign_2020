@@ -1,10 +1,11 @@
-from font5x7 import font
+from font5x7 import glyph
 from sign import COLS
 
 class SignPrinter:
     """Writes basic static text messages to the sign memory"""
     def __init__(self, sign):
         self.sign = sign
+        self.screen_buff = bytearray(COLS)
 
     def clear(self):
         self.sign.clear()
@@ -15,22 +16,45 @@ class SignPrinter:
         self._print(buff, 2) # first 2 columns are unaddressable
 
     def center(self, msg):
-        buff = SignPrinter.to_byte_array(msg)
-        index = max(0,int((COLS - len(buff)) / 2))
-        self._print(buff, index)
+        # buff = SignPrinter.to_byte_array(msg)
+        buff = self.screen_buff
+        len = SignPrinter.write_byte_array(msg, buff)
+        index = max(0,int((COLS - len) / 2))
+        self._print(buff, index, len)
 
     def right(self, msg):
         buff = SignPrinter.to_byte_array(msg)
         self._print(buff, COLS - len(buff))
 
-    def _print(self, buff, index):
-        self.sign.blit(index, buff)
+    def char_at_pos(self, ch, pos):
+        glyph_cols = glyph(ch)
+        self.sign.blit(pos, glyph_cols, len(glyph_cols))
 
+    def _print(self, buff, index, len):
+        self.sign.blit(index, buff, len)
+
+    # writes the given message to the buff.
+    # assumes that the buff is large enough to hold it
+    def write_byte_array(msg, buff):
+        offset = 0
+        for i,ch in enumerate(msg):
+            glyph_cols = glyph(ch)
+            glyph_len = len(glyph_cols)
+            buff[offset:offset+glyph_len] = glyph_cols
+            offset = offset + glyph_len
+            if(ch != ' ' and i < len(msg)-1):
+                buff[offset] = 0x00
+                offset = offset + 1
+            if(offset >= len(buff)):
+                return len(buff)
+        return offset
+
+    # deprecated! this allocates memory, use the other one
     def to_byte_array(msg):
         buff = []
         for i,ch in enumerate(msg):
-            glyph = font[ ord(ch) - ord(' ')]
-            buff.extend(glyph)
+            glyph_cols = glyph(ch)
+            buff.extend(cols)
             if(ch != ' ' and i < len(msg)-1):
                 buff.append(0) # gap in between chars (kerning)
         return buff

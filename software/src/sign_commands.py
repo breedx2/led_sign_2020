@@ -4,7 +4,7 @@ from micropython_lib_random import shuffle
 from sign import COLS
 from sign_memory import clear_row, ROWBUFF_LEN
 from sign_printer import SignPrinter
-from font5x7 import font
+from font5x7 import glyph
 import datetime
 
 class SignCommands:
@@ -328,6 +328,7 @@ class SignCommands:
 
     def throb(self, direction = 'cw', pos = int(COLS/2)-2, clear = False, speed = 50, revolutions = 10):
         sign = self.sign
+        printer = self.printer
         if clear:
             sign.clear()
         for ct in range(0,revolutions):
@@ -335,10 +336,11 @@ class SignCommands:
             if direction is not 'cw':
                 chars.reverse()
             for ch in chars:
-                glyph = font[ ord(ch) - ord(' ')]
-                sign.blit(pos, glyph)
+                printer.char_at_pos(ch, pos)
+                # glyph_cols = glyph(ch)
+                # sign.blit(pos, glyph, len(glyph_cols))
                 time.sleep_ms(speed)
-        sign.blit(pos, font[0])
+        printer.char_at_pos(' ', pos);
 
     def time(self, seconds = 10):
         self.sign.clear()

@@ -21,7 +21,7 @@ sc.clear()
 # offset = len('LONG CONTENT ')*6-2
 length = 6*len('Sun Jan 01 00:00:00')-3
 buff = bytearray(length)
-for i in range(0,100):
+for i in range(0,15):
     # SignPrinter.to_byte_array2('this thing %d' % (i))
     # x = 'this thing %d' % (i))
     # print('doing asctime %i'%(i))
