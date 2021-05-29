@@ -183,27 +183,46 @@ class SignCommands:
             time.sleep_ms(speed)
 
     # message shift in left (from the right)
-    # TODO: This wastes RAM, if we did it char-wise we wouldn't have to pre-buffer the whole message
     def msl(self, str, speed = 35):
-        msg_bytes = SignPrinter.to_byte_array_full(str)
-        self._message_shifter(msg_bytes, lambda sign: sign.shift_left(), COLS-1, speed)
+        def char_gen(): # character generator
+            for i,ch in enumerate(str):
+                yield [i,ch]
+        def col_gen(ch):
+            glyph_cols = glyph(ch)
+            for col in glyph_cols:
+                yield col
+        shifter = lambda sign: sign.shift_left()
+        self._message_shifter(char_gen, col_gen, shifter, COLS-1, speed)
 
     # message shift in right (from the left)
-    # TODO: This wastes RAM, if we did it char-wise we wouldn't have to pre-buffer the whole message
     def msr(self, str, speed = 35):
-        msg_bytes = SignPrinter.to_byte_array_full(str)
-        msg_bytes.reverse()
-        self._message_shifter(msg_bytes, lambda sign: sign.shift_right(), 0, speed)
+        def char_gen():
+            for i in range(len(str)-1, -1, -1):
+                yield [i,str[i]]
+        def col_gen(ch):
+            glyph_cols = glyph(ch)
+            for i in range(len(glyph_cols)-1, -1, -1):
+                yield glyph_cols[i]
+        shifter = lambda sign: sign.shift_right()
+        self._message_shifter(char_gen, col_gen, shifter, 0, speed)
 
-    def _message_shifter(self, msg_bytes, shift_fn, col_addr, speed):
+    # char_gen is a generator that produces each char in order
+    # col_gen produces the columns for a given char in order
+    # shift_fn is the shift function
+    def _message_shifter(self, char_gen, col_gen, shift_fn, col_addr, speed):
         sign = self.sign
-        for col in msg_bytes:
-            shift_fn(sign)
-            sign.col(col_addr, col)
-            time.sleep_ms(speed)
+        for i,ch in char_gen():
+            for col in col_gen(ch):
+                shift_fn(sign)
+                sign.col(col_addr, col)
+                time.sleep_ms(speed)
+            if(ch != ' '):
+                shift_fn(sign)
+                time.sleep_ms(speed)
         for x in range(0, COLS):
             shift_fn(sign)
             time.sleep_ms(speed)
+
 
     def mwoo(self, speed):
         sign = self.sign
