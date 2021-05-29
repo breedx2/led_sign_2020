@@ -5,6 +5,7 @@ from sign import COLS
 from sign_memory import clear_row, ROWBUFF_LEN
 from sign_printer import SignPrinter
 from font5x7 import font
+import datetime
 
 class SignCommands:
     def __init__(self, sign):
@@ -167,6 +168,7 @@ class SignCommands:
 
     # column-wise wipe in message from right
     def rwipe(self, str, speed):
+        sign = self.sign
         msg_bytes = SignPrinter.to_byte_array_full(str)
         for i in range(COLS-1, -1, -1):
             sign.col(i+1, msg_bytes[i])
@@ -337,6 +339,14 @@ class SignCommands:
                 sign.blit(pos, glyph)
                 time.sleep_ms(speed)
         sign.blit(pos, font[0])
+
+    def time(self, seconds = 10):
+        self.sign.clear()
+        printer = self.printer
+        for i in range(0,seconds):
+            str = datetime.asctime()
+            printer.center(str)
+            time.sleep(1)
 
     # display message word-wise in center of display
     def mwc(self, str, speed = 50):

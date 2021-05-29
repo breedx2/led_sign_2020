@@ -98,3 +98,10 @@ font = [
     [0x08, 0x08, 0x2A, 0x1C, 0x08], # ->
     [0x08, 0x1C, 0x2A, 0x08, 0x08]  # <-
 ]
+
+def glyph(ch):
+    return font[ord(ch) - ord(' ')]
+
+# must be between 0 and 9
+def digit(single_digit):
+    return font[ord('0') - ord(' ') + single_digit]
