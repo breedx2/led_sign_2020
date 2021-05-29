@@ -50,6 +50,8 @@ class SignPrinter:
             if(ch != ' ' and i < len(msg)-1 and offset < bufflen):
                 buff[offset] = 0x00
                 offset = offset + 1
+            if(ch == ' '):
+                offset = offset - 1
             if(offset >= bufflen):
                 return bufflen
         return offset

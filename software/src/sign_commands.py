@@ -334,13 +334,14 @@ class SignCommands:
     # roll message in upwards
     def riu(self, str, speed = 50):
         sign = self.sign
-        msg_bytes = SignPrinter.to_byte_array_full(str)
+        buff = self.screen_buff
+        msglen = self.printer.fill_signbuff(str, buff)
         for row in range(6, -1, -1):
             sign.roll_up(clear_row)
             mask = 1 << ( 6 - row)
             for col in range(0, COLS-2):
                 # print('col %d' % (col))
-                if col < len(msg_bytes) and (msg_bytes[col] & mask):
+                if (buff[col] & mask):
                     sign.on(col+2, 6)
                 else:
                     sign.off(col+2, 6)
