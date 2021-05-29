@@ -134,10 +134,10 @@ class SignCommands:
     # poorly inspired by the "TANNING INVITATIONAL" pool party lazer text in real genius
     def lazr(self, str):
         sign = self.sign
+        buff = self.screen_buff
         sign.clear()
-        buff = SignPrinter.to_byte_array(str)
-        bufflen = len(buff)
-        offset = max(0,int((COLS - len(buff)) / 2))
+        bufflen = SignPrinter.write_byte_array(str, buff)
+        offset = max(0,int((COLS - bufflen) / 2))
         def swipe_pass(speed):
             h = int(bufflen/2)
             for i in range(0,h):
