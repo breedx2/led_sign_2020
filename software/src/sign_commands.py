@@ -11,6 +11,7 @@ class SignCommands:
     def __init__(self, sign):
         self.sign = sign
         self.printer = SignPrinter(sign)
+        self.screen_buff = bytearray(COLS)
 
     def center(self, str):
         self.printer.center(str)
@@ -42,7 +43,7 @@ class SignCommands:
             time.sleep_ms(speed)
 
     # column-wise roll in down. clears sign first.
-    def crid(self, str, speed, direction = 'left'):
+    def crid(self, str, speed = 25, direction = 'left'):
         self._cri_x(str, speed,
             lambda: range(0, 7),
             lambda x: x << 1,
@@ -51,7 +52,7 @@ class SignCommands:
         )
 
     # column-wise roll in up. clears sign first.
-    def criu(self, str, speed, direction = 'left'):
+    def criu(self, str, speed = 25, direction = 'left'):
         self._cri_x(str, speed,
             lambda: range(6, -1, -1),
             lambda x: x >> 1,
@@ -62,18 +63,19 @@ class SignCommands:
     # column-wise roll in, handles either direction. clears sign first.
     def _cri_x(self, str, speed, ranger, shifter, modifier, direction):
         sign = self.sign
+        buff = self.screen_buff
         sign.clear()
-        msg_bytes = SignPrinter.to_byte_array(str)
-        offset = int((COLS - len(msg_bytes))/2)
-        multiplier = 1
+        len = SignPrinter.write_byte_array(str, buff)
+        offset = int((COLS - len)/2)
+        if(offset < 2):
+            offset = 2
+        buff_indexes = range(0, min(len,COLS))
         if direction == 'right':
-            offset = COLS - offset
-            multiplier = -1
-            msg_bytes.reverse()
-        for i,msgcol in enumerate(msg_bytes):
-            col = offset + multiplier * i
-            inb = msg_bytes[i]
-            if inb == 0:
+            buff_indexes = range(min(len,COLS)-1, -1, -1)
+        for i in buff_indexes:
+            col = offset + i
+            inb = buff[i]
+            if inb == 0: # don't bother with spaces/blank cols
                 continue
             curb = 0
             for row in ranger():
