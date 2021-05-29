@@ -287,11 +287,13 @@ class SignCommands:
     # random transition (fade in)
     def randt(self, str, speed = 10):
         sign = self.sign
-        msg_bytes = SignPrinter.to_byte_array_full(str)
+        buff = self.screen_buff
+        self.printer.fill_signbuff(str, buff)
+        # TODO: switch to bytearray(?) and preallocate?
         remaining = []
         for i in range(0, COLS):
             cur_col = sign.get_col(i)
-            new_col = msg_bytes[i]
+            new_col = buff[i]
             for j in range(0, 7):
                 bm = (1 << j)
                 if (cur_col & bm) and not (new_col & bm):
