@@ -117,18 +117,18 @@ class SignCommands:
     # TODO: add alignment, this currently assumes center
     def _roll_chars(self, str, speed, colmaker):
         sign = self.sign
-        buff = SignPrinter.to_byte_array(str)
-        bufflen = len(buff)
-        offset = max(0,int((COLS - len(buff)) / 2))
+        buff = self.screen_buff
+        bufflen = SignPrinter.write_byte_array(str, buff)
+        offset = max(0,int((COLS - bufflen) / 2))
         for ch in str:
-            glyph = font[ ord(ch) - ord(' ')]
+            glyph_cols = glyph(ch)
             if ch is not ' ':
                 for row in range(0, 7):
-                    for glyphcol,colvalue in enumerate(glyph):
+                    for glyphcol,colvalue in enumerate(glyph_cols):
                         sign.col(offset+glyphcol, colmaker(colvalue,row))
                     time.sleep_ms(speed)
                 offset = offset + 1
-            offset = offset + len(glyph)
+            offset = offset + len(glyph_cols)
 
     # lazer scanner baby, cheese city
     # poorly inspired by the "TANNING INVITATIONAL" pool party lazer text in real genius
