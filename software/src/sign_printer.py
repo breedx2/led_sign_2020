@@ -56,27 +56,6 @@ class SignPrinter:
                 return bufflen
         return offset
 
-    # deprecated! this allocates memory, use the other one
-    def to_byte_array(msg):
-        buff = []
-        for i,ch in enumerate(msg):
-            glyph_cols = glyph(ch)
-            buff.extend(glyph_cols)
-            if(ch != ' ' and i < len(msg)-1):
-                buff.append(0) # gap in between chars (kerning)
-        return buff
-
-    # Just like the above, but returns an array full sign width
-    # deprecated, use the below
-    def to_byte_array_full(msg, align = 'center'):
-        buff = SignPrinter.to_byte_array(msg)
-        # TODO: Use the alignment
-        delta = (COLS - len(buff))/2
-        for i in range(0,delta):
-            buff.insert(0, 0)
-            buff.append(0)
-        return buff
-
     # Fills a buffer that's full sign width with the message
     # Returns the actual inner content length, not the buffer length
     # TODO: Use alignment
