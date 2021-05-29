@@ -164,7 +164,7 @@ class SignCommands:
     def lwipe(self, str, speed = 35):
         sign = self.sign
         buff = self.screen_buff
-        msglen = self.printer.fill_signbuff(str, buff)
+        self.printer.fill_signbuff(str, buff)
         for i in range(2, COLS):
             if buff[i-2] == 0x00 and sign.get_col(i) == 0x00:
                 continue
@@ -175,7 +175,7 @@ class SignCommands:
     def rwipe(self, str, speed = 35):
         sign = self.sign
         buff = self.screen_buff
-        msglen = self.printer.fill_signbuff(str, buff)
+        self.printer.fill_signbuff(str, buff)
         for i in range(COLS-2, -1, -1):
             if buff[i] == 0x00 and sign.get_col(i+2) == 0x00:
                 continue
@@ -316,17 +316,16 @@ class SignCommands:
     def rou(self, speed = 50):
         SignCommands._all_rows(lambda row: self.sign.roll_up(clear_row), speed)
 
-    # roll message in upwards
-    # TODO: should take a full size col array here instead of string or ?
+    # roll message in downwards
     def rid(self, str, speed = 50):
         sign = self.sign
-        msg_bytes = SignPrinter.to_byte_array_full(str)
+        buff = self.screen_buff
+        msglen = self.printer.fill_signbuff(str, buff)
         for row in range(0, 7):
             sign.roll_down(clear_row)
             mask = 1 << (6 - row)
             for col in range(0, COLS-2):
-                # print('col %d' % (col))
-                if col < len(msg_bytes) and (msg_bytes[col] & mask):
+                if (buff[col] & mask):
                     sign.on(col+2, 0)
                 else:
                     sign.off(col+2, 0)

@@ -86,4 +86,4 @@ class SignPrinter:
         # TODO: Use the alignment
         offset = int((COLS - msglen)/2)
         buff[offset:offset+msglen] = tmpbuff[0:msglen]
-        return len
+        return msglen
