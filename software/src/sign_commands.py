@@ -174,9 +174,12 @@ class SignCommands:
     # column-wise wipe in message from right
     def rwipe(self, str, speed = 35):
         sign = self.sign
-        msg_bytes = SignPrinter.to_byte_array_full(str)
-        for i in range(COLS-1, -1, -1):
-            sign.col(i+1, msg_bytes[i])
+        buff = self.screen_buff
+        msglen = self.printer.fill_signbuff(str, buff)
+        for i in range(COLS-2, -1, -1):
+            if buff[i] == 0x00 and sign.get_col(i+2) == 0x00:
+                continue
+            sign.col(i+2, buff[i])
             time.sleep_ms(speed)
 
     # message shift in left (from the right)
