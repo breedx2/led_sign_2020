@@ -28,7 +28,7 @@ class SignPrinter:
         buff = self.screen_buff
         msglen = SignPrinter.write_byte_array(msg, buff)
         index = max(0,int((COLS - msglen) / 2))
-        self.sign.blit(COLS-len, buff, msglen) # first 2 columns are unaddressable
+        self.sign.blit(COLS-msglen, buff, msglen) # first 2 columns are unaddressable
 
     def char_at_pos(self, ch, pos):
         glyph_cols = glyph(ch)
