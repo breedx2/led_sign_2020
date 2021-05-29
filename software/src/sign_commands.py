@@ -65,13 +65,13 @@ class SignCommands:
         sign = self.sign
         buff = self.screen_buff
         sign.clear()
-        len = SignPrinter.write_byte_array(str, buff)
-        offset = int((COLS - len)/2)
+        msglen = SignPrinter.write_byte_array(str, buff)
+        offset = int((COLS - msglen)/2)
         if(offset < 2):
             offset = 2
-        buff_indexes = range(0, min(len,COLS))
+        buff_indexes = range(0, min(msglen,COLS))
         if direction == 'right':
-            buff_indexes = range(min(len,COLS)-1, -1, -1)
+            buff_indexes = range(min(msglen,COLS)-1, -1, -1)
         for i in buff_indexes:
             col = offset + i
             inb = buff[i]
@@ -161,15 +161,18 @@ class SignCommands:
         self.printer.center(str)
 
     # column-wise wipe in message from left
-    def lwipe(self, str, speed):
+    def lwipe(self, str, speed = 35):
         sign = self.sign
-        msg_bytes = SignPrinter.to_byte_array_full(str)
-        for i in range(0, COLS-1):
-            sign.col(i+1, msg_bytes[i])
+        buff = self.screen_buff
+        msglen = self.printer.fill_signbuff(str, buff)
+        for i in range(2, COLS):
+            if buff[i-2] == 0x00 and sign.get_col(i) == 0x00:
+                continue
+            sign.col(i, buff[i-2])
             time.sleep_ms(speed)
 
     # column-wise wipe in message from right
-    def rwipe(self, str, speed):
+    def rwipe(self, str, speed = 35):
         sign = self.sign
         msg_bytes = SignPrinter.to_byte_array_full(str)
         for i in range(COLS-1, -1, -1):
@@ -287,7 +290,7 @@ class SignCommands:
 
     # roll off down
     def rou(self, speed = 50):
-        SignCommands._all_rows(lambda row: self.sign.roll_up(clear_row), speed);
+        SignCommands._all_rows(lambda row: self.sign.roll_up(clear_row), speed)
 
     # roll message in upwards
     # TODO: should take a full size col array here instead of string or ?
@@ -342,7 +345,7 @@ class SignCommands:
                 # glyph_cols = glyph(ch)
                 # sign.blit(pos, glyph, len(glyph_cols))
                 time.sleep_ms(speed)
-        printer.char_at_pos(' ', pos);
+        printer.char_at_pos(' ', pos)
 
     def time(self, seconds = 10):
         self.sign.clear()
