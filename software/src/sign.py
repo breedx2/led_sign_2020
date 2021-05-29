@@ -22,7 +22,7 @@ class Sign:
         while rownum < 7:
             row = rows[rownum]
             # print("before => %s" %(hex(row[byteoff])))
-            # print("value & mask : %s" %(hex(value & mask)));
+            # print("value & mask : %s" %(hex(value & mask)))
             if value & (1<<rownum):
                 row[byteoff] = row[byteoff] | mask
             else:

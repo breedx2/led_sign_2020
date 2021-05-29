@@ -10,7 +10,7 @@ import sign_hardware as hw
 # ROW_SLEEP_MS = 5
 
 _rownum = 0
-_rowtimer = Timer(0);
+_rowtimer = Timer(0)
 
 def start(memory):
     global _rowtimer

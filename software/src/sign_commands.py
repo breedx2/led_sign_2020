@@ -128,6 +128,8 @@ class SignCommands:
                         sign.col(offset+glyphcol, colmaker(colvalue,row))
                     time.sleep_ms(speed)
                 offset = offset + 1
+            if ch is ' ':
+                offset = offset - 1
             offset = offset + len(glyph_cols)
 
     # lazer scanner baby, cheese city

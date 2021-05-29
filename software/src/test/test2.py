@@ -6,7 +6,7 @@ from machine import Timer, Pin, disable_irq, enable_irq
 # Use a timer to toggle a pin with/out wifi
 
 _wlan = network.WLAN(network.STA_IF)
-_tmr = Timer(2);
+_tmr = Timer(2)
 pin = Pin(32, Pin.OUT, value=0)
 v = 0x01
 
