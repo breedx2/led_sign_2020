@@ -6,6 +6,7 @@ from sign_memory import clear_row, ROWBUFF_LEN
 from sign_printer import SignPrinter
 from font5x7 import glyph
 import datetime
+import utime
 
 class SignCommands:
     def __init__(self, sign):
@@ -24,9 +25,11 @@ class SignCommands:
 
     def clear(self):
         self.sign.clear()
+        self.sign.buffer_flip()
 
     def invert(self):
         self.sign.invert()
+        self.sign.buffer_flip()
 
     # wipe screen clear from left at speed
     def clwipe(self, speed):
@@ -83,6 +86,7 @@ class SignCommands:
                 if inb & (1 << (6-row)):
                     curb = modifier(curb)
                 sign.col(col, curb)
+                sign.buffer_flip()
                 time.sleep_ms(speed)
 
     # returns a hex containing the raw sign memory
@@ -368,18 +372,23 @@ class SignCommands:
                 chars.reverse()
             for ch in chars:
                 printer.char_at_pos(ch, pos)
-                # glyph_cols = glyph(ch)
-                # sign.blit(pos, glyph, len(glyph_cols))
                 time.sleep_ms(speed)
         printer.char_at_pos(' ', pos)
 
     def time(self, seconds = 10):
-        self.sign.clear()
+        sign = self.sign
+        sign.clear()
         printer = self.printer
-        for i in range(0,seconds):
-            str = datetime.asctime()
-            printer.center(str)
-            time.sleep(1)
+        buff = memoryview(self.screen_buff)
+        for i in range(0,4*seconds):
+            # str = datetime.asctime()
+            datetime.asctime2(buff)
+            start = utime.ticks_us()
+            sign.blit2(0, buff, COLS)
+            delta = utime.ticks_diff(utime.ticks_us(), start)
+            print('blit delta = {:6.3f}ms'.format(delta/1000))
+            sign.buffer_flip()
+            time.sleep_ms(1000)
 
     # display message word-wise in center of display
     def mwc(self, str, speed = 50):

@@ -1,5 +1,6 @@
 from machine import Pin, SPI, SoftSPI, Timer
 import time
+import sign_memory
 
 # pin mappings
 _EN    = const(21)
@@ -50,6 +51,6 @@ def all_rows_off():
         row.off()
 
 @micropython.native
-def shift_row(rownum, memory):
+def shift_row(row):
     global _spi
-    _spi.write(memory[rownum])
+    _spi.write(row)

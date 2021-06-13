@@ -14,6 +14,7 @@ def asctime():
 # Fills a buffer with a string formatted with the current date/time
 # but without using string formatting or concat.
 # Data is columnar
+@micropython.native
 def asctime2(buff):
     # length = 6*len('Sun Jan 01 00:00:00')-3
     # buff = bytearray(length)

@@ -3,12 +3,12 @@ import sign_hardware as hw
 from sign_printer import SignPrinter
 from sign_commands import SignCommands
 import sign_updater as upd
-import sign_memory
+from sign_buffers import Buffers
 import time
 
-mem = sign_memory.create()
-sign = Sign(mem)
-upd.start(mem)
+sb = Buffers()
+sign = Sign(sb)
+upd.start(sb)
 p = SignPrinter(sign)
 
 sc = SignCommands(sign)

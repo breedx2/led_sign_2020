@@ -8,7 +8,7 @@ import time
 from font5x7 import digit
 import datetime
 
-mem = sign_memory.create()
+mem = sign_memory.create_frame()
 sign = Sign(mem)
 upd.start(mem)
 

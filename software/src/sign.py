@@ -1,33 +1,37 @@
-from sign_memory import create, ROWBUFF_LEN
+from sign_memory import ROWBUFF_LEN, create_temp_row
+from sign_buffers import Buffers
+import time
+import utime
 
 COLS = const(145)
 
 class Sign:
     """A low level memory representation of the sign"""
 
-    def __init__(self, memory = create()):
-        # byte per column
-        self.memory = memory
+    def __init__(self, screen_buffers):
+        self.sb = screen_buffers
+
+    # @micropython.native
+    def buffer_flip(self):
+        self.sb.flip()
 
     @micropython.native
     def col(self, colnum, value):
         """sets an entire column value """
         rownum = 0
         realigned_col = colnum + 6
-        byteoff = self._col_to_index(realigned_col)
-        # print("byteoff => %d" % ( byteoff))
+        # realigned_col = colnum
+        # byteoff = self._col_to_index(realigned_col)
+        byteoff = int(realigned_col/8)
         mask = (1 << realigned_col % 8)
-        # print("mask = %s" %(hex(mask)))
-        rows = self.memory
         while rownum < 7:
-            row = rows[rownum]
-            # print("before => %s" %(hex(row[byteoff])))
-            # print("value & mask : %s" %(hex(value & mask)))
+            # row = self.get_row(rownum)
+            # row = self.sb.off_row(rownum)
+            row = self.sb.off_rows[rownum]
             if value & (1<<rownum):
                 row[byteoff] = row[byteoff] | mask
             else:
                 row[byteoff] = row[byteoff] & ~mask
-            # print("after => %s" %(hex(row[byteoff])))
             rownum = rownum + 1
         return self
 
@@ -37,36 +41,91 @@ class Sign:
         realigned_col = colnum + 6
         byteoff = self._col_to_index(realigned_col)
         mask = (1 << realigned_col % 8)
-        rows = self.memory
         while rownum < 7:
-            row = rows[rownum]
+            row = self.get_row(rownum)
             if row[byteoff] & mask:
                 result = result | (1<<rownum)
             rownum = rownum + 1
         return result
 
     def get_row(self, row):
-        return self.memory[row]
+        return self.sb.off_row(row)
 
-    @micropython.native
     def _col_to_index(self, col):
         # TODO: probably nudge/offset corrections
         # maybe this should return byte offset and bit index both?
         return int(col/8)
 
+    # @micropython.native
     def blit(self, index, cols, len):
         """copies some columns in at an index"""
-        for i,col in enumerate(cols):
-            if (i >= len) or (i + index >= COLS):
-                return self
-            self.col(index+i, col)
-        return self
+        off_rows = self.sb.off_rows
+        i = 0
+        while i < len and i + index < COLS:
+            # start = utime.ticks_us()
+
+            # self.col(index+i, cols[i])
+            realigned_col = index + i + 6
+            # realigned_col = colnum
+            # byteoff = self._col_to_index(realigned_col)
+            byteoff = int(realigned_col/8)
+            mask = (1 << realigned_col % 8)
+            value = cols[i]
+
+            while rownum < 7:
+                # row = self.get_row(rownum)
+                # row = self.sb.off_row(rownum)
+                row = off_rows[rownum]
+                if value & (1<<rownum):
+                    row[byteoff] = row[byteoff] | mask
+                else:
+                    row[byteoff] = row[byteoff] & ~mask
+                rownum = rownum + 1
+
+
+
+
+            # delta = utime.ticks_diff(utime.ticks_us(), start)
+            # print('  col delta = {:6.3f}ms'.format(delta/1000))
+            i = i + 1
+        # for i,col in enumerate(cols):
+        #     if (i >= len) or (i + index >= COLS):
+        #         return self
+        #     self.col(index+i, col)
+        # return self
+
+
+    # @micropython.native
+    def blit2(self, index, cols, len):
+        """copies some columns in at an index"""
+        off_rows = self.sb.off_rows
+
+        for rownum in range(0,7):
+            row = off_rows[rownum]
+            bytenum = int(index / 8)
+            byte = 0x00 # TODO: Could nullify existing bits on either end but prevents a read
+            # col_index = 0
+            colmask = 1 << rownum
+            while bytenum < ROWBUFF_LEN:
+                for bit_index in range(0,8):
+                    bitmask = 1 << bit_index
+                    col_index = 8 * bytenum + bit_index
+
+                    # print("row %d bytenum %d bit_index = %d col_index = %d" %(rownum, bytenum, bit_index, col_index))
+                    col = cols[col_index] if col_index < len else 0x00
+                    if col & colmask:
+                        byte = byte | bitmask
+                    else:
+                        byte = byte & ~bitmask
+                row[bytenum] = byte
+                bytenum = bytenum + 1
+            rownum = rownum + 1
 
     def on(self, col, rownum):
         """turns on a bit at col,row"""
         realigned_col = col + 6
         byteoff = self._col_to_index(realigned_col)
-        row = self.memory[rownum]
+        row = self.get_row(rownum)
         mask = (1 << realigned_col % 8)
         row[byteoff] = row[byteoff] | mask
         return self
@@ -75,7 +134,7 @@ class Sign:
         """turns off a bit at row,col"""
         realigned_col = col + 6
         byteoff = self._col_to_index(realigned_col)
-        row = self.memory[rownum]
+        row = self.get_row(rownum)
         mask = ~(1 << realigned_col % 8)
         row[byteoff] = row[byteoff] & mask
         return self
@@ -116,7 +175,7 @@ class Sign:
                 if roll and (nextindex < 0):
                     nextindex = ROWBUFF_LEN - 1
                 if nextindex >= 0:
-                    row = self.memory[r]
+                    row = self.get_row(r)
                     row[nextindex] = row[nextindex] | 0x80
             return result
         return op
@@ -129,11 +188,10 @@ class Sign:
                 if roll and (nextindex == ROWBUFF_LEN):
                     nextindex = 0
                 if nextindex < ROWBUFF_LEN:
-                    row = self.memory[r]
+                    row = self.get_row(r)
                     row[nextindex] = row[nextindex] | 0x01
             return result
         return op
-
 
     def _do_for_every_byte(self, op):
         def rowop(r, row):
@@ -153,31 +211,50 @@ class Sign:
 
     def _do_for_every_row(self, rowop):
         r = 0
-        memory = self.memory
         while(r < 7):
-            row = memory[r]
+            row = self.get_row(r)
             rowop(r, row)
             r = r + 1
         return self
 
     def roll_down(self, first_row_fn = lambda bot: bot):
-        mem = self.memory
-        b = mem[6]
-        mem[6] = mem[5]
-        mem[5] = mem[4]
-        mem[4] = mem[3]
-        mem[3] = mem[2]
-        mem[2] = mem[1]
-        mem[1] = mem[0]
-        mem[0] = first_row_fn(b)
+        mem = self.sb.off
+        row6 = self.get_row(6)
+        row5 = self.get_row(5)
+        row4 = self.get_row(4)
+        row3 = self.get_row(3)
+        row2 = self.get_row(2)
+        row1 = self.get_row(1)
+        row0 = self.get_row(0)
+
+        tmp = create_temp_row()
+        tmp[0:ROWBUFF_LEN] = row6[0:ROWBUFF_LEN]
+
+        row6[0:ROWBUFF_LEN] = row5[0:ROWBUFF_LEN]
+        row5[0:ROWBUFF_LEN] = row4[0:ROWBUFF_LEN]
+        row4[0:ROWBUFF_LEN] = row3[0:ROWBUFF_LEN]
+        row3[0:ROWBUFF_LEN] = row2[0:ROWBUFF_LEN]
+        row2[0:ROWBUFF_LEN] = row1[0:ROWBUFF_LEN]
+        row1[0:ROWBUFF_LEN] = row0[0:ROWBUFF_LEN]
+        row0[0:ROWBUFF_LEN] = first_row_fn(tmp)
 
     def roll_up(self, last_row_fn = lambda top: top):
-        mem = self.memory
-        t = mem[0]
-        mem[0] = mem[1]
-        mem[1] = mem[2]
-        mem[2] = mem[3]
-        mem[3] = mem[4]
-        mem[4] = mem[5]
-        mem[5] = mem[6]
-        mem[6] = last_row_fn(t)
+        mem = self.sb.off
+        row6 = self.get_row(6)
+        row5 = self.get_row(5)
+        row4 = self.get_row(4)
+        row3 = self.get_row(3)
+        row2 = self.get_row(2)
+        row1 = self.get_row(1)
+        row0 = self.get_row(0)
+
+        tmp = create_temp_row()
+        tmp[0:ROWBUFF_LEN] = row0[0:ROWBUFF_LEN]
+
+        row0[0:ROWBUFF_LEN] = row1[0:ROWBUFF_LEN]
+        row1[0:ROWBUFF_LEN] = row2[0:ROWBUFF_LEN]
+        row2[0:ROWBUFF_LEN] = row3[0:ROWBUFF_LEN]
+        row3[0:ROWBUFF_LEN] = row4[0:ROWBUFF_LEN]
+        row4[0:ROWBUFF_LEN] = row5[0:ROWBUFF_LEN]
+        row5[0:ROWBUFF_LEN] = row6[0:ROWBUFF_LEN]
+        row6[0:ROWBUFF_LEN] = last_row_fn(tmp)

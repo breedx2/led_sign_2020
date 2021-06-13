@@ -10,6 +10,7 @@ class SignPrinter:
 
     def clear(self):
         self.sign.clear()
+        self.sign.buffer_flip()
         return self
 
     def left(self, msg):
@@ -17,18 +18,29 @@ class SignPrinter:
         msglen = SignPrinter.write_byte_array(msg, buff)
         index = max(0,int((COLS - msglen) / 2))
         self.sign.blit(2, buff, msglen) # first 2 columns are unaddressable
+        self.sign.buffer_flip()
 
     def center(self, msg):
         buff = self.screen_buff
         msglen = SignPrinter.write_byte_array(msg, buff)
         index = max(0,int((COLS - msglen) / 2))
         self.sign.blit(index, buff, msglen)
+        self.sign.buffer_flip()
+        
+    @micropython.native
+    def center2(self, msg):
+        buff = self.screen_buff
+        msglen = SignPrinter.write_byte_array2(msg, buff)
+        # index = max(0,int((COLS - msglen) / 2))
+        # self.sign.blit(index, buff, msglen)
+        self.sign.buffer_flip()
 
     def right(self, msg):
         buff = self.screen_buff
         msglen = SignPrinter.write_byte_array(msg, buff)
         index = max(0,int((COLS - msglen) / 2))
         self.sign.blit(COLS-msglen, buff, msglen) # first 2 columns are unaddressable
+        self.sign.buffer_flip()
 
     def char_at_pos(self, ch, pos):
         glyph_cols = glyph(ch)
@@ -55,6 +67,16 @@ class SignPrinter:
             if(offset >= bufflen):
                 return bufflen
         return offset
+    def write_byte_array2(msg, buff):
+        msglen = len(msg)
+        for i in range(0, msglen):
+            # ch = 'a'
+            # pass
+            ch = msg[i]
+            # glyph_cols = glyph(msg[i])
+        # for i,ch in enumerate(msg):
+        #     pass
+        return 0
 
     # Fills a buffer that's full sign width with the message
     # Returns the actual inner content length, not the buffer length

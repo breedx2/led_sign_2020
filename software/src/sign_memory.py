@@ -1,17 +1,13 @@
 
 ROWBUFF_LEN = const(19)
-def create():
-    return [
-        bytearray(ROWBUFF_LEN),
-        bytearray(ROWBUFF_LEN),
-        bytearray(ROWBUFF_LEN),
-        bytearray(ROWBUFF_LEN),
-        bytearray(ROWBUFF_LEN),
-        bytearray(ROWBUFF_LEN),
-        bytearray(ROWBUFF_LEN)
-    ]
 
-def clear_row(row):
+def create_frame():
+    return bytearray(ROWBUFF_LEN * 7)
+
+# allocates a temp chunk the size of a row
+def create_temp_row():
+    return bytearray(ROWBUFF_LEN)
+
+def clear_row(buff, row_num):
     for i in range(0, ROWBUFF_LEN):
-        row[i] = 0x00
-    return row
+        buff[ROWBUFF_LEN * row_num + i] = 0x00
