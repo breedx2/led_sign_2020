@@ -8,13 +8,24 @@ it doesn't work out we'll try something lower level.
 
 # setup
 
+In some other directory, like `~/software` do
+
 ```
-$ virtualenv env
-$ source env/bin/activate
-$ pip install esptool adafruit-ampy
-$ esptool.py --port /dev/ttyUSB0 erase_flash
-$ esptool.py --chip esp32 --port /dev/ttyUSB0 write_flash -z 0x1000 firmware/esp32-idf3-20200902-v1.13.bin
+$ git clone -b v4.2.1 --recursive https://github.com/espressif/esp-idf.git
 ```
+
+And in this dir, should only have to do this once:
+```
+$ git submodule update --init --recursive
+```
+
+## dev setup
+
+each time you're ready to develop:
+
+`$ source ./dev-setup.sh`
+
+# misc
 
 To use the python REPL then on the device:
 `screen /dev/ttyUSB0 115200`
