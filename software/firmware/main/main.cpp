@@ -5,6 +5,6 @@ void setup(){
 }
 
 void loop(){
-	Serial.println("It is alive.");
+	Serial.println("It is alive. Die now.");
 	delay(500);
 }

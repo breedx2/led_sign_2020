@@ -3,8 +3,7 @@
 
 This is the software side of the vintage LED sign refresh.
 
-Going to try using [micropython](https://micropython.org/) for starters, if
-it doesn't work out we'll try something lower level.
+Micropython has failed us. Let's cpp with arduino libs now.
 
 # setup
 
@@ -27,7 +26,15 @@ each time you're ready to develop:
 
 # misc
 
-To use the python REPL then on the device:
+To compile/build:
+
+`idf.py build`
+
+To burn new firmware:
+
+`idf.py -p /dev/ttyUSB0 flash`
+
+To use the serial console:
 `screen /dev/ttyUSB0 115200`
 
 To upload a file to the device:
