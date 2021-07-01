@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <SPI.h>
+#include "sign_memory.h"
 #include "sign_hardware.h"
 
 // pin mappings
@@ -54,12 +55,12 @@ void disable_output(){
   digitalWrite(_EN, LOW);
 }
 
-void row_on(uint8_t row){
-  digitalWrite(row_pins[row-1], HIGH);
+void row_on(uint8_t rownum){
+  digitalWrite(row_pins[rownum], HIGH);
 }
 
-void row_off(uint8_t row){
-  digitalWrite(row_pins[row-1], LOW);
+void row_off(uint8_t rownum){
+  digitalWrite(row_pins[rownum], LOW);
 }
 
 void all_rows_off(){
@@ -72,6 +73,6 @@ void all_rows_off(){
   row_off(_C7);
 }
 
-void shift_row(uint8_t *row){
+void shift_row(SIGN_ROW row){
   spi.writeBytes(row, BYTES_PER_ROW);
 }
