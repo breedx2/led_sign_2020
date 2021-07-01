@@ -24,5 +24,11 @@ int loopcounter;
 
 void loop(){
   Serial.printf("LOOP %d chillin.\r\n", loopcounter++);
-	delay(500);
+  for(uint8_t i = 0; i < 7; i++){
+    SIGN_ROW row = get_mem_row(i);
+    for(uint8_t c = 0; c < BYTES_PER_ROW; c++){
+      row[c] = row[c] + i + 1;
+    }
+  }
+  delay(150);
 }
