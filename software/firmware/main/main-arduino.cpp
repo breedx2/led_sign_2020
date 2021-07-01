@@ -21,27 +21,8 @@ void setup(){
 }
 
 int loopcounter;
-void loop(){
 
+void loop(){
   Serial.printf("LOOP %d chillin.\r\n", loopcounter++);
 	delay(500);
-
-  //
-  // uint8_t rowData[] = {
-	//  		1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
-	//  };
-  // shift_row(rowData);
-  // row_on(7);
-
-
-	// uint8_t rowData[] = {
-	// 		1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
-	// };
-	// shift_row(rowData);
-	// Serial.print("on3...");
-	// row_on(3);
-	// delay(500);
-	// Serial.println("off3...");
-	// row_off(3);
-	// delay(500);
 }
