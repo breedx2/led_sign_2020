@@ -12,6 +12,7 @@ class SignPrinter {
     void print(const char *msg, int pos);
     void left(const char *msg);
     void right(const char *msg);
+    void center(const char *msg);
 };
 
 #endif
