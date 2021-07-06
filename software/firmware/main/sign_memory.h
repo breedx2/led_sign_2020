@@ -6,3 +6,4 @@ typedef uint8_t** SIGN_MEM;
 
 SIGN_MEM new_sign_memory();
 SIGN_ROW get_mem_row(uint8_t rownum);
+void clear_memory();

@@ -15,3 +15,9 @@ SIGN_MEM new_sign_memory(){
 SIGN_ROW get_mem_row(uint8_t rownum){
   return _mem[rownum];
 }
+
+void clear_memory(){
+  for(int i=0; i < 7; i++){
+    memset(_mem[i], 0x00, BYTES_PER_ROW);
+  }
+}

@@ -20,7 +20,7 @@
 #define _C6      17
 #define _C7      18
 
-#define SPI_FREQ 3000000
+#define SPI_FREQ 3500000
 uint8_t row_pins[] = {
   _C1, _C2, _C3, _C4, _C5, _C6, _C7
 };

@@ -108,3 +108,16 @@ GLYPH glyph(char ch){
 GLYPH single_digit(uint8_t dig) {
   return font['0' - ' ' + dig];
 }
+
+uint16_t text_length(const char *str){
+  uint16_t len = 0;
+  for(int i=0; i < strlen(str); i++){
+    char ch = str[i];
+    GLYPH g = glyph(ch);
+    len += g.length;
+    if((ch != ' ') && (i < strlen(str)-1)){
+      len++;
+    }
+  }
+  return len;
+}

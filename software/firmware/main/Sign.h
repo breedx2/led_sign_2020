@@ -1,5 +1,6 @@
 
 #ifndef SIGN_H
+#define SIGN_H 1
 
 #define SIGN_COLS 145
 
