@@ -5,9 +5,11 @@
  #include "font5x7.h"
  #include "Sign.h"
  #include "SignPrinter.h"
+ #include "SignCommands.h"
 
  Sign sign;
  SignPrinter printer = SignPrinter(sign);
+ SignCommands sc = SignCommands(sign);
  int loopcounter;
  uint8_t offset = 0;
 
@@ -25,16 +27,18 @@ void setup(){
 }
 
 void loop(){
-  delay(2000);
+  delay(750);
   printer.clear();
   printer.left("i'm ok");
-  delay(2000);
+  delay(750);
   printer.clear();
   printer.right("you're ok");
-  delay(2000);
+  delay(750);
   printer.clear();
   printer.center("ok");
-  delay(2000);
+  delay(750);
   sign.invert();
+  delay(500);
+  sc.clwipe(10);
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
 }
