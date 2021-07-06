@@ -29,3 +29,12 @@ void Sign::blit(uint8_t offset, uint8_t *cols, uint8_t length) {
     col(offset + i, cols[i]);
   }
 }
+
+void Sign::invert(){
+  for(uint8_t rownum = 0; rownum < 7; rownum++){
+    SIGN_ROW row = get_mem_row(rownum);
+    for(uint8_t b = 0; b < BYTES_PER_ROW; b++){
+      row[b] ^= 0xFF;
+    }
+  }
+}

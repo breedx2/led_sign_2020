@@ -34,5 +34,7 @@ void loop(){
   delay(2000);
   printer.clear();
   printer.center("ok");
+  delay(2000);
+  sign.invert();
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
 }
