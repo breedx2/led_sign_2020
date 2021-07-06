@@ -23,3 +23,9 @@ void Sign::col(uint8_t colnum, uint8_t value) {
     }
   }
 }
+
+void Sign::blit(uint8_t offset, uint8_t *cols, uint8_t length) {
+  for(uint8_t i=0; i < length; i++){
+    col(offset + i, cols[i]);
+  }
+}

@@ -29,7 +29,7 @@ int loopcounter;
 uint8_t offset = 0;
 
 void loop(){
-  Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
+  // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
 
   GLYPH g = glyph('G');
   if(offset > 0){
@@ -38,17 +38,11 @@ void loop(){
   else {
     sign.col(SIGN_COLS-1, 0);
   }
-  for(uint8_t i = 0; i < g.length; i++){
-
-    uint8_t glyph_col = g.cols[i];
-    sign.col( offset + i, glyph_col);
-  }
+  sign.blit(offset, g.cols, g.length);
 
   offset++;
   if( offset >= SIGN_COLS){
     offset = 0;
   }
-  sign.col(2, 0xff);
-  sign.col(SIGN_COLS-1, 0xff);
-  delay(25);
+  delay(10);
 }
