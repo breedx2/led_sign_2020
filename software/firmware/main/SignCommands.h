@@ -5,9 +5,11 @@
 class SignCommands {
   private:
     Sign &sign;
+    SignPrinter &printer;
   public:
-    SignCommands(Sign &sign): sign(sign) {}
+    SignCommands(Sign &sign, SignPrinter &printer): sign(sign), printer(printer){}
     void clwipe(uint16_t speed);
+    void time(uint16_t seconds = 10);
 };
 
 #endif

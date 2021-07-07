@@ -9,7 +9,7 @@
 
  Sign sign;
  SignPrinter printer = SignPrinter(sign);
- SignCommands sc = SignCommands(sign);
+ SignCommands sc = SignCommands(sign, printer);
  int loopcounter;
  uint8_t offset = 0;
 
@@ -20,25 +20,24 @@ void setup(){
 
 	Serial.println("It is alive. Die now.");
 
-  printer.clear();
-  printer.center("* hello world *");
+  printer.center("* hello world *", true);
   start_updater();
   enable_output();
 }
 
 void loop(){
   delay(750);
-  printer.clear();
-  printer.left("i'm ok");
+  printer.left("left align", true);
   delay(750);
   printer.clear();
-  printer.right("you're ok");
+  printer.right("right align", true);
   delay(750);
-  printer.clear();
-  printer.center("ok");
+  printer.center("=[ centered ]=", true);
   delay(750);
+  printer.center("=[ inverted ]=", true);
   sign.invert();
   delay(500);
   sc.clwipe(10);
+  sc.time(30);
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
 }

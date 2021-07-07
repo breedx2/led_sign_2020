@@ -9,10 +9,10 @@ class SignPrinter {
   public:
     SignPrinter(Sign &sign): sign(sign) {}
     void clear();
-    void print(const char *msg, int pos);
-    void left(const char *msg);
-    void right(const char *msg);
-    void center(const char *msg);
+    void print(const char *msg, int pos, bool clear_first = false);
+    void left(const char *msg, bool clear_first = false);
+    void right(const char *msg, bool clear_first = false);
+    void center(const char *msg, bool clear_first = false);
 };
 
 #endif
