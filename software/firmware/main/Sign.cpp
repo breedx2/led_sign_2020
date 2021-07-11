@@ -2,6 +2,10 @@
 #include "sign_memory.h"
 #include "Sign.h"
 
+void Sign::clear(){
+  clear_memory();
+}
+
 void Sign::col(uint8_t colnum, uint8_t value) {
   if(colnum >= SIGN_COLS){
     return;

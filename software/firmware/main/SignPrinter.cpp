@@ -5,7 +5,7 @@
 #include "SignPrinter.h"
 
 void SignPrinter::clear(){
-  clear_memory();
+  sign.clear();
 }
 
 void SignPrinter::print(const char *msg, int pos, bool clear_first){

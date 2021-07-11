@@ -27,15 +27,14 @@ void setup(){
 
 void loop(){
   delay(750);
-  printer.left("left align", true);
+  sc.left("left align", true);
   delay(750);
-  printer.clear();
-  printer.right("right align", true);
+  sc.right("right align", true);
   delay(750);
-  printer.center("=[ centered ]=", true);
+  sc.center("=[ centered ]=", true);
   delay(750);
-  printer.center("=[ inverted ]=", true);
-  sign.invert();
+  sc.center("=[ inverted ]=", true);
+  sc.invert();
   delay(500);
   sc.clwipe(10);
   sc.time(30);
