@@ -33,33 +33,14 @@ void loop(){
   sc.criu("LET'S GO!", 15, RIGHT);
   delay(1000);
   sign.clear();
-
-  // printer.print("LET'S GO!", 46);
-  // printer.print("E", 46);
-  // dump_mem_serial();
-  // delay(1000);
-  // // sign.clear();
-  // printer.print("E", 52);
-  // dump_mem_serial();
-  // delay(100000);
-  // delay(100000);
-  // delay(100000);
-  // sign.clear();
-  // printer.print("E", 52);
-  // dump_mem_serial();
-  // delay(1000);
-
-  // Serial.printf("Now setting special col\r\n");
-  // sign.col(45, 192);
-  // delay(3000);
-
-  // sc.ctr(151, 25);
-  // delay(200);
-  //
   sc.left("left align", true);
+  long start = millis();
   delay(500);
+  Serial.printf("elapsed = %ld\r\n", millis()-start);
   sc.right("right align", true);
+  start = millis();
   delay(500);
+  Serial.printf("elapsed = %ld\r\n", millis()-start);
   sc.center("=[ centered ]=", true);
   delay(500);
   sc.center("=[ inverted ]=", true);
