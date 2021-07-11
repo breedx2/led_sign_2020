@@ -27,21 +27,24 @@ void setup(){
 
 void loop(){
   delay(750);
-  sc.crid("...STARTING TEST...", 25);
-  delay(750);
-  sc.left("left align", true);
-  delay(750);
-  sc.right("right align", true);
-  delay(750);
-  sc.center("=[ centered ]=", true);
-  delay(750);
-  sc.center("=[ inverted ]=", true);
-  sc.invert();
+  sc.criu("...STARTING TEST...", 10);
+  delay(250);
+  sc.criu("LET'S GO!", 25, RIGHT);
   delay(500);
-  sc.clwipe(10);
-  delay(500);
-  sc.ctr(250, 25);
-  delay(200);
-  sc.time(30);
+  // sc.ctr(151, 25);
+  // delay(200);
+  //
+  // sc.left("left align", true);
+  // delay(300);
+  // sc.right("right align", true);
+  // delay(300);
+  // sc.center("=[ centered ]=", true);
+  // delay(300);
+  // sc.center("=[ inverted ]=", true);
+  // sc.invert();
+  // delay(300);
+  // sc.clwipe(10);
+  // delay(300);
+  // sc.time(10);
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
 }
