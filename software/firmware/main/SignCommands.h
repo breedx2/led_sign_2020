@@ -2,12 +2,15 @@
 #ifndef SIGN_COMMANDS_H
 #define SIGN_COMMANDS_H 1
 
+#include <functional>
+
 enum DIRECTION { LEFT, RIGHT };
 
 class SignCommands {
   private:
     Sign &sign;
     SignPrinter &printer;
+    void cri_x(const char *str, uint16_t speed, DIRECTION dir, std::function<uint8_t(uint8_t, uint8_t)> shifter);
   public:
     SignCommands(Sign &sign, SignPrinter &printer): sign(sign), printer(printer){}
     void center(const char *str, bool clear_first = false);

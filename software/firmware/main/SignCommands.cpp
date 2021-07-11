@@ -15,27 +15,18 @@ void SignCommands::clear(){
 }
 
 void SignCommands::crid(const char *str, uint16_t speed, DIRECTION dir){
-  uint8_t buff[SIGN_COLS];
-  uint8_t col_num = printer.print_mem(str, buff, SIGN_COLS);
-  uint8_t index = (SIGN_COLS-col_num)/2;
-  if(dir == RIGHT){
-    reverse_buffer(buff, col_num);
-    index = SIGN_COLS - index - 1;
-  }
-  sign.clear();
-  for(uint8_t i = 0; i < col_num; i++){
-    uint8_t col = buff[i];
-    index += (dir == LEFT) ? 1 : -1;
-    if(col == 0x00) continue;
-    for(uint8_t bits = 0; bits < 7; bits++){
-      // Serial.printf("col %02X shifted %02X\r\n", col, col >> bits);
-      sign.col(index, col >> (6-bits));
-      delay(speed);
-    }
-  }
+  cri_x(str, speed, dir, [](uint8_t col, uint8_t bits){
+    return col >> (6-bits);
+  });
 }
 
 void SignCommands::criu(const char *str, uint16_t speed, DIRECTION dir){
+  cri_x(str, speed, dir, [](uint8_t col, uint8_t bits){
+    return col << (6-bits);
+  });
+}
+
+void SignCommands::cri_x(const char *str, uint16_t speed, DIRECTION dir, std::function<uint8_t(uint8_t, uint8_t)> shifter){
   uint8_t buff[SIGN_COLS];
   uint8_t col_num = printer.print_mem(str, buff, SIGN_COLS);
   uint8_t index = (SIGN_COLS-col_num)/2;
@@ -49,8 +40,7 @@ void SignCommands::criu(const char *str, uint16_t speed, DIRECTION dir){
     index += (dir == LEFT) ? 1 : -1;
     if(col == 0x00) continue;
     for(uint8_t bits = 0; bits < 7; bits++){
-      // Serial.printf("col %02X shifted %02X\r\n", col, col >> bits);
-      sign.col(index, col << (6-bits));
+      sign.col(index, shifter(col,bits));
       delay(speed);
     }
   }
