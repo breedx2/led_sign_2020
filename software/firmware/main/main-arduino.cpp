@@ -37,6 +37,9 @@ void loop(){
   sc.invert();
   delay(500);
   sc.clwipe(10);
+  delay(500);
+  sc.ctr(250, 25);
+  delay(200);
   sc.time(30);
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
 }

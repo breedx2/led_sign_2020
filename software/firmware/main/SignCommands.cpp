@@ -4,8 +4,26 @@
 #include "SignPrinter.h"
 #include "SignCommands.h"
 
+void SignCommands::center(const char *str, bool clear_first){
+  printer.center(str, clear_first);
+}
+
 void SignCommands::clear(){
   sign.clear();
+}
+
+// Counter counts up centered as fast as possible at speed
+void SignCommands::ctr(uint16_t num, uint16_t speed){
+  char buff[SIGN_COLS];
+  sign.clear();
+  for(uint16_t i = 0; i < num; i++){
+    sprintf(buff, "%d", i);
+    Serial.printf("%s\r\n", buff);
+    printer.center(buff);
+    if(speed > 0){
+      delay(speed);
+    }
+  }
 }
 
 void SignCommands::left(const char *str, bool clear_first){
@@ -14,10 +32,6 @@ void SignCommands::left(const char *str, bool clear_first){
 
 void SignCommands::right(const char *str, bool clear_first){
   printer.right(str, clear_first);
-}
-
-void SignCommands::center(const char *str, bool clear_first){
-  printer.center(str, clear_first);
 }
 
 void SignCommands::invert(){

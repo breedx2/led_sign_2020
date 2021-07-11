@@ -18,6 +18,7 @@ void SignPrinter::print(const char *msg, int pos, bool clear_first){
     sign.blit(offset, g.cols, g.length);
     offset += g.length;
     if(ch != ' '){
+      sign.col(offset, 0x00);
       offset += 1;
     }
   }
