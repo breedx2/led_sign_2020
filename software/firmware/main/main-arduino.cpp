@@ -27,6 +27,8 @@ void setup(){
 
 void loop(){
   delay(750);
+  sc.crid("...STARTING TEST...", 15);
+  delay(750);
   sc.left("left align", true);
   delay(750);
   sc.right("right align", true);

@@ -24,6 +24,21 @@ void SignPrinter::print(const char *msg, int pos, bool clear_first){
   }
 }
 
+uint8_t SignPrinter::print_mem(const char *str, uint8_t *buff, uint8_t bufflen){
+  uint8_t index = 0;
+  for(uint8_t i = 0; i < strlen(str); i++){
+    GLYPH g = glyph(str[i]);
+    for(uint8_t colnum = 0; colnum < g.length; colnum++){
+      if(index >= bufflen) return index;
+      buff[index++] = g.cols[colnum];
+    }
+    if(str[i] != ' '){
+      buff[index++] = 0x00;
+    }
+  }
+  return index;
+}
+
 void SignPrinter::left(const char *msg, bool clear_first){
   print(msg, 2, clear_first); // first 2 cols aren't addressable
 }
