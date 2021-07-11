@@ -20,7 +20,7 @@ void SignCommands::crid(const char *str, uint16_t speed, DIRECTION dir){
   uint8_t index = (SIGN_COLS-col_num)/2;
   if(dir == RIGHT){
     reverse_buffer(buff, col_num);
-    index = SIGN_COLS - index;
+    index = SIGN_COLS - index - 1;
   }
   sign.clear();
   for(uint8_t i = 0; i < col_num; i++){
