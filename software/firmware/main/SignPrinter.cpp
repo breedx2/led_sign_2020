@@ -26,13 +26,14 @@ void SignPrinter::print(const char *msg, int pos, bool clear_first){
 
 uint8_t SignPrinter::print_mem(const char *str, uint8_t *buff, uint8_t bufflen){
   uint8_t index = 0;
-  for(uint8_t i = 0; i < strlen(str); i++){
+  uint8_t msglen = strlen(str);
+  for(uint8_t i = 0; i < msglen; i++){
     GLYPH g = glyph(str[i]);
     for(uint8_t colnum = 0; colnum < g.length; colnum++){
       if(index >= bufflen) return index;
       buff[index++] = g.cols[colnum];
     }
-    if(str[i] != ' '){
+    if((str[i] != ' ') && (i < msglen-1)){
       buff[index++] = 0x00;
     }
   }
