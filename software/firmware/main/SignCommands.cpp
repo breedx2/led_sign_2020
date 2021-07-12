@@ -59,18 +59,16 @@ void SignCommands::ctr(uint16_t num, uint16_t speed){
   }
 }
 
+// show message left-aligned
 void SignCommands::left(const char *str, bool clear_first){
   printer.left(str, clear_first);
-}
-
-void SignCommands::right(const char *str, bool clear_first){
-  printer.right(str, clear_first);
 }
 
 void SignCommands::invert(){
   sign.invert();
 }
 
+// column-wise wipe clear from left
 void SignCommands::clwipe(uint16_t speed){
   for(int i=2; i < SIGN_COLS; i++){
     sign.col(i, 0x00);
@@ -78,6 +76,7 @@ void SignCommands::clwipe(uint16_t speed){
   }
 }
 
+// column-wise wipe clear from right
 void SignCommands::crwipe(uint16_t speed){
   for(int i = SIGN_COLS; i >= 2; i--){
     sign.col(i, 0x00);
@@ -85,6 +84,35 @@ void SignCommands::crwipe(uint16_t speed){
   }
 }
 
+// roll message in downwards
+void SignCommands::rid(const char *str, uint16_t speed){
+  uint8_t buff[SIGN_COLS];
+  uint8_t col_num = printer.print_mem(str, buff, SIGN_COLS);
+  for(int i = 0; i < 7; i++){
+    uint8_t mask = 1 << (6 - i);
+    sign.roll_down([](SIGN_ROW row){
+      memset(row, 0x00, BYTES_PER_ROW);
+      return row;
+    });
+    uint8_t offset = (SIGN_COLS-col_num)/2;
+    for(int col = 0; col < col_num; col++){
+      if (buff[col] & mask){
+        sign.on(offset+col+2, 0);
+      }
+      else{
+        sign.off(offset+col+2, 0);
+      }
+    }
+    delay(speed);
+  }
+}
+
+// show message right-aligned
+void SignCommands::right(const char *str, bool clear_first){
+  printer.right(str, clear_first);
+}
+
+// line-wise roll-off downward
 void SignCommands::rod(uint16_t speed){
   for(uint8_t i = 0; i < 7; i++){
     sign.roll_down([](SIGN_ROW row){
@@ -94,6 +122,7 @@ void SignCommands::rod(uint16_t speed){
   }
 }
 
+// line-wise roll-off upward
 void SignCommands::rou(uint16_t speed){
   for(uint8_t i = 0; i < 7; i++){
     sign.roll_up([](SIGN_ROW row){
