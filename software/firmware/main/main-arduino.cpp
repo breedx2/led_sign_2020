@@ -33,7 +33,7 @@ void loop(){
   sc.criu("LET'S GO!", 5, RIGHT);
   delay(1000);
   sign.clear();
-  sc.ctr(150, 15);
+  sc.ctr(151, 20);
   sc.left("left align", true);
   delay(500);
   sc.right("right align", true);
@@ -50,11 +50,11 @@ void loop(){
   delay(300);
   sc.left("LINES CAN JUST FALL DOWN");
   delay(666);
-  sc.rod(150);
+  sc.rod(100);
   delay(500);
   sc.left("LINES CAN ALSO FLOAT UP!");
   delay(666);
-  sc.rou(150);
+  sc.rou(100);
   delay(500);
 
   sc.left("ABCDEFGHIJKLMNOPQRSTUVWX");
