@@ -54,3 +54,16 @@ void Sign::roll_down(std::function<SIGN_ROW(SIGN_ROW)> first_row_fn){
   mem[1] = mem[0];
   mem[0] = first_row_fn(b);
 }
+
+// The last_row_fn determines how to populate the last row given the first row before rolling
+void Sign::roll_up(std::function<SIGN_ROW(SIGN_ROW)> last_row_fn){
+  SIGN_MEM mem = get_memory();
+  SIGN_ROW t = mem[0];
+  mem[0] = mem[1];
+  mem[1] = mem[2];
+  mem[2] = mem[3];
+  mem[3] = mem[4];
+  mem[4] = mem[5];
+  mem[5] = mem[6];
+  mem[6] = last_row_fn(t);
+}

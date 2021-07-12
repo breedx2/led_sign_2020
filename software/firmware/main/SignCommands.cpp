@@ -86,8 +86,17 @@ void SignCommands::crwipe(uint16_t speed){
 }
 
 void SignCommands::rod(uint16_t speed){
-  for(uint8_t row = 0; row < 7; row++){
+  for(uint8_t i = 0; i < 7; i++){
     sign.roll_down([](SIGN_ROW row){
+      return clear_row(row);
+    });
+    delay(speed);
+  }
+}
+
+void SignCommands::rou(uint16_t speed){
+  for(uint8_t i = 0; i < 7; i++){
+    sign.roll_up([](SIGN_ROW row){
       return clear_row(row);
     });
     delay(speed);

@@ -15,7 +15,7 @@ class Sign {
     void blit(uint8_t offset, uint8_t *cols, uint8_t length);
     void invert();
     void roll_down(std::function<SIGN_ROW(SIGN_ROW)> first_row_fn);
-    // void roll_up();
+    void roll_up(std::function<SIGN_ROW(SIGN_ROW)> last_row_fn);
 };
 
 #endif

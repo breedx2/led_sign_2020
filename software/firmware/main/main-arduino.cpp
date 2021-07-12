@@ -49,7 +49,11 @@ void loop(){
   delay(300);
   sc.left("LINES CAN JUST FALL DOWN");
   delay(666);
-  sc.rod(250);
+  sc.rod(150);
+  delay(500);
+  sc.left("LINES CAN ALSO FLOAT UP!");
+  delay(666);
+  sc.rou(150);
   delay(500);
   sc.time(10);
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
