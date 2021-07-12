@@ -34,20 +34,23 @@ void loop(){
   delay(1000);
   sign.clear();
   sc.left("left align", true);
-  long start = millis();
   delay(500);
-  Serial.printf("elapsed = %ld\r\n", millis()-start);
   sc.right("right align", true);
-  start = millis();
   delay(500);
-  Serial.printf("elapsed = %ld\r\n", millis()-start);
   sc.center("=[ centered ]=", true);
   delay(500);
   sc.center("=[ inverted ]=", true);
   sc.invert();
   delay(300);
-  sc.clwipe(10);
+  sc.clwipe(5);
   delay(300);
+  sc.left("ABCDEFGHIJKLMNOPQRSTUVWX");
+  sc.crwipe(5);
+  delay(300);
+  sc.left("LINES CAN JUST FALL DOWN");
+  delay(666);
+  sc.rod(250);
+  delay(500);
   sc.time(10);
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
 }

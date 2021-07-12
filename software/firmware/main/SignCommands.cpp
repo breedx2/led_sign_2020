@@ -78,6 +78,22 @@ void SignCommands::clwipe(uint16_t speed){
   }
 }
 
+void SignCommands::crwipe(uint16_t speed){
+  for(int i = SIGN_COLS; i >= 2; i--){
+    sign.col(i, 0x00);
+    delay(speed);
+  }
+}
+
+void SignCommands::rod(uint16_t speed){
+  for(uint8_t row = 0; row < 7; row++){
+    sign.roll_down([](SIGN_ROW row){
+      return clear_row(row);
+    });
+    delay(speed);
+  }
+}
+
 // format is like 'Sun Jan 01 00:00:00'
 void SignCommands::time(uint16_t seconds){
   printer.clear();

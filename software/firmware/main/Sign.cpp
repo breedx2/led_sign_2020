@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include "sign_memory.h"
 #include "Sign.h"
 
 void Sign::clear(){
@@ -41,4 +40,17 @@ void Sign::invert(){
       row[b] ^= 0xFF;
     }
   }
+}
+
+// The first_row_fn determines how to populate the first row given the last row before rolling
+void Sign::roll_down(std::function<SIGN_ROW(SIGN_ROW)> first_row_fn){
+  SIGN_MEM mem = get_memory();
+  SIGN_ROW b = mem[6];
+  mem[6] = mem[5];
+  mem[5] = mem[4];
+  mem[4] = mem[3];
+  mem[3] = mem[2];
+  mem[2] = mem[1];
+  mem[1] = mem[0];
+  mem[0] = first_row_fn(b);
 }
