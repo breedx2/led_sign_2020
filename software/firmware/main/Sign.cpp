@@ -42,6 +42,22 @@ void Sign::invert(){
   }
 }
 
+void Sign::on(uint8_t col, uint8_t rownum){
+  uint8_t realigned_col = col + 6;
+  uint8_t byteoff = realigned_col / 8;
+  SIGN_ROW row = get_mem_row(rownum);
+  uint8_t mask = (1 << realigned_col % 8);
+  row[byteoff] = row[byteoff] | mask;
+}
+
+void Sign::off(uint8_t col, uint8_t rownum){
+  uint8_t realigned_col = col + 6;
+  uint8_t byteoff = realigned_col / 8;
+  SIGN_ROW row = get_mem_row(rownum);
+  uint8_t mask = ~(1 << realigned_col % 8);
+  row[byteoff] = row[byteoff] & mask;
+}
+
 // The first_row_fn determines how to populate the first row given the last row before rolling
 void Sign::roll_down(std::function<SIGN_ROW(SIGN_ROW)> first_row_fn){
   SIGN_MEM mem = get_memory();
