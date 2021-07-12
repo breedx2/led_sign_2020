@@ -30,9 +30,21 @@ void loop(){
   delay(750);
   sc.criu("...STARTING TEST...", 5);
   delay(250);
+  sc.rid("OMG LOL WTF", 250);
+  delay(1000);
+  sc.riu("this is a thing", 50);
+  delay(1000);
+  sc.rid("[[ Here we are ]]", 10);
+  delay(1000);
+  sc.riu("aGaIN 2 tHriV3", 10);
+  delay(15000);
+
+
+
   sc.criu("LET'S GO!", 15, RIGHT);
   delay(1000);
   sign.clear();
+  sc.ctr(150);
   sc.left("left align", true);
   delay(500);
   sc.right("right align", true);

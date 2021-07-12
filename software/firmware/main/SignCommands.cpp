@@ -112,6 +112,29 @@ void SignCommands::right(const char *str, bool clear_first){
   printer.right(str, clear_first);
 }
 
+// roll message in upwards
+void SignCommands::riu(const char *str, uint16_t speed){
+  uint8_t buff[SIGN_COLS];
+  uint8_t col_num = printer.print_mem(str, buff, SIGN_COLS);
+  for(int i = 6; i >= 0; i--){
+    uint8_t mask = 1 << (6 - i);
+    sign.roll_up([](SIGN_ROW row){
+      memset(row, 0x00, BYTES_PER_ROW);
+      return row;
+    });
+    uint8_t offset = (SIGN_COLS-col_num)/2;
+    for(int col = 0; col < col_num; col++){
+      if (buff[col] & mask){
+        sign.on(offset+col+2, 6);
+      }
+      else{
+        sign.off(offset+col+2, 6);
+      }
+    }
+    delay(speed);
+  }
+}
+
 // line-wise roll-off downward
 void SignCommands::rod(uint16_t speed){
   for(uint8_t i = 0; i < 7; i++){

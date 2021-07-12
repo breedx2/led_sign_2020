@@ -24,6 +24,7 @@ class SignCommands {
     void left(const char *str, bool clear_first = false);
     void rid(const char *str, uint16_t speed = 50);
     void right(const char *str, bool clear_first = false);
+    void riu(const char *str, uint16_t speed = 50);
     void rod(uint16_t speed = 50);
     void rou(uint16_t speed = 50);
     void time(uint16_t seconds = 10);
