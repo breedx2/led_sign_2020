@@ -19,9 +19,10 @@ class SignCommands {
     void crwipe(uint16_t speed);
     void crid(const char *str, uint16_t speed = 25, DIRECTION dir = LEFT);
     void criu(const char *str, uint16_t speed = 25, DIRECTION dir = LEFT);
-    void ctr(uint16_t num, uint16_t speed = 0);
+    void ctr(uint16_t num, uint16_t speed = 50);
     void invert();
     void left(const char *str, bool clear_first = false);
+    void mwc(const char *str, uint16_t speed = 50);
     void rid(const char *str, uint16_t speed = 50);
     void right(const char *str, bool clear_first = false);
     void riu(const char *str, uint16_t speed = 50);

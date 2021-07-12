@@ -1,3 +1,4 @@
+#include <string.h>
 #include <time.h>
 #include <Arduino.h>
 #include "Sign.h"
@@ -48,24 +49,13 @@ void SignCommands::cri_x(const char *str, uint16_t speed, DIRECTION dir, std::fu
 
 // Counter counts up centered as fast as possible at speed
 void SignCommands::ctr(uint16_t num, uint16_t speed){
-  char buff[SIGN_COLS];
+  char buff[50];
   sign.clear();
   for(uint16_t i = 0; i < num; i++){
     sprintf(buff, "%d", i);
     printer.center(buff);
-    if(speed > 0){
-      delay(speed);
-    }
+    delay(speed);
   }
-}
-
-// show message left-aligned
-void SignCommands::left(const char *str, bool clear_first){
-  printer.left(str, clear_first);
-}
-
-void SignCommands::invert(){
-  sign.invert();
 }
 
 // column-wise wipe clear from left
@@ -81,6 +71,27 @@ void SignCommands::crwipe(uint16_t speed){
   for(int i = SIGN_COLS; i >= 2; i--){
     sign.col(i, 0x00);
     delay(speed);
+  }
+}
+
+void SignCommands::invert(){
+  sign.invert();
+}
+
+// show message left-aligned
+void SignCommands::left(const char *str, bool clear_first){
+  printer.left(str, clear_first);
+}
+
+void SignCommands::mwc(const char *str, uint16_t speed){
+  char buff[128];
+  memset(buff, 0x00, 128);
+  strncpy(buff, str, 127);
+  char *word = strtok(buff, " ");
+  while(word != NULL){
+    printer.center(word, true);
+    delay(speed);
+    word = strtok(NULL, " ");
   }
 }
 

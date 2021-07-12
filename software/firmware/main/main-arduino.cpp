@@ -33,7 +33,7 @@ void loop(){
   sc.criu("LET'S GO!", 5, RIGHT);
   delay(1000);
   sign.clear();
-  sc.ctr(150);
+  sc.ctr(150, 15);
   sc.left("left align", true);
   delay(500);
   sc.right("right align", true);
@@ -77,7 +77,7 @@ void loop(){
   sc.riu("\\\\\\\\\\\\//////\\", 75);
   sc.riu("\\\\\\\\\\\\///////", 100);
   delay(500);
-
+  sc.mwc("a bundle of peeled eggs in burlap weighs twice as much as molten metals or 3 times as much as anxiety", 175);
   sc.time(10);
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
 }
