@@ -28,20 +28,9 @@ void setup(){
 
 void loop(){
   delay(750);
-  sc.criu("...STARTING TEST...", 5);
+  sc.criu("...STARTING TEST...", 2);
   delay(250);
-  sc.rid("OMG LOL WTF", 250);
-  delay(1000);
-  sc.riu("this is a thing", 50);
-  delay(1000);
-  sc.rid("[[ Here we are ]]", 10);
-  delay(1000);
-  sc.riu("aGaIN 2 tHriV3", 10);
-  delay(15000);
-
-
-
-  sc.criu("LET'S GO!", 15, RIGHT);
+  sc.criu("LET'S GO!", 5, RIGHT);
   delay(1000);
   sign.clear();
   sc.ctr(150);
@@ -67,6 +56,28 @@ void loop(){
   delay(666);
   sc.rou(150);
   delay(500);
+
+  sc.left("ABCDEFGHIJKLMNOPQRSTUVWX");
+  delay(500);
+  sc.rid("Attack from above!", 150);
+  delay(500);
+  sc.riu("ROLLIN' ON UP FROM BELOW", 50);
+  delay(500);
+  sc.riu("//////\\\\\\\\\\\\", 100);
+  sc.riu("\\/////\\\\\\\\\\\\", 75);
+  sc.riu("\\\\////\\\\\\\\\\\\", 50);
+  sc.riu("\\\\\\///\\\\\\\\\\\\", 25);
+  sc.riu("\\\\\\\\//\\\\\\\\\\\\", 25);
+  sc.riu("\\\\\\\\\\/\\\\\\\\\\\\", 25);
+  sc.riu("\\\\\\\\\\\\\\\\\\\\\\\\", 25);
+  sc.riu("\\\\\\\\\\\\/\\\\\\\\\\", 25);
+  sc.riu("\\\\\\\\\\\\//\\\\\\\\", 25);
+  sc.riu("\\\\\\\\\\\\////\\\\\\", 25);
+  sc.riu("\\\\\\\\\\\\/////\\\\", 50);
+  sc.riu("\\\\\\\\\\\\//////\\", 75);
+  sc.riu("\\\\\\\\\\\\///////", 100);
+  delay(500);
+
   sc.time(10);
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
 }
