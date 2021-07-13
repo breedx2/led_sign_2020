@@ -33,6 +33,22 @@ void Sign::blit(uint8_t offset, uint8_t *cols, uint8_t length) {
   }
 }
 
+uint8_t Sign::get_col(uint8_t colnum){
+  uint8_t rownum = 0;
+  uint8_t result = 0;
+  uint8_t realigned_col = colnum + 6;
+  uint8_t byteoff = realigned_col/8;
+  uint8_t mask = (1 << (realigned_col % 8));
+  while(rownum < 7){
+    SIGN_ROW row = get_mem_row(rownum);
+    if(row[byteoff] & mask){
+      result = result | (1<<rownum);
+    }
+    rownum = rownum + 1;
+  }
+  return result;
+}
+
 void Sign::invert(){
   for(uint8_t rownum = 0; rownum < 7; rownum++){
     SIGN_ROW row = get_mem_row(rownum);

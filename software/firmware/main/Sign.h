@@ -13,6 +13,7 @@ class Sign {
     void clear();
     void col(uint8_t colnum, uint8_t value);
     void blit(uint8_t offset, uint8_t *cols, uint8_t length);
+    uint8_t get_col(uint8_t colnum);
     void invert();
     void on(uint8_t col, uint8_t rownum);
     void off(uint8_t col, uint8_t rownum);
