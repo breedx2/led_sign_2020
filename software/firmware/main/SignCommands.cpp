@@ -115,6 +115,16 @@ void SignCommands::mwoi(uint16_t speed){
   }
 }
 
+// message wipe out out
+void SignCommands::mwoo(uint16_t speed){
+  uint8_t half = int(SIGN_COLS/2)+1;
+  for(uint8_t i = 0; i < half; i++){
+      sign.col(half-i, 0);
+      sign.col(half+i, 0);
+      delay(speed);
+  }
+}
+
 // roll message in downwards
 void SignCommands::rid(const char *str, uint16_t speed){
   uint8_t buff[SIGN_COLS];

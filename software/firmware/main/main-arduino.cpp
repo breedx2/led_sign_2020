@@ -82,6 +82,10 @@ void loop(){
   sc.center("[ WIPE IN FROM OUT ]");
   delay(250);
   sc.mwoi(25);
+  sc.center("-==[WHEELBARROW ANGST]==-");
+  delay(150);
+  sc.mwoo(10);
+  delay(150);
   sc.time(10);
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
 }
