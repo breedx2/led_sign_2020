@@ -49,11 +49,11 @@ void loop(){
   sc.crwipe(5);
   delay(300);
   sc.left("LINES CAN JUST FALL DOWN");
-  delay(666);
+  delay(300);
   sc.rod(100);
   delay(500);
   sc.left("LINES CAN ALSO FLOAT UP!");
-  delay(666);
+  delay(300);
   sc.rou(100);
   delay(500);
 
@@ -78,6 +78,10 @@ void loop(){
   sc.riu("\\\\\\\\\\\\///////", 100);
   delay(500);
   sc.mwc("a bundle of peeled eggs in burlap weighs twice as much as molten metals or 3 times as much as anxiety", 175);
+  delay(250);
+  sc.center("[ WIPE IN FROM OUT ]");
+  delay(250);
+  sc.mwoi(25);
   sc.time(10);
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
 }

@@ -83,6 +83,7 @@ void SignCommands::left(const char *str, bool clear_first){
   printer.left(str, clear_first);
 }
 
+// display message word-wise in center of display
 void SignCommands::mwc(const char *str, uint16_t speed){
   char buff[128];
   memset(buff, 0x00, 128);
@@ -92,6 +93,25 @@ void SignCommands::mwc(const char *str, uint16_t speed){
     printer.center(word, true);
     delay(speed);
     word = strtok(NULL, " ");
+  }
+}
+
+// message wipe out in
+void SignCommands::mwoi(uint16_t speed){
+  uint8_t start = 2;
+  uint8_t end = SIGN_COLS - 1;
+  while((sign.get_col(start) == 0) && (start < end)){
+    start++;
+  }
+  while((sign.get_col(end) == 0) && (end > start)){
+    end--;
+  }
+  while(start <= end){
+    sign.col(start, 0);
+    sign.col(end, 0);
+    start++;
+    end--;
+    delay(speed);
   }
 }
 
