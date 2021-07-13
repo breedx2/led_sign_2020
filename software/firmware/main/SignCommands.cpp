@@ -83,6 +83,30 @@ void SignCommands::left(const char *str, bool clear_first){
   printer.left(str, clear_first);
 }
 
+// column-wise wipe in message from left
+// TODO: alignment parameter
+void SignCommands::lwipe(const char *str, uint16_t speed){
+  uint8_t buff[SIGN_COLS];
+  uint8_t col_num = printer.print_mem(str, buff, SIGN_COLS);
+  uint8_t pad = (SIGN_COLS - col_num) / 2;
+  uint8_t col = 2;
+  while(col < pad){
+    sign.col(col, 0x00);
+    col++;
+    delay(speed);
+  }
+  for(uint8_t i = 0; i < col_num; i++){
+    sign.col(pad + i, buff[i]);
+    col++;
+    delay(speed);
+  }
+  while(col < SIGN_COLS){
+    sign.col(col, 0x00);
+    col++;
+    delay(speed);
+  }
+}
+
 // display message word-wise in center of display
 void SignCommands::mwc(const char *str, uint16_t speed){
   char buff[128];

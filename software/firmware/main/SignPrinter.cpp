@@ -24,6 +24,9 @@ void SignPrinter::print(const char *msg, int pos, bool clear_first){
   }
 }
 
+// "prints" a message into a buffer. returns the actual length, in columns,
+// used by the print.
+// WARNING: Blindly assumes that buff has the spaces for the string.
 uint8_t SignPrinter::print_mem(const char *str, uint8_t *buff, uint8_t bufflen){
   uint8_t index = 0;
   uint8_t msglen = strlen(str);

@@ -85,7 +85,13 @@ void loop(){
   sc.center("-==[WHEELBARROW ANGST]==-");
   delay(150);
   sc.mwoo(10);
-  delay(150);
+  sc.left("ABCDEFGHIJKLMNOPQRSTUVWX");
+  delay(500);
+  sc.lwipe("abcdefghijklmnopqrstuvwx", 10);
+
+  // sc.rwipe("XWVUTSRQPONMLKJIHGFEDCBA", 10)
+  // delay(500)
+  delay(500);
   sc.time(10);
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
 }
