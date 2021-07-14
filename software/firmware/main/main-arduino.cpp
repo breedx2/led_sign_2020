@@ -101,6 +101,15 @@ void loop(){
   sc.strobe(75, 20);
   sc.strobe(20, 50);
   sc.strobe(150, 8);
+  sign.clear();
+  printer.print("ANTHRO", 109, false);
+  printer.print("ANTHRO", 3, false);
+  sign.invert();
+  printer.center("  ANTHRO  ");
+  for(uint8_t i = 0 ; i < 25; i++){
+    sign.invert();
+    delay(150);
+  }
   sc.time(10);
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
 }
