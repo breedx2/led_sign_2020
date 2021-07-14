@@ -244,6 +244,12 @@ void SignCommands::rwipe(const char *str, uint16_t speed){
   }
 }
 
+// shift in a byte from the left
+void SignCommands::sil(uint8_t byte_val){
+  sign.shift_right();
+  sign.col(2, byte_val);
+}
+
 void SignCommands::strobe(uint16_t speed, uint16_t count){
   for(uint16_t i = 0 ; i < count; i++){
     sign.all_on();

@@ -21,6 +21,7 @@ class Sign {
     void off(uint8_t col, uint8_t rownum);
     void roll_down(std::function<SIGN_ROW(SIGN_ROW)> first_row_fn);
     void roll_up(std::function<SIGN_ROW(SIGN_ROW)> last_row_fn);
+    void shift_right();
 };
 
 #endif
