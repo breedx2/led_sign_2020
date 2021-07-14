@@ -33,6 +33,7 @@ class SignCommands {
     void rou(uint16_t speed = 50);
     void rwipe(const char *str, uint16_t speed = 35);
     void sil(uint8_t byte_val);
+    void sir(uint8_t byte_val);
     void strobe(uint16_t speed, uint16_t count);
     void time(uint16_t seconds = 10);
 };

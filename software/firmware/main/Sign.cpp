@@ -117,12 +117,25 @@ void Sign::roll_up(std::function<SIGN_ROW(SIGN_ROW)> last_row_fn){
 
 // Shifts the display one column to the right
 void Sign::shift_right(){
-  for(int rownum = 6; rownum >= 0; rownum--){
+  for(int rownum = 0; rownum < 7; rownum++){
     SIGN_ROW row = get_mem_row(rownum);
     for(int b = BYTES_PER_ROW - 1; b >= 0; b--){
       row[b] = row[b] << 1;
       if((b > 0) && (row[b-1] & 0x80)){
         row[b] += 0x01;
+      }
+    }
+  }
+}
+
+// Shifts the display one column to the left
+void Sign::shift_left(){
+  for(int rownum = 0; rownum < 7; rownum++){
+    SIGN_ROW row = get_mem_row(rownum);
+    for(int b = 0; b < BYTES_PER_ROW; b++){
+      row[b] = row[b] >> 1;
+      if((b < BYTES_PER_ROW-1) && (row[b+1] & 0x01)){
+        row[b] |= 0x80;
       }
     }
   }

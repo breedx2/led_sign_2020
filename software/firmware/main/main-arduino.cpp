@@ -1,18 +1,19 @@
- #include <Arduino.h>
- #include "sign_memory.h"
- #include "sign_hardware.h"
- #include "sign_updater.h"
- #include "font5x7.h"
- #include "sign_utils.h"
- #include "Sign.h"
- #include "SignPrinter.h"
- #include "SignCommands.h"
+#include <vector>
+#include <Arduino.h>
+#include "sign_memory.h"
+#include "sign_hardware.h"
+#include "sign_updater.h"
+#include "font5x7.h"
+#include "sign_utils.h"
+#include "Sign.h"
+#include "SignPrinter.h"
+#include "SignCommands.h"
 
- Sign sign;
- SignPrinter printer = SignPrinter(sign);
- SignCommands sc = SignCommands(sign, printer);
- int loopcounter;
- uint8_t offset = 0;
+Sign sign;
+SignPrinter printer = SignPrinter(sign);
+SignCommands sc = SignCommands(sign, printer);
+int loopcounter;
+uint8_t offset = 0;
 
 void setup(){
 	Serial.begin(115200);
@@ -32,7 +33,7 @@ void loop(){
   delay(250);
   sc.criu("LET'S GO!", 5, RIGHT);
   delay(1000);
-  sign.clear();
+  sc.clear();
   sc.ctr(151, 20);
   sc.left("left align", true);
   delay(500);
@@ -101,7 +102,7 @@ void loop(){
   sc.strobe(75, 20);
   sc.strobe(20, 50);
   sc.strobe(150, 8);
-  sign.clear();
+  sc.clear();
   printer.print("ANTHRO", 109, false);
   printer.print("ANTHRO", 3, false);
   sign.invert();
@@ -109,6 +110,20 @@ void loop(){
   for(uint8_t i = 0 ; i < 25; i++){
     sign.invert();
     delay(150);
+  }
+  sc.clear();
+  sc.left("shift in left");
+  std::vector<uint8_t> nums = {0,0,1,3,7,15,31,63,127};
+  for(const uint8_t &i : nums){
+    sc.sil(i);
+    delay(200);
+  }
+  delay(250);
+  sc.clear();
+  sc.right("shift in right");
+  for(const uint8_t &i : nums){
+    sc.sir(i);
+    delay(200);
   }
   sc.time(10);
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);

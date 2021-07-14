@@ -250,6 +250,12 @@ void SignCommands::sil(uint8_t byte_val){
   sign.col(2, byte_val);
 }
 
+// shift in a byte from the right
+void SignCommands::sir(uint8_t byte_val){
+  sign.shift_left();
+  sign.col(SIGN_COLS-1, byte_val);
+}
+
 void SignCommands::strobe(uint16_t speed, uint16_t count){
   for(uint16_t i = 0 ; i < count; i++){
     sign.all_on();
