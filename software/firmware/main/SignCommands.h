@@ -31,6 +31,7 @@ class SignCommands {
     void riu(const char *str, uint16_t speed = 50);
     void rod(uint16_t speed = 50);
     void rou(uint16_t speed = 50);
+    void rwipe(const char *str, uint16_t speed = 35);
     void time(uint16_t seconds = 10);
 };
 

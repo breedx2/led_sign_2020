@@ -88,7 +88,7 @@ void SignCommands::left(const char *str, bool clear_first){
 void SignCommands::lwipe(const char *str, uint16_t speed){
   uint8_t buff[SIGN_COLS];
   uint8_t col_num = printer.print_mem(str, buff, SIGN_COLS);
-  uint8_t pad = (SIGN_COLS - col_num) / 2;
+  uint8_t pad = 1 + ((SIGN_COLS - col_num) / 2);
   uint8_t col = 2;
   while(col < pad){
     sign.col(col, 0x00);
@@ -216,6 +216,30 @@ void SignCommands::rou(uint16_t speed){
     sign.roll_up([](SIGN_ROW row){
       return clear_row(row);
     });
+    delay(speed);
+  }
+}
+
+// column-wise wipe in message from right
+// TODO: message alignment parameter
+void SignCommands::rwipe(const char *str, uint16_t speed){
+  uint8_t buff[SIGN_COLS];
+  uint8_t col_num = printer.print_mem(str, buff, SIGN_COLS);
+  uint8_t pad = (SIGN_COLS - col_num) / 2;
+  uint8_t col = SIGN_COLS;
+  while(col > SIGN_COLS - pad){
+    sign.col(col, 0x00);
+    col--;
+    delay(speed);
+  }
+  for(uint8_t i = col_num; i > 0; i--){
+    sign.col(pad + i, buff[i-1]);
+    col--;
+    delay(speed);
+  }
+  while(col > 1){
+    sign.col(col, 0x00);
+    col--;
     delay(speed);
   }
 }

@@ -88,10 +88,16 @@ void loop(){
   sc.left("ABCDEFGHIJKLMNOPQRSTUVWX");
   delay(500);
   sc.lwipe("abcdefghijklmnopqrstuvwx", 10);
-
-  // sc.rwipe("XWVUTSRQPONMLKJIHGFEDCBA", 10)
-  // delay(500)
-  delay(500);
+  delay(250);
+  sc.left("-------------------------");
+  delay(150);
+  sc.lwipe("|__dunwich__|", 10);
+  delay(250);
+  sc.rwipe("XWVUTSRQPONMLKJIHGFEDCBA", 10);
+  delay(250);
+  sc.left("XWVUTSRQPONMLKJIHGFEDCBA");
+  sc.rwipe("/solidify\\", 10);
+  delay(250);
   sc.time(10);
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
 }
