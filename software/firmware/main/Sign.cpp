@@ -1,6 +1,21 @@
 #include <Arduino.h>
 #include "Sign.h"
 
+
+void Sign::all_on(){
+  for(uint8_t rownum = 0; rownum < 7; rownum++){
+    SIGN_ROW row = get_mem_row(rownum);
+    memset(row, 0xFF, BYTES_PER_ROW);
+  }
+}
+
+void Sign::all_off(){
+  for(uint8_t rownum = 0; rownum < 7; rownum++){
+    SIGN_ROW row = get_mem_row(rownum);
+    memset(row, 0x00, BYTES_PER_ROW);
+  }
+}
+
 void Sign::clear(){
   clear_memory();
 }

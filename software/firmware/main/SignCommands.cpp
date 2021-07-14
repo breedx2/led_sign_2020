@@ -244,6 +244,15 @@ void SignCommands::rwipe(const char *str, uint16_t speed){
   }
 }
 
+void SignCommands::strobe(uint16_t speed, uint16_t count){
+  for(uint16_t i = 0 ; i < count; i++){
+    sign.all_on();
+    delay(speed);
+    sign.all_off();
+    delay(speed);
+  }
+}
+
 // format is like 'Sun Jan 01 00:00:00'
 void SignCommands::time(uint16_t seconds){
   printer.clear();

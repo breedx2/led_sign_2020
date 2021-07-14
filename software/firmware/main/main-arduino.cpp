@@ -98,6 +98,9 @@ void loop(){
   sc.left("XWVUTSRQPONMLKJIHGFEDCBA");
   sc.rwipe("/solidify\\", 10);
   delay(250);
+  sc.strobe(75, 20);
+  sc.strobe(20, 50);
+  sc.strobe(150, 8);
   sc.time(10);
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
 }
