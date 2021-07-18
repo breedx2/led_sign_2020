@@ -21,6 +21,7 @@ class SignCommands {
     void criu(const char *str, uint16_t speed = 25, DIRECTION dir = LEFT);
     void ctr(uint16_t num, uint16_t speed = 50);
     void invert();
+    void lazr(const char *str);
     void left(const char *str, bool clear_first = false);
     void lwipe(const char *str, uint16_t speed = 35);
     void mwoi(uint16_t speed = 50);

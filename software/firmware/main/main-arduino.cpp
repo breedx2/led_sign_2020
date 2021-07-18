@@ -138,6 +138,9 @@ void loop(){
   sc.randt("! A MOTH IS BORN ANEW !");
   delay(1000);
 
+  sc.lazr("IT'S A LAZER BEAM BOZO");
+  delay(1000);
+
   sc.time(10);
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
 }

@@ -81,6 +81,42 @@ void SignCommands::invert(){
   sign.invert();
 }
 
+// lazer scanner baby, cheese city
+// poorly inspired by the "TANNING INVITATIONAL" pool party lazer text in Real Genius
+void SignCommands::lazr(const char *str){
+   sign.clear();
+   uint8_t buff[SIGN_COLS];
+   uint8_t bufflen = printer.print_mem(str, buff, SIGN_COLS);
+   uint8_t offset = std::max(0,int((SIGN_COLS - bufflen) / 2));
+   auto swipe_pass = [&](uint8_t speed){
+       uint8_t h = (bufflen/2);
+       for(int i=0; i < h; i++){
+           sign.col(offset+i, buff[i]);
+           sign.col(offset+i+h, buff[i+h] ^ 0xFF);
+           sign.col(offset+bufflen-1-i, buff[bufflen-1-i]);
+           sign.col(offset+bufflen-1-h-i, buff[bufflen-1-h-i] ^ 0xFF);
+           delay(speed);
+           sign.col(offset+i, 0);
+           sign.col(offset+i+h, 0);
+           sign.col(offset+bufflen-1-i, 0);
+           sign.col(offset+bufflen-1-h-i, 0);
+       }
+   };
+   std::vector<uint8_t> speeds{11,9,7,6,5,5,5,5,5,3,3,2,2,1};
+   for(uint8_t t: speeds){
+     swipe_pass(t);
+   }
+   for(uint8_t i : std::vector<uint8_t>{4,3,2,1}){
+     for(uint8_t j = 0; j < 4; j++){
+         printer.center(str);
+         delay(13*i);
+         printer.clear();
+         delay(13*i);
+     }
+   }
+   printer.center(str);
+}
+
 // show message left-aligned
 void SignCommands::left(const char *str, bool clear_first){
   printer.left(str, clear_first);
