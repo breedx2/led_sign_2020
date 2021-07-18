@@ -8,6 +8,7 @@ void SignPrinter::clear(){
   sign.clear();
 }
 
+// Prints a message to the sign at a given position
 void SignPrinter::print(const char *msg, int pos, bool clear_first){
   if(clear_first) clear();
 
@@ -26,11 +27,19 @@ void SignPrinter::print(const char *msg, int pos, bool clear_first){
 
 // "prints" a message into a buffer. returns the actual length, in columns,
 // used by the print.
-// WARNING: Blindly assumes that buff has the spaces for the string.
-uint8_t SignPrinter::print_mem(const char *str, uint8_t *buff, uint8_t bufflen){
+uint8_t SignPrinter::print_mem(const char *str, uint8_t *buff, uint8_t bufflen, bool center){
   uint8_t index = 0;
+  uint16_t str_cols_len = text_length(str);
+
+  if(str_cols_len > bufflen) str_cols_len = bufflen;
+  if(center){
+    index = (bufflen - str_cols_len)/2;
+  }
   uint8_t msglen = strlen(str);
   for(uint8_t i = 0; i < msglen; i++){
+    if(index >= bufflen){
+      return index;
+    }
     GLYPH g = glyph(str[i]);
     for(uint8_t colnum = 0; colnum < g.length; colnum++){
       if(index >= bufflen) return index;

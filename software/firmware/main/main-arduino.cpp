@@ -31,7 +31,7 @@ void loop(){
   delay(750);
   sc.criu("...STARTING TEST...", 2);
   delay(250);
-  sc.criu("LET'S GO!", 5, RIGHT);
+  sc.criu("LET'S GO!", 3, RIGHT);
   delay(1000);
   sc.clear();
   sc.ctr(151, 20);
@@ -125,6 +125,15 @@ void loop(){
     sc.sir(i);
     delay(200);
   }
+
+  sign.clear();
+  printer.center("** RANDOM DISSOLVE **");
+  delay(400);
+  sc.rando(5);
+
+  sign.clear();
+  delay(500);
+
   sc.time(10);
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
 }

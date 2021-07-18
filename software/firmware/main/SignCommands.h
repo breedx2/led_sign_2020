@@ -26,6 +26,8 @@ class SignCommands {
     void mwoi(uint16_t speed = 50);
     void mwoo(uint16_t speed = 50);
     void mwc(const char *str, uint16_t speed = 50);
+    void rando(uint16_t speed = 10);
+    void randt(const char *str, uint16_t speed = 10);
     void rid(const char *str, uint16_t speed = 50);
     void right(const char *str, bool clear_first = false);
     void riu(const char *str, uint16_t speed = 50);

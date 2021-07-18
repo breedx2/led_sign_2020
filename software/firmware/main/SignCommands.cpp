@@ -1,5 +1,8 @@
 #include <string.h>
 #include <time.h>
+#include <algorithm>
+#include <tuple>
+#include <vector>
 #include <Arduino.h>
 #include "Sign.h"
 #include "SignPrinter.h"
@@ -148,6 +151,43 @@ void SignCommands::mwoo(uint16_t speed){
       delay(speed);
   }
 }
+
+// random dissolve (fade out)
+// basically just transition to a blank screen!
+void SignCommands::rando(uint16_t speed){
+  randt("", speed);
+}
+
+// Random pixel-wise transition to this new string
+void SignCommands::randt(const char *str, uint16_t speed){
+  uint8_t buff[SIGN_COLS];
+  memset(buff, 0x00, SIGN_COLS);
+  printer.print_mem(str, buff, SIGN_COLS, true);
+  std::vector<std::tuple<uint8_t,uint8_t,uint8_t>> remaining;
+  for(uint8_t col = 0; col < SIGN_COLS; col++){
+    uint8_t cur_col = sign.get_col(col);
+    uint8_t new_col = buff[col];
+    for(uint8_t row = 0; row < 7; row++){
+      uint8_t bitmask = (1 << row);
+      if ((cur_col & bitmask) && ((new_col & bitmask) != bitmask)){
+        remaining.push_back(std::make_tuple(col, row, 0));
+      }
+      if ((new_col & bitmask) && ((cur_col & bitmask) != bitmask)){
+        remaining.push_back(std::make_tuple(col, row, 1));
+      }
+    }
+  }
+  std::random_shuffle ( remaining.begin(), remaining.end() );
+  for (auto &t : remaining) {
+    auto col = std::get<0>(t);
+    auto row = std::get<1>(t);
+    auto value = std::get<2>(t);
+    if(value) sign.on(col, row);
+    else sign.off(col, row);
+    delay(speed);
+  }
+}
+
 
 // roll message in downwards
 void SignCommands::rid(const char *str, uint16_t speed){

@@ -10,7 +10,7 @@ class SignPrinter {
     SignPrinter(Sign &sign): sign(sign) {}
     void clear();
     void print(const char *msg, int pos, bool clear_first = false);
-    uint8_t print_mem(const char *str, uint8_t *buff, uint8_t bufflen);
+    uint8_t print_mem(const char *str, uint8_t *buff, uint8_t bufflen, bool center = false);
     void left(const char *msg, bool clear_first = false);
     void right(const char *msg, bool clear_first = false);
     void center(const char *msg, bool clear_first = false);
