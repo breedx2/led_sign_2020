@@ -130,9 +130,13 @@ void loop(){
   printer.center("** RANDOM DISSOLVE **");
   delay(400);
   sc.rando(5);
+  delay(333);
 
-  sign.clear();
-  delay(500);
+  sc.center("ANYTHING BASICALLY");
+  sc.randi("** RANDOM APPEAR **");  //clears sign internally
+  delay(250);
+  sc.randt("! A MOTH IS BORN ANEW !");
+  delay(1000);
 
   sc.time(10);
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);

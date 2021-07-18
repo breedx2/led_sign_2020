@@ -152,6 +152,12 @@ void SignCommands::mwoo(uint16_t speed){
   }
 }
 
+// random in (fade in).  Clears sign first.
+void SignCommands::randi(const char *str, uint16_t speed){
+  sign.clear();
+  randt(str, speed);
+}
+
 // random dissolve (fade out)
 // basically just transition to a blank screen!
 void SignCommands::rando(uint16_t speed){
