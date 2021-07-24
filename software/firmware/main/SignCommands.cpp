@@ -97,6 +97,25 @@ void SignCommands::kriu(const char *str, uint16_t speed, bool clear_first){
   });
 }
 
+//char-wise roll out down at speed.
+void SignCommands::krod(const char *str, uint16_t speed, bool clear_first){
+  if(clear_first) clear();
+  center(str);
+  roll_chars(str, speed, [](uint8_t col, uint8_t row){
+    return col << (row+1);
+  });
+}
+
+// char-wise roll out up at speed.
+void SignCommands::krou(const char *str, uint16_t speed, bool clear_first){
+  if(clear_first) clear();
+  center(str);
+  roll_chars(str, speed, [](uint8_t col, uint8_t row){
+    return col >> (row+1);
+  });
+}
+
+
 // lazer scanner baby, cheese city
 // poorly inspired by the "TANNING INVITATIONAL" pool party lazer text in Real Genius
 void SignCommands::lazr(const char *str){
