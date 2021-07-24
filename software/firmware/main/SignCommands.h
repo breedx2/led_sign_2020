@@ -11,6 +11,7 @@ class SignCommands {
     Sign &sign;
     SignPrinter &printer;
     void cri_x(const char *str, uint16_t speed, DIRECTION dir, std::function<uint8_t(uint8_t, uint8_t)> shifter);
+    void roll_chars(const char *str, uint16_t speed, std::function<uint8_t(uint8_t, uint8_t)> colmaker);
   public:
     SignCommands(Sign &sign, SignPrinter &printer): sign(sign), printer(printer){}
     void center(const char *str, bool clear_first = false);
@@ -21,6 +22,8 @@ class SignCommands {
     void criu(const char *str, uint16_t speed = 25, DIRECTION dir = LEFT);
     void ctr(uint16_t num, uint16_t speed = 50);
     void invert();
+    void krid(const char *str, uint16_t speed = 35, bool clear_first = true);
+    void kriu(const char *str, uint16_t speed = 35, bool clear_first = true);
     void lazr(const char *str);
     void left(const char *str, bool clear_first = false);
     void lwipe(const char *str, uint16_t speed = 35);

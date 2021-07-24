@@ -81,6 +81,22 @@ void SignCommands::invert(){
   sign.invert();
 }
 
+//char-wise roll in down at speed.
+void SignCommands::krid(const char *str, uint16_t speed, bool clear_first){
+  if(clear_first) clear();
+  roll_chars(str, speed, [](uint8_t col, uint8_t row){
+    return col >> (6-row);
+  });
+}
+
+// char-wise roll in up at speed.
+void SignCommands::kriu(const char *str, uint16_t speed, bool clear_first){
+  if(clear_first) clear();
+  roll_chars(str, speed, [](uint8_t col, uint8_t row){
+    return col << (6-row);
+  });
+}
+
 // lazer scanner baby, cheese city
 // poorly inspired by the "TANNING INVITATIONAL" pool party lazer text in Real Genius
 void SignCommands::lazr(const char *str){
@@ -289,6 +305,29 @@ void SignCommands::rod(uint16_t speed){
       return clear_row(row);
     });
     delay(speed);
+  }
+}
+
+// Char-wise column roller (private, used by kriu etc)
+// TODO: add alignment, this currently assumes center
+void SignCommands::roll_chars(const char *str, uint16_t speed, std::function<uint8_t(uint8_t, uint8_t)>colmaker){
+
+  uint8_t bufflen = text_length(str);
+  uint8_t offset = std::max(0,int((SIGN_COLS - bufflen) / 2));
+
+  for(uint8_t i = 0; i < strlen(str); i++){
+    char ch = str[i];
+    GLYPH g = glyph(ch);
+    if(ch != ' '){
+      for(uint8_t row = 0; row < 7; row++){
+        for(uint8_t colnum = 0; colnum < g.length; colnum++){
+          sign.col(offset+colnum, colmaker(g.cols[colnum],row));
+        }
+        delay(speed);
+      }
+      offset = offset + 1;
+    }
+    offset = offset + g.length;
   }
 }
 
