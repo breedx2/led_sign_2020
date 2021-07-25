@@ -156,5 +156,8 @@ void loop(){
 	sc.msr("AND WE CAN DO IT IN THE OTHER DIRECTION EVEVEN THO ITS HARD TO READ", 8);
 	delay(333);
   sc.time(10);
+	delay(250);
+	sc.clear();
+	sc.center("_._.all done._._");
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
 }
