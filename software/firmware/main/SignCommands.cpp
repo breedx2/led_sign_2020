@@ -181,6 +181,46 @@ void SignCommands::lwipe(const char *str, uint16_t speed){
   }
 }
 
+// message shift in left (from the right)
+void SignCommands::msl(const char *str, uint16_t speed){
+  for(uint8_t i = 0; i < strlen(str); i++){
+      char ch =  str[i];
+      GLYPH g = glyph(ch);
+      for(uint8_t j = 0; j < g.length; j++){
+        sir(g.cols[j]);
+        delay(speed);
+      }
+      if(ch != ' '){
+        sign.shift_left();
+        delay(speed);
+      }
+  }
+  for(uint8_t i = 0; i < SIGN_COLS; i++){
+    sign.shift_left();
+    delay(speed);
+  }
+}
+
+// message shift in right (from the left)
+void SignCommands::msr(const char *str, uint16_t speed){
+  for(int i = strlen(str)-1; i >= 0; i--){
+      char ch =  str[i];
+      GLYPH g = glyph(ch);
+      for(int j = g.length-1; j >= 0; j--){
+        sil(g.cols[j]);
+        delay(speed);
+      }
+      if(ch != ' '){
+        sil(0x00);
+        delay(speed);
+      }
+  }
+  for(uint8_t i = 0; i < SIGN_COLS; i++){
+    sign.shift_right();
+    delay(speed);
+  }
+}
+
 // display message word-wise in center of display
 void SignCommands::mwc(const char *str, uint16_t speed){
   char buff[128];

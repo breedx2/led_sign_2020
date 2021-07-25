@@ -29,6 +29,8 @@ class SignCommands {
     void lazr(const char *str);
     void left(const char *str, bool clear_first = false);
     void lwipe(const char *str, uint16_t speed = 35);
+    void msl(const char *str, uint16_t speed = 35);
+    void msr(const char *str, uint16_t speed = 35);
     void mwoi(uint16_t speed = 50);
     void mwoo(uint16_t speed = 50);
     void mwc(const char *str, uint16_t speed = 50);

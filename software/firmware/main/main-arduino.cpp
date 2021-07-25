@@ -151,6 +151,10 @@ void loop(){
 	delay(333);
   sc.krod("* CHARS MELT INTO MUD *");
 	delay(333);
+	sc.msl("WE CAN SCROLL A MESSAGE THAT IS MUCH MUCH WIDER THAN THE SIGN ITSELF", 15);
+	delay(333);
+	sc.msr("AND WE CAN DO IT IN THE OTHER DIRECTION EVEVEN THO ITS HARD TO READ", 8);
+	delay(333);
   sc.time(10);
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
 }
