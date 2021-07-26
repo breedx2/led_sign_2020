@@ -9,6 +9,7 @@
 #include "SignCommands.h"
 #include "Demo.h"
 #include "SerialCommander.h"
+#include "CommandParser.h"
 
 Sign sign;
 SignPrinter printer = SignPrinter(sign);
@@ -18,6 +19,7 @@ int loopcounter;
 uint8_t offset = 0;
 
 SerialCommander ser = SerialCommander();
+CommandParser parser = CommandParser(sc, printer);
 
 void setup(){
 	Serial.begin(115200);
@@ -46,6 +48,7 @@ void loop(){
 		memset(cmd, 0, 1024);
 		uint16_t len = ser.drain(cmd, 1023);
 		Serial.printf("OUTER GOT COMMAND: '%s'\r\n", cmd);
+		parser.parse(cmd);
 	}
 
   // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);

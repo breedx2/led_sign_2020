@@ -8,8 +8,8 @@ class CommandParser {
 private:
   SignCommands &sc;
   SignPrinter &printer;
-  CommandParser(SignCommands &sc, SignPrinter &printer): sc(sc), printer(printer){}
 public:
+  CommandParser(SignCommands &sc, SignPrinter &printer): sc(sc), printer(printer){}
   void parse(const char *cmd);
 };
 
