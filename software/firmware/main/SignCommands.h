@@ -3,6 +3,8 @@
 #define SIGN_COMMANDS_H 1
 
 #include <functional>
+#include "Sign.h"
+#include "SignPrinter.h"
 
 enum DIRECTION { LEFT, RIGHT };
 
