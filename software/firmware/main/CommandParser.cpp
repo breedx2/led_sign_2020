@@ -6,7 +6,7 @@
 void CommandParser::parse(const char *commandstring){
   Serial.printf("Parsing: %s\r\n", commandstring);
 
-  const std::string cmd_str = commandstring;
+  const std::string &cmd_str = commandstring;
 
   std::string cmd = parseCommandPart(cmd_str);
   Serial.printf("cmd = '%s'\r\n", cmd.c_str());
@@ -29,11 +29,10 @@ void CommandParser::parse(const char *commandstring){
     return remainder.empty() ? sc.crwipe() : sc.crwipe(parseNum(remainder));
   }
   if(cmd == "crid"){
-    std::string msg = getString(remainder);
-    uint16_t speed = getNum1AfterString(remainder, DEFAULT_CRID_SPEED);
-    std::string dir = getWordAfterNum1(remainder);
-    //TODO: Direction
-    sc.crid(msg.c_str(), speed);
+    return parseColRoll(VDIRECTION::DOWN, remainder);
+  }
+  if(cmd == "criu"){
+    return parseColRoll(VDIRECTION::UP, remainder);
   }
 
   /*
@@ -60,9 +59,19 @@ void CommandParser::parse(const char *commandstring){
 */
 }
 
-std::string CommandParser::parseCommandPart(std::string cmd){
+void CommandParser::parseColRoll(VDIRECTION vdir, std::string &remainder){
+  std::string msg = getString(remainder);
+  uint16_t speed = getNum1AfterString(remainder, DEFAULT_CRID_SPEED);
+  std::string dirstr = getWordAfterNum1(remainder);
+  DIRECTION dir = parseDirection(dirstr);
+  if(dir == DIRECTION::NONE){
+    return vdir == VDIRECTION::DOWN ? sc.crid(msg.c_str(), speed) : sc.criu(msg.c_str(), speed);
+  }
+  return vdir == VDIRECTION::DOWN ? sc.crid(msg.c_str(), speed, dir) : sc.criu(msg.c_str(), speed, dir);
+}
+
+std::string CommandParser::parseCommandPart(const std::string &cmd){
   size_t first_space = cmd.find(' ', 0);
-  // Serial.printf("first space at %d\r\n", first_space);
   if(first_space == std::string::npos){ // no spaces
     return cmd.substr(0, std::min(10, int(cmd.length())));
   }
@@ -70,7 +79,7 @@ std::string CommandParser::parseCommandPart(std::string cmd){
   return cmd.substr(0, len);
 }
 
-std::string CommandParser::firstMatchGroup(std::string str, const std::regex re){
+std::string CommandParser::firstMatchGroup(std::string &str, const std::regex &re){
   if(str.empty()) return std::string();
   std::smatch match;
   if (std::regex_match(str, match, re)) {
@@ -82,18 +91,9 @@ std::string CommandParser::firstMatchGroup(std::string str, const std::regex re)
   return std::string();
 }
 
-std::string CommandParser::getString(std::string input){
-  // const std::regex re("'(.*[^\\])'");
-  const std::regex re("'(.*)'");
+std::string CommandParser::getString(std::string &input){
+  const std::regex re("\\s*'(.*)'.*");
   return firstMatchGroup(input, re);
-  // std::smatch match;
-  // if (std::regex_match(input, match, re)) {
-  //   if(match.size() == 2){
-  //     std::ssub_match group = match[1];
-  //     return group.str();
-  //   }
-  // }
-  // return std::string();
 }
 
 uint16_t CommandParser::parseNum(std::string &str, uint16_t defaultNum){
@@ -101,7 +101,7 @@ uint16_t CommandParser::parseNum(std::string &str, uint16_t defaultNum){
     return std::stoi(str);
   }
   catch(std::invalid_argument& e){
-    Serial.printf("Invalid argument %s\r\n", e.what());
+    Serial.printf("Invalid argument '%s' %s\r\n", str.c_str(), e.what());
     return defaultNum;
   }
   catch(std::out_of_range& e){
@@ -110,13 +110,23 @@ uint16_t CommandParser::parseNum(std::string &str, uint16_t defaultNum){
   }
 }
 
-uint16_t CommandParser::getNum1AfterString(std::string input, uint16_t defaultNum){
+uint16_t CommandParser::getNum1AfterString(std::string &input, uint16_t defaultNum){
   const std::regex re("'.*' ([0-9]+)");
   std::string numstr = firstMatchGroup(input, re);
   return parseNum(numstr, defaultNum);
 }
 
-std::string CommandParser::getWordAfterNum1(std::string input){
+std::string CommandParser::getWordAfterNum1(std::string &input){
   const std::regex re("'.*' [0-9]+ (\\w+)");
   return firstMatchGroup(input, re);
+}
+
+DIRECTION CommandParser::parseDirection(std::string &dirstr){
+  if((dirstr == "LEFT") || (dirstr == "left")){
+    return DIRECTION::LEFT;
+  }
+  if((dirstr == "RIGHT") || (dirstr == "right")){
+    return DIRECTION::RIGHT;
+  }
+  return DIRECTION::NONE;
 }

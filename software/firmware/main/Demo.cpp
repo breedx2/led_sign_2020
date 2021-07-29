@@ -6,7 +6,7 @@ void Demo::run(){
   delay(750);
   sc.criu("...STARTING TEST...", 2);
   delay(250);
-  sc.criu("LET'S GO!", 3, RIGHT);
+  sc.criu("LET'S GO!", 3, DIRECTION::RIGHT);
   delay(1000);
   sc.clear();
   sc.ctr(151, 20);

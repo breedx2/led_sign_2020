@@ -33,14 +33,14 @@ void SignCommands::cri_x(const char *str, uint16_t speed, DIRECTION dir, std::fu
   uint8_t buff[SIGN_COLS];
   uint8_t col_num = printer.print_mem(str, buff, SIGN_COLS);
   uint8_t index = (SIGN_COLS-col_num)/2;
-  if(dir == RIGHT){
+  if(dir == DIRECTION::RIGHT){
     reverse_buffer(buff, col_num);
     index = SIGN_COLS - index - 1;
   }
   sign.clear();
   for(uint8_t i = 0; i < col_num; i++){
     uint8_t col = buff[i];
-    index += (dir == LEFT) ? 1 : -1;
+    index += (dir == DIRECTION::LEFT) ? 1 : -1;
     if(col == 0x00) continue;
     for(uint8_t bits = 0; bits < 7; bits++){
       sign.col(index, shifter(col,bits));

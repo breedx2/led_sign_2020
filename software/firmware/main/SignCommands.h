@@ -6,7 +6,8 @@
 #include "Sign.h"
 #include "SignPrinter.h"
 
-enum DIRECTION { LEFT, RIGHT };
+enum class VDIRECTION {NONE, UP, DOWN };
+enum class DIRECTION {NONE, LEFT, RIGHT };
 
 #define DEFAULT_CRID_SPEED   25
 #define DEFAULT_CRIU_SPEED   25
@@ -23,8 +24,8 @@ class SignCommands {
     void clear();
     void clwipe(uint16_t speed = 5);
     void crwipe(uint16_t speed = 5);
-    void crid(const char *str, uint16_t speed = DEFAULT_CRID_SPEED, DIRECTION dir = LEFT);
-    void criu(const char *str, uint16_t speed = DEFAULT_CRIU_SPEED, DIRECTION dir = LEFT);
+    void crid(const char *str, uint16_t speed = DEFAULT_CRID_SPEED, DIRECTION dir = DIRECTION::LEFT);
+    void criu(const char *str, uint16_t speed = DEFAULT_CRIU_SPEED, DIRECTION dir = DIRECTION::LEFT);
     void ctr(uint16_t num, uint16_t speed = 50);
     void invert();
     void krid(const char *str, uint16_t speed = 25, bool clear_first = true);
