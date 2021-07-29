@@ -48,6 +48,9 @@ void loop(){
 		memset(cmd, 0, 1024);
 		uint16_t len = ser.drain(cmd, 1023);
 		Serial.printf("OUTER GOT COMMAND: '%s'\r\n", cmd);
+		if(strncmp(cmd, "demo", 4) == 0){
+			return demo.run();
+		}
 		parser.parse(cmd);
 	}
 

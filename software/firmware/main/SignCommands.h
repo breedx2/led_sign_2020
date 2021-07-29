@@ -6,8 +6,9 @@
 #include "Sign.h"
 #include "SignPrinter.h"
 
-enum class VDIRECTION {NONE, UP, DOWN };
-enum class DIRECTION {NONE, LEFT, RIGHT };
+enum class VDIRECTION { NONE, UP, DOWN };
+enum class DIRECTION { NONE, LEFT, RIGHT };
+enum class CLOCK_DIR { CW, CCW };
 
 #define DEFAULT_CRID_SPEED   25
 #define DEFAULT_CRIU_SPEED   25
@@ -52,6 +53,7 @@ class SignCommands {
     void sil(uint8_t byte_val);
     void sir(uint8_t byte_val);
     void strobe(uint16_t speed, uint16_t count);
+    void throb(CLOCK_DIR dir = CLOCK_DIR::CW, uint8_t pos = (SIGN_COLS/2)-2, uint16_t speed = 65, uint16_t revolutions = 10);
     void time(uint16_t seconds = 10);
 };
 

@@ -15,14 +15,18 @@ void SignPrinter::print(const char *msg, int pos, bool clear_first){
   uint8_t offset = pos;
   for(uint8_t i = 0; i < strlen(msg); i++){
     char ch = msg[i];
-    GLYPH g = glyph(ch);
-    sign.blit(offset, g.cols, g.length);
-    offset += g.length;
+    offset += char_at_pos(ch, offset);
     if(ch != ' '){
       sign.col(offset, 0x00);
       offset += 1;
     }
   }
+}
+
+uint8_t SignPrinter::char_at_pos(const char ch, uint8_t pos){
+  GLYPH g = glyph(ch);
+  sign.blit(pos, g.cols, g.length);
+  return g.length;
 }
 
 // "prints" a message into a buffer. returns the actual length, in columns,

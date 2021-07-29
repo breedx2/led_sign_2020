@@ -11,11 +11,11 @@ void CommandParser::parse(const char *commandstring){
   std::string cmd = parseCommandPart(cmd_str);
   Serial.printf("cmd = '%s'\r\n", cmd.c_str());
 
-  std::string remainder = (cmd == cmd_str) ? "" : cmd_str.substr(cmd.length()+1);
-  Serial.printf("remainder = '%s'\r\n", remainder.c_str());
+  std::string params = (cmd == cmd_str) ? "" : cmd_str.substr(cmd.length()+1);
+  Serial.printf("params = '%s'\r\n", params.c_str());
 
   if(cmd == "center"){
-    std::string str = getString(remainder);
+    std::string str = getString(params);
     Serial.printf("String is: '%s'\r\n", str.c_str());
     return sc.center(str.c_str());
   }
@@ -23,16 +23,19 @@ void CommandParser::parse(const char *commandstring){
     return sc.clear();
   }
   if(cmd == "clwipe"){
-    return remainder.empty() ? sc.clwipe() : sc.clwipe(parseNum(remainder));
+    return params.empty() ? sc.clwipe() : sc.clwipe(parseNum(params));
   }
   if(cmd == "crwipe"){
-    return remainder.empty() ? sc.crwipe() : sc.crwipe(parseNum(remainder));
+    return params.empty() ? sc.crwipe() : sc.crwipe(parseNum(params));
   }
   if(cmd == "crid"){
-    return parseColRoll(VDIRECTION::DOWN, remainder);
+    return parseColRoll(VDIRECTION::DOWN, params);
   }
   if(cmd == "criu"){
-    return parseColRoll(VDIRECTION::UP, remainder);
+    return parseColRoll(VDIRECTION::UP, params);
+  }
+  if(cmd == "throb"){
+    return parseThrob(params);
   }
 
   /*
@@ -59,10 +62,10 @@ void CommandParser::parse(const char *commandstring){
 */
 }
 
-void CommandParser::parseColRoll(VDIRECTION vdir, std::string &remainder){
-  std::string msg = getString(remainder);
-  uint16_t speed = getNum1AfterString(remainder, DEFAULT_CRID_SPEED);
-  std::string dirstr = getWordAfterNum1(remainder);
+void CommandParser::parseColRoll(VDIRECTION vdir, std::string &params){
+  std::string msg = getString(params);
+  uint16_t speed = getNum1AfterString(params, DEFAULT_CRID_SPEED);
+  std::string dirstr = getWordAfterNum1(params);
   DIRECTION dir = parseDirection(dirstr);
   if(dir == DIRECTION::NONE){
     return vdir == VDIRECTION::DOWN ? sc.crid(msg.c_str(), speed) : sc.criu(msg.c_str(), speed);
@@ -129,4 +132,37 @@ DIRECTION CommandParser::parseDirection(std::string &dirstr){
     return DIRECTION::RIGHT;
   }
   return DIRECTION::NONE;
+}
+
+void CommandParser::parseThrob(std::string &params){
+  //throb dir pos speed revolutions
+  const std::regex re("(cw|CW|ccw|CW)\\s?+(\\d+)?\\s?+(\\d+)?\\s?+(\\d+)?");
+  std::smatch match;
+  if (!std::regex_match(params, match, re)) {
+    return sc.throb();
+  }
+  std::ssub_match dirmatch = match[1];
+  std::ssub_match posmatch = match[2];
+  std::ssub_match speedmatch = match[3];
+  std::ssub_match revmatch = match[4];
+
+  std::string dirstr = dirmatch.str();
+  CLOCK_DIR cd = ((dirstr == "cw") || (dirstr == "CW")) ? CLOCK_DIR::CW : CLOCK_DIR::CCW;
+
+  if(!posmatch.matched){
+    return sc.throb(cd);
+  }
+  std::string posstr = posmatch.str();
+  uint16_t pos = parseNum(posstr, (SIGN_COLS/2)-2);
+  if(!speedmatch.matched){
+    return sc.throb(cd, pos);
+  }
+  std::string speedstr = speedmatch.str();
+  uint16_t speed = parseNum(speedstr, 65);
+  if(!revmatch.matched){
+    return sc.throb(cd, pos, speed);
+  }
+  std::string revstr = revmatch.str();
+  uint16_t revolutions = std::min(int(parseNum(revstr, 10)), 100);
+  return sc.throb(cd, pos, speed, revolutions);
 }

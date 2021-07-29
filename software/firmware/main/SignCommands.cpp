@@ -444,6 +444,19 @@ void SignCommands::strobe(uint16_t speed, uint16_t count){
   }
 }
 
+void SignCommands::throb(CLOCK_DIR dir, uint8_t pos, uint16_t speed, uint16_t revolutions){
+  const char cw[] = {'|', '/', '-', '\\'};
+  const char ccw[] = {'|', '\\', '-', '/'};
+  const char *chars = (dir == CLOCK_DIR::CW) ? cw : ccw;
+  for(uint16_t rev = 0; rev < revolutions; rev++){
+      for(uint8_t i = 0 ; i < 4; i++){
+        printer.char_at_pos(chars[i], pos);
+        delay(speed);
+      }
+  }
+  printer.char_at_pos(' ', pos);
+}
+
 // format is like 'Sun Jan 01 00:00:00'
 void SignCommands::time(uint16_t seconds){
   printer.clear();
