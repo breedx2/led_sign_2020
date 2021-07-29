@@ -58,6 +58,14 @@ void CommandParser::parse(const char *commandstring){
       if(cmd == "krod") return sc.krod(str.c_str(), speed);
       if(cmd == "krou") return sc.krou(str.c_str(), speed);
   }
+  if(cmd == "lazr"){
+    return sc.lazr(getString(params).c_str());
+  }
+  if(cmd == "left"){
+    std::string str = getString(params);
+    bool clear_first = getNum1AfterString(params, 0) != 0;
+    return sc.left(str.c_str(), clear_first);
+  }
   if(cmd == "throb"){
     return parseThrob(params);
   }

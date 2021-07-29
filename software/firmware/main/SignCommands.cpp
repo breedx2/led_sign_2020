@@ -262,6 +262,14 @@ void SignCommands::mwoo(uint16_t speed){
   }
 }
 
+void SignCommands::on(uint8_t col, uint8_t rownum){
+  sign.on(col, rownum);
+}
+
+void SignCommands::off(uint8_t col, uint8_t rownum){
+  sign.off(col, rownum);
+}
+
 // random in (fade in).  Clears sign first.
 void SignCommands::randi(const char *str, uint16_t speed){
   sign.clear();
