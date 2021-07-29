@@ -12,6 +12,7 @@ enum class CLOCK_DIR { CW, CCW };
 
 #define DEFAULT_CRID_SPEED   25
 #define DEFAULT_CRIU_SPEED   25
+#define DEFAULT_KR_SPEED     25
 
 class SignCommands {
   private:
@@ -29,10 +30,10 @@ class SignCommands {
     void criu(const char *str, uint16_t speed = DEFAULT_CRIU_SPEED, DIRECTION dir = DIRECTION::LEFT);
     void ctr(uint16_t num, uint16_t speed = 50);
     void invert();
-    void krid(const char *str, uint16_t speed = 25, bool clear_first = true);
-    void kriu(const char *str, uint16_t speed = 25, bool clear_first = true);
-    void krod(const char *str, uint16_t speed = 25, bool clear_first = true);
-    void krou(const char *str, uint16_t speed = 25, bool clear_first = true);
+    void krid(const char *str, uint16_t speed = DEFAULT_KR_SPEED, bool clear_first = true);
+    void kriu(const char *str, uint16_t speed = DEFAULT_KR_SPEED, bool clear_first = true);
+    void krod(const char *str, uint16_t speed = DEFAULT_KR_SPEED, bool clear_first = true);
+    void krou(const char *str, uint16_t speed = DEFAULT_KR_SPEED, bool clear_first = true);
     void lazr(const char *str);
     void left(const char *str, bool clear_first = false);
     void lwipe(const char *str, uint16_t speed = 35);

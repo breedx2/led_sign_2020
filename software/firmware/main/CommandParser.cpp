@@ -17,7 +17,6 @@ void CommandParser::parse(const char *commandstring){
 
   if(cmd == "center"){
     std::string str = getString(params);
-    Serial.printf("String is: '%s'\r\n", str.c_str());
     return sc.center(str.c_str());
   }
   if(cmd == "clear"){
@@ -48,6 +47,17 @@ void CommandParser::parse(const char *commandstring){
     uint16_t speed = parseNum(match[2], 50);
     return sc.ctr(num, speed);
   }
+  if(cmd == "invert"){
+    return sc.invert();
+  }
+  if((cmd == "krid") || (cmd == "kriu") || (cmd == "krod") || (cmd == "krou")){
+      std::string str = getString(params);
+      uint16_t speed = getNum1AfterString(params, DEFAULT_KR_SPEED);
+      if(cmd == "krid") return sc.krid(str.c_str(), speed);
+      if(cmd == "kriu") return sc.kriu(str.c_str(), speed);
+      if(cmd == "krod") return sc.krod(str.c_str(), speed);
+      if(cmd == "krou") return sc.krou(str.c_str(), speed);
+  }
   if(cmd == "throb"){
     return parseThrob(params);
   }
@@ -61,9 +71,6 @@ void CommandParser::parse(const char *commandstring){
   //   return sc.clwipe();
   // }
 
-  if(strcmp(cmd, "invert") == 0){
-    return sc.invert();
-  }
   if(strncmp(cmd, "sil ", 4) == 0){
     long value = strtol(cmd+4, NULL, 16);
     return sc.sil(value);
