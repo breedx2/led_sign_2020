@@ -12,7 +12,8 @@ private:
   std::string parseCommandPart(const std::string &commandstring);
   std::string firstMatchGroup(std::string &str, const std::regex &re);
   std::string getString(std::string &input);
-  uint16_t parseNum(std::string &str, uint16_t defaultNum = 0);
+  uint16_t parseNum(std::ssub_match match, uint16_t defaultNum = 0);
+  uint16_t parseNum(std::string str, uint16_t defaultNum = 0);
   uint16_t getNum1AfterString(std::string &input, uint16_t defaultNum = 0);
   std::string getWordAfterNum1(std::string &input);
   DIRECTION parseDirection(std::string &dirstr);

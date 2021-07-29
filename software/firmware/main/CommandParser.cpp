@@ -13,6 +13,7 @@ void CommandParser::parse(const char *commandstring){
 
   std::string params = (cmd == cmd_str) ? "" : cmd_str.substr(cmd.length()+1);
   Serial.printf("params = '%s'\r\n", params.c_str());
+  std::smatch match;
 
   if(cmd == "center"){
     std::string str = getString(params);
@@ -33,6 +34,19 @@ void CommandParser::parse(const char *commandstring){
   }
   if(cmd == "criu"){
     return parseColRoll(VDIRECTION::UP, params);
+  }
+  if(cmd == "ctr"){
+    const std::regex re("([0-9]+)\\s+([0-9]+)?");
+    if (!std::regex_match(params, match, re)) {
+      return sc.ctr(10, 150);
+    }
+    uint16_t num = parseNum(match[1], 10);
+    std::ssub_match speedmatch = match[2];
+    if(!speedmatch.matched){
+      return sc.ctr(num);
+    }
+    uint16_t speed = parseNum(match[2], 50);
+    return sc.ctr(num, speed);
   }
   if(cmd == "throb"){
     return parseThrob(params);
@@ -99,7 +113,12 @@ std::string CommandParser::getString(std::string &input){
   return firstMatchGroup(input, re);
 }
 
-uint16_t CommandParser::parseNum(std::string &str, uint16_t defaultNum){
+uint16_t CommandParser::parseNum(std::ssub_match match, uint16_t defaultNum){
+  std::string str = match.str();
+  return parseNum(str, defaultNum);
+}
+
+uint16_t CommandParser::parseNum(std::string str, uint16_t defaultNum){
   try{
     return std::stoi(str);
   }
@@ -152,17 +171,14 @@ void CommandParser::parseThrob(std::string &params){
   if(!posmatch.matched){
     return sc.throb(cd);
   }
-  std::string posstr = posmatch.str();
-  uint16_t pos = parseNum(posstr, (SIGN_COLS/2)-2);
+  uint16_t pos = parseNum(posmatch, (SIGN_COLS/2)-2);
   if(!speedmatch.matched){
     return sc.throb(cd, pos);
   }
-  std::string speedstr = speedmatch.str();
-  uint16_t speed = parseNum(speedstr, 65);
+  uint16_t speed = parseNum(speedmatch, 65);
   if(!revmatch.matched){
     return sc.throb(cd, pos, speed);
   }
-  std::string revstr = revmatch.str();
-  uint16_t revolutions = std::min(int(parseNum(revstr, 10)), 100);
+  uint16_t revolutions = std::min(int(parseNum(revmatch, 10)), 100);
   return sc.throb(cd, pos, speed, revolutions);
 }
