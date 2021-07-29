@@ -8,6 +8,9 @@
 
 enum DIRECTION { LEFT, RIGHT };
 
+#define DEFAULT_CRID_SPEED   25
+#define DEFAULT_CRIU_SPEED   25
+
 class SignCommands {
   private:
     Sign &sign;
@@ -18,10 +21,10 @@ class SignCommands {
     SignCommands(Sign &sign, SignPrinter &printer): sign(sign), printer(printer){}
     void center(const char *str, bool clear_first = false);
     void clear();
-    void clwipe(uint16_t speed);
-    void crwipe(uint16_t speed);
-    void crid(const char *str, uint16_t speed = 25, DIRECTION dir = LEFT);
-    void criu(const char *str, uint16_t speed = 25, DIRECTION dir = LEFT);
+    void clwipe(uint16_t speed = 5);
+    void crwipe(uint16_t speed = 5);
+    void crid(const char *str, uint16_t speed = DEFAULT_CRID_SPEED, DIRECTION dir = LEFT);
+    void criu(const char *str, uint16_t speed = DEFAULT_CRIU_SPEED, DIRECTION dir = LEFT);
     void ctr(uint16_t num, uint16_t speed = 50);
     void invert();
     void krid(const char *str, uint16_t speed = 25, bool clear_first = true);
