@@ -1,7 +1,26 @@
 #include <Arduino.h>
 #include <string.h>
+#include <set>
 #include "CommandParser.h"
 
+typedef std::function<void(SignCommands &sc, const char *str, uint16_t speed)> STRING_AND_SPEED_FN;
+typedef struct {
+  uint16_t speed;
+  STRING_AND_SPEED_FN fn;
+} cmdinfo;
+
+// just commands that take a single string and an optional speed
+const std::map<std::string, cmdinfo> CMD_STR_SPEED_CONFIGS {
+  {"lwipe", {35, [](SignCommands &sc, const char *str, uint16_t speed){ sc.lwipe(str, speed); } } },
+  {"msl",   {35, [](SignCommands &sc, const char *str, uint16_t speed){ sc.msl(str, speed); } } },
+  {"msr",   {35, [](SignCommands &sc, const char *str, uint16_t speed){ sc.msr(str, speed); } } },
+  {"mwc",   {50, [](SignCommands &sc, const char *str, uint16_t speed){ sc.mwc(str, speed); } } },
+  {"randi", {10, [](SignCommands &sc, const char *str, uint16_t speed){ sc.randi(str, speed); } } },
+  {"randt", {10, [](SignCommands &sc, const char *str, uint16_t speed){ sc.randt(str, speed); } } },
+  {"rid",   {50, [](SignCommands &sc, const char *str, uint16_t speed){ sc.rid(str, speed); } } },
+  {"riu",   {50, [](SignCommands &sc, const char *str, uint16_t speed){ sc.riu(str, speed); } } },
+  {"rwipe", {35, [](SignCommands &sc, const char *str, uint16_t speed){ sc.rwipe(str, speed); } } },
+};
 
 void CommandParser::parse(const char *commandstring){
   Serial.printf("Parsing: %s\r\n", commandstring);
@@ -70,6 +89,10 @@ void CommandParser::parse(const char *commandstring){
     return parseThrob(params);
   }
 
+  if(stringWithSpeed(cmd, params)){
+    return;
+  }
+
   /*
 
   // const std::string cmd_string = cmd;
@@ -89,6 +112,20 @@ void CommandParser::parse(const char *commandstring){
   }
   std::string command = cmd;
 */
+}
+
+// There are quite a number of commands that fit this pattern.
+bool CommandParser::stringWithSpeed(std::string &cmd, std::string &params){
+  auto it = CMD_STR_SPEED_CONFIGS.find(cmd);
+  if(it == CMD_STR_SPEED_CONFIGS.end()){
+    return false;
+  }
+  uint16_t default_speed = it->second.speed;
+  STRING_AND_SPEED_FN fn = it->second.fn;
+  std::string str = getString(params);
+  uint16_t speed = getNum1AfterString(params, default_speed);
+  fn(sc, str.c_str(), speed);
+  return true;
 }
 
 void CommandParser::parseColRoll(VDIRECTION vdir, std::string &params){

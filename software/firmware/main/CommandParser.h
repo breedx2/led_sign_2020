@@ -19,6 +19,7 @@ private:
   DIRECTION parseDirection(std::string &dirstr);
   void parseColRoll(VDIRECTION vdir, std::string &remainder);
   void parseThrob(std::string &params);
+  bool stringWithSpeed(std::string &cmd, std::string &params);
 public:
   CommandParser(SignCommands &sc, SignPrinter &printer): sc(sc), printer(printer){}
   void parse(const char *cmd);
