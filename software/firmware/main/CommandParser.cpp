@@ -122,7 +122,6 @@ void CommandParser::parse(const char *commandstring){
   if(stringWithSpeed(cmd, params)){
     return;
   }
-
 }
 
 void CommandParser::parseTwo(std::string &params, std::function<void(uint16_t, uint16_t)> fn){
@@ -183,21 +182,35 @@ std::string CommandParser::parseCommandPart(const std::string &cmd){
   return cmd.substr(0, len);
 }
 
+// Returns the guts of the first quoted string it finds, or empty if not found.
+std::string CommandParser::getString(std::string &input){
+  size_t first = 0;
+  while((first < input.length()) && (input.at(first) == ' ') && (input.at(first) != '\'')){
+    first++;
+  }
+  if(input.at(first) != '\'') return std::string();
+  first++;
+  if(first >= input.length()) return std::string();
+  size_t last = input.find_last_of('\'');
+  if(last <= first) return std::string();
+
+  return input.substr(first, last - first);
+}
+
+// DEPRECATED! This can easily overflow the stack because regex is recursive.
+// UGH. This needs to go away I guess.
 std::string CommandParser::firstMatchGroup(std::string &str, const std::regex &re){
   if(str.empty()) return std::string();
   std::smatch match;
+  Serial.println("PRE MATCH");
   if (std::regex_match(str, match, re)) {
+    Serial.println("HERE!");
     if(match.size() > 1){
       std::ssub_match group = match[1];
       return group.str();
     }
   }
   return std::string();
-}
-
-std::string CommandParser::getString(std::string &input){
-  const std::regex re("\\s*'(.*)'.*");
-  return firstMatchGroup(input, re);
 }
 
 uint16_t CommandParser::parseNum(std::ssub_match match, uint16_t defaultNum){
