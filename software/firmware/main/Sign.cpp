@@ -74,6 +74,7 @@ void Sign::invert(){
 }
 
 void Sign::on(uint8_t col, uint8_t rownum){
+  if(rownum > 6) return;
   uint8_t realigned_col = col + 6;
   uint8_t byteoff = realigned_col / 8;
   SIGN_ROW row = get_mem_row(rownum);
@@ -82,6 +83,7 @@ void Sign::on(uint8_t col, uint8_t rownum){
 }
 
 void Sign::off(uint8_t col, uint8_t rownum){
+  if(rownum > 6) return;
   uint8_t realigned_col = col + 6;
   uint8_t byteoff = realigned_col / 8;
   SIGN_ROW row = get_mem_row(rownum);

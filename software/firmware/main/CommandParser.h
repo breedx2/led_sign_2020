@@ -21,6 +21,7 @@ private:
   void parseThrob(std::string &params);
   bool stringWithSpeed(std::string &cmd, std::string &params);
   bool parseCommandWithJustOptionalSpeed(std::string &cmd, std::string &params);
+  void parseTwo(std::string &params, std::function<void(uint16_t, uint16_t)> fn);
 public:
   CommandParser(SignCommands &sc, SignPrinter &printer): sc(sc), printer(printer){}
   void parse(const char *cmd);

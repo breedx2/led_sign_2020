@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <string.h>
 #include <set>
+#include <tuple>
 #include "CommandParser.h"
 
 typedef std::function<void(SignCommands &sc, uint16_t speed)> SPEED_FN;
@@ -96,6 +97,14 @@ void CommandParser::parse(const char *commandstring){
     bool clear_first = getNum1AfterString(params, 0) != 0;
     return sc.left(str.c_str(), clear_first);
   }
+  if(cmd == "on"){
+    SignCommands *scmd = &sc;
+    return parseTwo(params, [scmd](uint16_t num1, uint16_t num2){ scmd->on(num1, num2);});
+  }
+  if(cmd == "off"){
+    SignCommands *scmd = &sc;
+    return parseTwo(params, [scmd](uint16_t num1, uint16_t num2){ scmd->off(num1, num2);});
+  }
   if(cmd == "throb"){
     return parseThrob(params);
   }
@@ -106,6 +115,17 @@ void CommandParser::parse(const char *commandstring){
     return;
   }
 
+}
+
+void CommandParser::parseTwo(std::string &params, std::function<void(uint16_t, uint16_t)> fn){
+  const std::regex re("([0-9]+)\\s+([0-9]+)");
+  std::smatch match;
+  if (!std::regex_match(params, match, re)) {
+    return;
+  }
+  uint8_t col = parseNum(match[1], 0);
+  uint8_t row = parseNum(match[2], 0);
+  return fn(col, row);
 }
 
 // There are quite a number of commadns that just take a single optional uint16_t
