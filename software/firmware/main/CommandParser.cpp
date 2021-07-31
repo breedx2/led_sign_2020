@@ -105,6 +105,10 @@ void CommandParser::parse(const char *commandstring){
     SignCommands *scmd = &sc;
     return parseTwo(params, [scmd](uint16_t num1, uint16_t num2){ scmd->off(num1, num2);});
   }
+  if(cmd == "right"){
+    std::string str = getString(params);
+    return sc.right(str.c_str());
+  }
   if(cmd == "strobe"){
     SignCommands *scmd = &sc;
     return parseTwo(params, [scmd](uint16_t num1, uint16_t num2){ scmd->strobe(num1, num2);});
