@@ -3,14 +3,32 @@
 #include <set>
 #include "CommandParser.h"
 
+typedef std::function<void(SignCommands &sc, uint16_t speed)> SPEED_FN;
+typedef struct {
+  uint16_t speed;
+  SPEED_FN fn;
+} speed_cmdinfo;
+// just commands that take an optional speed
+const std::map<std::string, speed_cmdinfo> CMD_SPEED_CONFIGS {
+  {"clwipe", {5,  [](SignCommands &sc, uint16_t speed){ sc.clwipe(speed); } } },
+  {"crwipe", {5,  [](SignCommands &sc, uint16_t speed){ sc.crwipe(speed); } } },
+  {"mwoi",   {50, [](SignCommands &sc, uint16_t speed){ sc.mwoi(speed); } } },
+  {"mwoo",   {50, [](SignCommands &sc, uint16_t speed){ sc.mwoo(speed); } } },
+  {"rando",  {10, [](SignCommands &sc, uint16_t speed){ sc.rando(speed); } } },
+  {"rod",    {50, [](SignCommands &sc, uint16_t speed){ sc.rod(speed); } } },
+  {"rou",    {50, [](SignCommands &sc, uint16_t speed){ sc.rou(speed); } } },
+  // time is technically not speed, but one single uint16_t so we get away with it
+  {"time",   {10, [](SignCommands &sc, uint16_t seconds){ sc.time(seconds); } } },
+};
+
 typedef std::function<void(SignCommands &sc, const char *str, uint16_t speed)> STRING_AND_SPEED_FN;
 typedef struct {
   uint16_t speed;
   STRING_AND_SPEED_FN fn;
-} cmdinfo;
+} string_speed_cmdinfo;
 
 // just commands that take a single string and an optional speed
-const std::map<std::string, cmdinfo> CMD_STR_SPEED_CONFIGS {
+const std::map<std::string, string_speed_cmdinfo> CMD_STR_SPEED_CONFIGS {
   {"lwipe", {35, [](SignCommands &sc, const char *str, uint16_t speed){ sc.lwipe(str, speed); } } },
   {"msl",   {35, [](SignCommands &sc, const char *str, uint16_t speed){ sc.msl(str, speed); } } },
   {"msr",   {35, [](SignCommands &sc, const char *str, uint16_t speed){ sc.msr(str, speed); } } },
@@ -40,12 +58,6 @@ void CommandParser::parse(const char *commandstring){
   }
   if(cmd == "clear"){
     return sc.clear();
-  }
-  if(cmd == "clwipe"){
-    return params.empty() ? sc.clwipe() : sc.clwipe(parseNum(params));
-  }
-  if(cmd == "crwipe"){
-    return params.empty() ? sc.crwipe() : sc.crwipe(parseNum(params));
   }
   if(cmd == "crid"){
     return parseColRoll(VDIRECTION::DOWN, params);
@@ -88,20 +100,14 @@ void CommandParser::parse(const char *commandstring){
   if(cmd == "throb"){
     return parseThrob(params);
   }
-
+  if(parseCommandWithJustOptionalSpeed(cmd, params)){
+    return;
+  }
   if(stringWithSpeed(cmd, params)){
     return;
   }
 
   /*
-
-  // const std::string cmd_string = cmd;
-  // const std::regex ws_re("\\s+"); // whitespace
-  // if(strncmp(cmd, "clwipe ", strlen("clwipe")) == 0){
-  //   long value = strtol(cmd+4, NULL, 16);
-  //   return sc.clwipe();
-  // }
-
   if(strncmp(cmd, "sil ", 4) == 0){
     long value = strtol(cmd+4, NULL, 16);
     return sc.sil(value);
@@ -112,6 +118,19 @@ void CommandParser::parse(const char *commandstring){
   }
   std::string command = cmd;
 */
+}
+
+// There are quite a number of commadns that just take a single optional uint16_t
+bool CommandParser::parseCommandWithJustOptionalSpeed(std::string &cmd, std::string &params){
+  auto it = CMD_SPEED_CONFIGS.find(cmd);
+  if(it == CMD_SPEED_CONFIGS.end()){
+    return false;
+  }
+  uint16_t default_speed = it->second.speed;
+  SPEED_FN fn = it->second.fn;
+  uint16_t speed = parseNum(params, default_speed);
+  fn(sc, speed);
+  return true;
 }
 
 // There are quite a number of commands that fit this pattern.
@@ -167,10 +186,12 @@ std::string CommandParser::getString(std::string &input){
 
 uint16_t CommandParser::parseNum(std::ssub_match match, uint16_t defaultNum){
   std::string str = match.str();
+  if(!match.matched) return defaultNum;
   return parseNum(str, defaultNum);
 }
 
 uint16_t CommandParser::parseNum(std::string str, uint16_t defaultNum){
+  if(str.empty()) return defaultNum;
   try{
     return std::stoi(str);
   }
@@ -185,6 +206,7 @@ uint16_t CommandParser::parseNum(std::string str, uint16_t defaultNum){
 }
 
 uint16_t CommandParser::getNum1AfterString(std::string &input, uint16_t defaultNum){
+  if(input.empty()) return defaultNum;
   const std::regex re("'.*' ([0-9]+)");
   std::string numstr = firstMatchGroup(input, re);
   return parseNum(numstr, defaultNum);

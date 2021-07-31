@@ -414,14 +414,13 @@ void SignCommands::rwipe(const char *str, uint16_t speed){
   uint8_t col_num = printer.print_mem(str, buff, SIGN_COLS);
   uint8_t pad = (SIGN_COLS - col_num) / 2;
   uint8_t col = SIGN_COLS;
-  while(col > SIGN_COLS - pad){
+  while(col >= SIGN_COLS - pad){
     sign.col(col, 0x00);
     col--;
     delay(speed);
   }
-  for(uint8_t i = col_num; i > 0; i--){
-    sign.col(pad + i, buff[i-1]);
-    col--;
+  for(short i = col_num-1; i >= 0; i--){
+    sign.col(col--, buff[i]);
     delay(speed);
   }
   while(col > 1){
