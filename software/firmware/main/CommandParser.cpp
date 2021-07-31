@@ -32,6 +32,10 @@ typedef struct {
 
 // just commands that take a single string and an optional speed
 const std::map<std::string, string_speed_cmdinfo> CMD_STR_SPEED_CONFIGS {
+  {"krid",  {DEFAULT_KR_SPEED, [](SignCommands &sc, const char *str, uint16_t speed){ sc.krid(str, speed); } } },
+  {"kriu",  {DEFAULT_KR_SPEED, [](SignCommands &sc, const char *str, uint16_t speed){ sc.kriu(str, speed); } } },
+  {"krod",  {DEFAULT_KR_SPEED, [](SignCommands &sc, const char *str, uint16_t speed){ sc.krod(str, speed); } } },
+  {"krou",  {DEFAULT_KR_SPEED, [](SignCommands &sc, const char *str, uint16_t speed){ sc.krou(str, speed); } } },
   {"lwipe", {35, [](SignCommands &sc, const char *str, uint16_t speed){ sc.lwipe(str, speed); } } },
   {"msl",   {35, [](SignCommands &sc, const char *str, uint16_t speed){ sc.msl(str, speed); } } },
   {"msr",   {35, [](SignCommands &sc, const char *str, uint16_t speed){ sc.msr(str, speed); } } },
@@ -83,14 +87,6 @@ void CommandParser::parse(const char *commandstring){
   }
   if(cmd == "invert"){
     return sc.invert();
-  }
-  if((cmd == "krid") || (cmd == "kriu") || (cmd == "krod") || (cmd == "krou")){
-      std::string str = getString(params);
-      uint16_t speed = getNum1AfterString(params, DEFAULT_KR_SPEED);
-      if(cmd == "krid") return sc.krid(str.c_str(), speed);
-      if(cmd == "kriu") return sc.kriu(str.c_str(), speed);
-      if(cmd == "krod") return sc.krod(str.c_str(), speed);
-      if(cmd == "krou") return sc.krou(str.c_str(), speed);
   }
   if(cmd == "lazr"){
     return sc.lazr(getString(params).c_str());
