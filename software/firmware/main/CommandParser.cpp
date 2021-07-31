@@ -17,6 +17,9 @@ const std::map<std::string, speed_cmdinfo> CMD_SPEED_CONFIGS {
   {"rando",  {10, [](SignCommands &sc, uint16_t speed){ sc.rando(speed); } } },
   {"rod",    {50, [](SignCommands &sc, uint16_t speed){ sc.rod(speed); } } },
   {"rou",    {50, [](SignCommands &sc, uint16_t speed){ sc.rou(speed); } } },
+  // sil/sir technically not speed, but we can get away with it
+  {"sil",    {0,  [](SignCommands &sc, uint16_t value){ sc.sil(value); } } },
+  {"sir",    {0,  [](SignCommands &sc, uint16_t value){ sc.sir(value); } } },
   // time is technically not speed, but one single uint16_t so we get away with it
   {"time",   {10, [](SignCommands &sc, uint16_t seconds){ sc.time(seconds); } } },
 };
@@ -107,17 +110,6 @@ void CommandParser::parse(const char *commandstring){
     return;
   }
 
-  /*
-  if(strncmp(cmd, "sil ", 4) == 0){
-    long value = strtol(cmd+4, NULL, 16);
-    return sc.sil(value);
-  }
-  if(strncmp(cmd, "sir ", 4) == 0){
-    long value = strtol(cmd+4, NULL, 16);
-    return sc.sir(value);
-  }
-  std::string command = cmd;
-*/
 }
 
 // There are quite a number of commadns that just take a single optional uint16_t
