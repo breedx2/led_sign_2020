@@ -157,6 +157,8 @@ bool CommandParser::stringWithSpeed(std::string &cmd, std::string &params){
   uint16_t default_speed = it->second.speed;
   STRING_AND_SPEED_FN fn = it->second.fn;
   std::string str = getString(params);
+  if(str.empty()) return false;
+
   uint16_t speed = getNum1AfterString(params, default_speed);
   fn(sc, str.c_str(), speed);
   return true;
@@ -184,17 +186,24 @@ std::string CommandParser::parseCommandPart(const std::string &cmd){
 
 // Returns the guts of the first quoted string it finds, or empty if not found.
 std::string CommandParser::getString(std::string &input){
+  auto range = findString(input);
+  size_t first = std::get<0>(range);
+  size_t last = std::get<1>(range);
+  if(first == -1) return std::string();
+  return input.substr(first, last - first);
+}
+
+std::tuple<int16_t,int16_t> CommandParser::findString(std::string &input){
   size_t first = 0;
   while((first < input.length()) && (input.at(first) == ' ') && (input.at(first) != '\'')){
     first++;
   }
-  if(input.at(first) != '\'') return std::string();
+  if(input.at(first) != '\'') return std::make_tuple(-1, -1);
   first++;
-  if(first >= input.length()) return std::string();
+  if(first >= input.length()) return std::make_tuple(-1, -1);
   size_t last = input.find_last_of('\'');
-  if(last <= first) return std::string();
-
-  return input.substr(first, last - first);
+  if(last <= first) return std::make_tuple(-1, -1);
+  return std::make_tuple(first, last);
 }
 
 // DEPRECATED! This can easily overflow the stack because regex is recursive.
@@ -202,9 +211,7 @@ std::string CommandParser::getString(std::string &input){
 std::string CommandParser::firstMatchGroup(std::string &str, const std::regex &re){
   if(str.empty()) return std::string();
   std::smatch match;
-  Serial.println("PRE MATCH");
   if (std::regex_match(str, match, re)) {
-    Serial.println("HERE!");
     if(match.size() > 1){
       std::ssub_match group = match[1];
       return group.str();

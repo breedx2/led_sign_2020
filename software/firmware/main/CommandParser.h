@@ -2,6 +2,7 @@
 #define COMMAND_PARSER_H 1
 
 #include <regex>
+#include <tuple>
 #include "SignCommands.h"
 #include "SignPrinter.h"
 
@@ -22,6 +23,7 @@ private:
   bool stringWithSpeed(std::string &cmd, std::string &params);
   bool parseCommandWithJustOptionalSpeed(std::string &cmd, std::string &params);
   void parseTwo(std::string &params, std::function<void(uint16_t, uint16_t)> fn);
+  std::tuple<int16_t,int16_t> findString(std::string &input);
 public:
   CommandParser(SignCommands &sc, SignPrinter &printer): sc(sc), printer(printer){}
   void parse(const char *cmd);
