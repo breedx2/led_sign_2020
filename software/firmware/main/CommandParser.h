@@ -24,6 +24,7 @@ private:
   bool parseCommandWithJustOptionalSpeed(std::string &cmd, std::string &params);
   void parseTwo(std::string &params, std::function<void(uint16_t, uint16_t)> fn);
   std::tuple<int16_t,int16_t> findString(std::string &input);
+  uint16_t parseDigits(std::string &input, uint16_t defaultNum);
 public:
   CommandParser(SignCommands &sc, SignPrinter &printer): sc(sc), printer(printer){}
   void parse(const char *cmd);

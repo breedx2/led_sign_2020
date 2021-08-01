@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <string.h>
+#include <ctype.h>
 #include <set>
 #include <tuple>
 #include "CommandParser.h"
@@ -243,9 +244,30 @@ uint16_t CommandParser::parseNum(std::string str, uint16_t defaultNum){
 
 uint16_t CommandParser::getNum1AfterString(std::string &input, uint16_t defaultNum){
   if(input.empty()) return defaultNum;
-  const std::regex re("'.*' ([0-9]+)");
-  std::string numstr = firstMatchGroup(input, re);
-  return parseNum(numstr, defaultNum);
+  auto range = findString(input);
+  size_t first = std::get<0>(range);
+  size_t last = std::get<1>(range);
+  if(first == -1) return defaultNum; // no string at all
+  auto afterString = input.substr(last+1);
+  Serial.printf("After string => %s\r\n", afterString.c_str());
+  return parseDigits(afterString, defaultNum);
+}
+
+// input may have leading whitespace, but then will parse out the
+// first numeric portion into a number.
+uint16_t CommandParser::parseDigits(std::string &input, uint16_t defaultNum){
+  size_t first = 0;
+  while((first < input.length()) && (input.at(first) == ' ')){
+    first++;
+  }
+  if((first >= input.length()) || !isdigit(input.at(first))){
+    return defaultNum;
+  }
+  size_t last = first + 1;
+  while((last < input.length()) && isdigit(input.at(last))){
+    last++;
+  }
+  return parseNum(input.substr(first, last - first), defaultNum);
 }
 
 std::string CommandParser::getWordAfterNum1(std::string &input){
