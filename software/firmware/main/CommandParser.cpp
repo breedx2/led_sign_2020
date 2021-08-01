@@ -205,20 +205,6 @@ std::tuple<int16_t,int16_t> CommandParser::findString(std::string &input){
   return std::make_tuple(first, last);
 }
 
-// DEPRECATED! This can easily overflow the stack because regex is recursive.
-// UGH. This needs to go away I guess.
-std::string CommandParser::firstMatchGroup(std::string &str, const std::regex &re){
-  if(str.empty()) return std::string();
-  std::smatch match;
-  if (std::regex_match(str, match, re)) {
-    if(match.size() > 1){
-      std::ssub_match group = match[1];
-      return group.str();
-    }
-  }
-  return std::string();
-}
-
 uint16_t CommandParser::parseNum(std::ssub_match match, uint16_t defaultNum){
   std::string str = match.str();
   if(!match.matched) return defaultNum;
