@@ -1,8 +1,8 @@
 #ifndef COMMAND_PARSER_H
 #define COMMAND_PARSER_H 1
 
-#include <regex>
 #include <tuple>
+#include <regex>
 #include "SignCommands.h"
 #include "SignPrinter.h"
 

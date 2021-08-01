@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <string.h>
 #include <ctype.h>
+#include <regex>
 #include <set>
 #include <tuple>
 #include "CommandParser.h"
@@ -75,16 +76,16 @@ void CommandParser::parse(const char *commandstring){
     return parseColRoll(VDIRECTION::UP, params);
   }
   if(cmd == "ctr"){
-    const std::regex re("([0-9]+)\\s+([0-9]+)?");
-    if (!std::regex_match(params, match, re)) {
+    auto second = afterDigits(params);
+    if(second.empty()){
+      return sc.ctr(parseNum(params, 10));
+    }
+    auto first = params.substr(0, params.length() - second.length());
+    if(first.empty()){
       return sc.ctr(10, 150);
     }
-    uint16_t num = parseNum(match[1], 10);
-    std::ssub_match speedmatch = match[2];
-    if(!speedmatch.matched){
-      return sc.ctr(num);
-    }
-    uint16_t speed = parseNum(match[2], 50);
+    uint16_t num = parseNum(first, 10);
+    uint16_t speed = parseNum(second, 50);
     return sc.ctr(num, speed);
   }
   if(cmd == "invert"){
