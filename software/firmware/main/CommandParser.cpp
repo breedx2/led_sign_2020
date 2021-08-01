@@ -195,13 +195,11 @@ std::string CommandParser::getString(std::string &input){
 }
 
 std::tuple<int16_t,int16_t> CommandParser::findString(std::string &input){
-  size_t first = 0;
-  while((first < input.length()) && (input.at(first) == ' ') && (input.at(first) != '\'')){
-    first++;
+  std::string afterWs = afterWhitespace(input);
+  if(afterWs.empty() || (afterWs.at(0) != '\'')){
+    return std::make_tuple(-1,-1);
   }
-  if(input.at(first) != '\'') return std::make_tuple(-1, -1);
-  first++;
-  if(first >= input.length()) return std::make_tuple(-1, -1);
+  size_t first = 1;
   size_t last = input.find_last_of('\'');
   if(last <= first) return std::make_tuple(-1, -1);
   return std::make_tuple(first, last);
@@ -243,14 +241,8 @@ uint16_t CommandParser::parseNum(std::string str, uint16_t defaultNum){
 }
 
 uint16_t CommandParser::getNum1AfterString(std::string &input, uint16_t defaultNum){
-  if(input.empty()) return defaultNum;
-  auto range = findString(input);
-  size_t first = std::get<0>(range);
-  size_t last = std::get<1>(range);
-  if(first == -1) return defaultNum; // no string at all
-  auto afterString = input.substr(last+1);
-  Serial.printf("After string => %s\r\n", afterString.c_str());
-  return parseDigits(afterString, defaultNum);
+  auto after = afterString(input);
+  return parseDigits(after, defaultNum);
 }
 
 // input may have leading whitespace, but then will parse out the
@@ -270,9 +262,46 @@ uint16_t CommandParser::parseDigits(std::string &input, uint16_t defaultNum){
   return parseNum(input.substr(first, last - first), defaultNum);
 }
 
+// Returns a string continaing the stuff after the quoted string
+std::string CommandParser::afterString(std::string input){
+  auto range = findString(input);
+  size_t first = std::get<0>(range);
+  size_t last = std::get<1>(range);
+  if(first == -1) return std::string(); // no string at all
+  return afterWhitespace(input.substr(last+1));
+}
+
+std::string CommandParser::afterDigits(std::string input){
+  if(input.empty()) return input;
+  std::string afterWs = afterWhitespace(input);
+  size_t index = 0;
+  while((index < afterWs.length()) && isdigit(afterWs.at(index))){
+    index++;
+  }
+  if(index >= afterWs.length()){
+    return std::string();
+  }
+  return afterWhitespace(afterWs.substr(index));
+}
+
+std::string CommandParser::afterWhitespace(std::string input){
+  size_t index = 0;
+  while((index < input.length()) && (input.at(index) == ' ')){
+    index++;
+  }
+  return input.substr(index);
+}
+
 std::string CommandParser::getWordAfterNum1(std::string &input){
-  const std::regex re("'.*' [0-9]+ (\\w+)");
-  return firstMatchGroup(input, re);
+  auto as = afterString(input);
+  if(as.empty()) return as;
+  auto ad = afterDigits(as);
+  if(ad.empty()) return ad;
+  size_t index = 0;
+  while((index < ad.length()) && (isalnum(ad.at(index)))){
+    index++;
+  }
+  return ad.substr(0, index);
 }
 
 DIRECTION CommandParser::parseDirection(std::string &dirstr){
