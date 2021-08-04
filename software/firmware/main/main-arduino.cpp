@@ -53,6 +53,12 @@ void loop(){
 			netTools.initWifi();
 			return;
 		}
+		if(strncmp(cmd, "ntp", 3) == 0){
+			int daylightOffset_sec = 3600;
+			const char* ntpServer = "pool.ntp.org";
+			const long gmtOffset_sec = -28800;
+			configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+		}
 		parser.parse(cmd);
 	}
 }
