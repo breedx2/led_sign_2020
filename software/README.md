@@ -3,20 +3,38 @@
 
 This is the software side of the vintage LED sign refresh.
 
-Going to try using [micropython](https://micropython.org/) for starters, if
-it doesn't work out we'll try something lower level.
+Micropython has failed us. Let's cpp with arduino libs now.
 
 # setup
 
+In some other directory, like `~/software` do
+
 ```
-$ virtualenv env
-$ source env/bin/activate
-$ pip install esptool adafruit-ampy
-$ esptool.py --port /dev/ttyUSB0 erase_flash
-$ esptool.py --chip esp32 --port /dev/ttyUSB0 write_flash -z 0x1000 firmware/esp32-idf3-20200902-v1.13.bin
+$ git clone -b v4.2.1 --recursive https://github.com/espressif/esp-idf.git
 ```
 
-To use the python REPL then on the device:
+And in this dir, should only have to do this once:
+```
+$ git submodule update --init --recursive
+```
+
+## dev setup
+
+each time you're ready to develop:
+
+`$ source ./dev-setup.sh`
+
+# misc
+
+To compile/build:
+
+`idf.py build`
+
+To burn new firmware:
+
+`idf.py -p /dev/ttyUSB0 flash`
+
+To use the serial console:
 `screen /dev/ttyUSB0 115200`
 
 To upload a file to the device:
