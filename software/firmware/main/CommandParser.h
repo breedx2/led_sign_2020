@@ -26,7 +26,7 @@ private:
   std::string afterString(std::string input);
   std::string afterDigits(std::string input);
   std::string afterWhitespace(std::string input);
-  uint16_t parseDigits(std::string &input, uint16_t defaultNum);
+  uint16_t parseDigits(std::string input, uint16_t defaultNum);
 public:
   CommandParser(SignCommands &sc, SignPrinter &printer): sc(sc), printer(printer){}
   void parse(const char *cmd);

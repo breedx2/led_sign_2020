@@ -234,19 +234,23 @@ uint16_t CommandParser::getNum1AfterString(std::string &input, uint16_t defaultN
 
 // input may have leading whitespace, but then will parse out the
 // first numeric portion into a number.
-uint16_t CommandParser::parseDigits(std::string &input, uint16_t defaultNum){
-  size_t first = 0;
-  while((first < input.length()) && (input.at(first) == ' ')){
-    first++;
-  }
-  if((first >= input.length()) || !isdigit(input.at(first))){
+uint16_t CommandParser::parseDigits(std::string input, uint16_t defaultNum){
+  // while((first < input.length()) && (input.at(first) == ' ')){
+  //   first++;
+  // }
+  // if((first >= input.length()) || !isdigit(input.at(first))){
+  //   return defaultNum;
+  // }
+  auto afterWs = afterWhitespace(input);
+  if(afterWs.empty() || !isdigit(afterWs.at(0))){
     return defaultNum;
   }
-  size_t last = first + 1;
-  while((last < input.length()) && isdigit(input.at(last))){
+  size_t first = 0;
+  size_t last = 1;
+  while((last < afterWs.length()) && isdigit(afterWs.at(last))){
     last++;
   }
-  return parseNum(input.substr(first, last - first), defaultNum);
+  return parseNum(afterWs.substr(first, last - first), defaultNum);
 }
 
 // Returns a string continaing the stuff after the quoted string
@@ -303,30 +307,42 @@ DIRECTION CommandParser::parseDirection(std::string &dirstr){
 
 void CommandParser::parseThrob(std::string &params){
   //throb dir pos speed revolutions
-  const std::regex re("(cw|CW|ccw|CW)\\s?+(\\d+)?\\s?+(\\d+)?\\s?+(\\d+)?");
-  std::smatch match;
-  if (!std::regex_match(params, match, re)) {
-    return sc.throb();
-  }
-  std::ssub_match dirmatch = match[1];
-  std::ssub_match posmatch = match[2];
-  std::ssub_match speedmatch = match[3];
-  std::ssub_match revmatch = match[4];
 
-  std::string dirstr = dirmatch.str();
-  CLOCK_DIR cd = ((dirstr == "cw") || (dirstr == "CW")) ? CLOCK_DIR::CW : CLOCK_DIR::CCW;
+  // we treat the first bit like a command
+  auto dirstr = parseCommandPart(params);
+  CLOCK_DIR cd;
+  if((dirstr == "cw") || (dirstr == "CW")){
+    cd = CLOCK_DIR::CW;
+  }
+  else if((dirstr == "ccw") || (dirstr == "CCW")){
+    cd = CLOCK_DIR::CCW;
+  }
+  else { // No direction, no problem...default
+    return sc.throb(); //defaults
+  }
+    // now to try for a position
+  auto remain = afterWhitespace(params.substr(dirstr.length()));
+  size_t first_space = remain.find(' ', 0);
+  if(first_space == std::string::npos){ // no spaces
+    uint16_t position = parseDigits(remain, (SIGN_COLS/2)-2);
+    return sc.throb(cd, position);
+  }
+  uint16_t position = parseDigits(remain.substr(0,first_space), (SIGN_COLS/2)-2);
+  remain = afterWhitespace(remain.substr(first_space));
 
-  if(!posmatch.matched){
-    return sc.throb(cd);
+  first_space = remain.find(' ', 0);
+  if(first_space == std::string::npos){ // no spaces
+    uint8_t speed = parseDigits(remain, 65);
+    return sc.throb(cd, position, speed);
   }
-  uint16_t pos = parseNum(posmatch, (SIGN_COLS/2)-2);
-  if(!speedmatch.matched){
-    return sc.throb(cd, pos);
+  uint16_t speed = parseDigits(remain.substr(0,first_space), 65);
+  remain = afterWhitespace(remain.substr(first_space));
+
+  first_space = remain.find(' ', 0);
+  if(first_space == std::string::npos){ //no spaces
+    uint16_t revolutions = parseDigits(remain, 10);
+    return sc.throb(cd, position, speed, revolutions);
   }
-  uint16_t speed = parseNum(speedmatch, 65);
-  if(!revmatch.matched){
-    return sc.throb(cd, pos, speed);
-  }
-  uint16_t revolutions = std::min(int(parseNum(revmatch, 10)), 100);
-  return sc.throb(cd, pos, speed, revolutions);
+  uint16_t revolutions = parseDigits(remain.substr(0, first_space), 10);
+  return sc.throb(cd, position, speed, revolutions);
 }
