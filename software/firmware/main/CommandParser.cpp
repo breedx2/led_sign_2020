@@ -127,14 +127,9 @@ void CommandParser::parse(const char *commandstring){
 }
 
 void CommandParser::parseTwo(std::string &params, std::function<void(uint16_t, uint16_t)> fn){
-  const std::regex re("([0-9]+)\\s+([0-9]+)");
-  std::smatch match;
-  if (!std::regex_match(params, match, re)) {
-    return;
-  }
-  uint8_t col = parseNum(match[1], 0);
-  uint8_t row = parseNum(match[2], 0);
-  return fn(col, row);
+  uint8_t first = parseDigits(params, 0);
+  uint8_t second = parseDigits(afterDigits(params), 0);
+  fn(first, second);
 }
 
 // There are quite a number of commadns that just take a single optional uint16_t
@@ -206,11 +201,11 @@ std::tuple<int16_t,int16_t> CommandParser::findString(std::string &input){
   return std::make_tuple(first, last);
 }
 
-uint16_t CommandParser::parseNum(std::ssub_match match, uint16_t defaultNum){
-  std::string str = match.str();
-  if(!match.matched) return defaultNum;
-  return parseNum(str, defaultNum);
-}
+// uint16_t CommandParser::parseNum(std::ssub_match match, uint16_t defaultNum){
+//   std::string str = match.str();
+//   if(!match.matched) return defaultNum;
+//   return parseNum(str, defaultNum);
+// }
 
 uint16_t CommandParser::parseNum(std::string str, uint16_t defaultNum){
   if(str.empty()) return defaultNum;
