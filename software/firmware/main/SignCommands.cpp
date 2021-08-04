@@ -6,6 +6,7 @@
 #include "Sign.h"
 #include "SignPrinter.h"
 #include "font5x7.h"
+#include "sign_memory.h"
 #include "sign_utils.h"
 #include "SignCommands.h"
 
@@ -74,6 +75,19 @@ void SignCommands::crwipe(uint16_t speed){
     sign.col(i, 0x00);
     delay(speed);
   }
+}
+
+// Dumps the memory of the sign to the given destination. It
+// is assumed that the dest is wide enough to hold the whole sign.
+uint8_t SignCommands::dump(uint8_t *destination){
+  SIGN_MEM memory = get_memory();
+  uint8_t d = 0;
+  for(uint8_t rownum = 0; rownum < 7; rownum++){
+    SIGN_ROW row = memory[rownum];
+    memcpy(destination+d, row, BYTES_PER_ROW);
+    d += BYTES_PER_ROW;
+  }
+  return BYTES_PER_ROW * 7;
 }
 
 void SignCommands::invert(){

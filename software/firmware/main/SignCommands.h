@@ -29,6 +29,7 @@ class SignCommands {
     void crid(const char *str, uint16_t speed = DEFAULT_CRID_SPEED, DIRECTION dir = DIRECTION::LEFT);
     void criu(const char *str, uint16_t speed = DEFAULT_CRIU_SPEED, DIRECTION dir = DIRECTION::LEFT);
     void ctr(uint16_t num, uint16_t speed = 50);
+    uint8_t dump(uint8_t *destination);
     void invert();
     void krid(const char *str, uint16_t speed = DEFAULT_KR_SPEED, bool clear_first = true);
     void kriu(const char *str, uint16_t speed = DEFAULT_KR_SPEED, bool clear_first = true);

@@ -86,6 +86,14 @@ void CommandParser::parse(const char *commandstring){
     uint16_t speed = parseNum(second, 50);
     return sc.ctr(num, speed);
   }
+  if(cmd == "dump"){
+    uint8_t buff[7*BYTES_PER_ROW];
+    auto rc = sc.dump(buff);
+    for(auto i = 0; i < rc; i++){
+      Serial.printf("%02x", buff[i]);
+    }
+    Serial.println();
+  }
   if(cmd == "invert"){
     return sc.invert();
   }
