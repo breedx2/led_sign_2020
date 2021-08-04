@@ -4,22 +4,22 @@
 #include "sign_updater.h"
 #include "font5x7.h"
 #include "sign_utils.h"
+#include "CommandParser.h"
+#include "Demo.h"
+#include "SerialCommander.h"
 #include "Sign.h"
 #include "SignPrinter.h"
 #include "SignCommands.h"
-#include "Demo.h"
-#include "SerialCommander.h"
-#include "CommandParser.h"
+#include "NetTools.h"
 
 Sign sign;
 SignPrinter printer = SignPrinter(sign);
 SignCommands sc = SignCommands(sign, printer);
 Demo demo = Demo(sc, printer);
-int loopcounter;
-uint8_t offset = 0;
 
 SerialCommander ser = SerialCommander();
 CommandParser parser = CommandParser(sc, printer);
+NetTools netTools = NetTools();
 
 void setup(){
 	Serial.begin(115200);
@@ -32,10 +32,8 @@ void setup(){
   start_updater();
   enable_output();
 
-	delay(1000);
+	delay(500);
 	sc.clear();
-	// memset(cmdbuff, 0, 1024);
-	// Serial.print("sign > ");
 }
 
 void loop(){
@@ -51,8 +49,10 @@ void loop(){
 		if(strncmp(cmd, "demo", 4) == 0){
 			return demo.run();
 		}
+		if(strncmp(cmd, "wifi on", 7) == 0){
+			netTools.initWifi();
+			return;
+		}
 		parser.parse(cmd);
 	}
-
-  // Serial.printf("LOOP %d chillin offset = %d\r\n", loopcounter++, offset);
 }
