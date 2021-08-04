@@ -1,8 +1,7 @@
 #include <Arduino.h>
 #include <string.h>
 #include <ctype.h>
-#include <regex>
-#include <set>
+#include <map>
 #include <tuple>
 #include "CommandParser.h"
 
@@ -60,7 +59,6 @@ void CommandParser::parse(const char *commandstring){
 
   std::string params = (cmd == cmd_str) ? "" : cmd_str.substr(cmd.length()+1);
   Serial.printf("params = '%s'\r\n", params.c_str());
-  std::smatch match;
 
   if(cmd == "center"){
     std::string str = getString(params);

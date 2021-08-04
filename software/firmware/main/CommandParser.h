@@ -2,7 +2,6 @@
 #define COMMAND_PARSER_H 1
 
 #include <tuple>
-#include <regex>
 #include "SignCommands.h"
 #include "SignPrinter.h"
 
@@ -12,7 +11,6 @@ private:
   SignPrinter &printer;
   std::string parseCommandPart(const std::string &commandstring);
   std::string getString(std::string &input);
-  uint16_t parseNum(std::ssub_match match, uint16_t defaultNum = 0);
   uint16_t parseNum(std::string str, uint16_t defaultNum = 0);
   uint16_t getNum1AfterString(std::string &input, uint16_t defaultNum = 0);
   std::string getWordAfterNum1(std::string &input);
