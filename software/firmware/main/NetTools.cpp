@@ -11,13 +11,13 @@ bool NetTools::initWifi(){
 
   // Try pausing our update timer while we get settled on the network...
   stop_updater();
-  Serial.println("WIFI ONE");
+  // Serial.println("WIFI ONE");
   WiFi.mode(WIFI_STA);
-  Serial.println("WIFI TWO");
+  // Serial.println("WIFI TWO");
   WiFi.begin(LED_WIFI_SSID, LED_WIFI_PASS);
-  Serial.println("WIFI FOUR");
+  // Serial.println("WIFI FOUR");
   Serial.printf("Connecting to '%s' .", LED_WIFI_SSID);
-  Serial.println("WIFI FIVE");
+  // Serial.println("WIFI FIVE");
   char throb[] = {'|', '/', '-', '\\', '-'};
   int i = 0;
   while (WiFi.status() != WL_CONNECTED) {
