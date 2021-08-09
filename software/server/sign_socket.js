@@ -22,6 +22,9 @@ function handleSignWsRequest(ws,req){
     if(msg.startsWith("id:")){
       handleAuthLine(ws, msg);
     }
+    else if(msg.startsWith("dump:")){
+      handleDumpReply(msg);
+    }
   });
   ws.on('close', (code,reason) => {
     console.log(`Server saw close`);
@@ -39,7 +42,7 @@ function handleSignWsRequest(ws,req){
 }
 
 function handleAuthLine(ws, msg){
-  console.log(`Checking this auth line: '${msg}'`);
+  console.log(`Checking this auth line`);
   if(signSocket){ // already have an authed sign
     return ws.close();
   }
@@ -53,10 +56,28 @@ function handleAuthLine(ws, msg){
       dumpTimer = setInterval(() => {
         console.log("Asking for a dump");
         signSocket.send("dump\r\n");
-      }, 5000);
+      }, 500);
       return ws.send('ACK\r\n');
   }
   ws.close(); // invalid auth
+}
+
+function handleDumpReply(msg){
+  const buff = new Buffer(msg.substr(5), 'base64');
+  for(let row=0; row < 7; row++){
+    for(let col=0; col < 19; col++){
+      const b = buff[(19*row) + col];
+      for(let bp = 0; bp < 8; bp++){
+        if(b & (1 << bp)){
+          process.stdout.write('*');
+        }
+        else{
+          process.stdout.write(' ');
+        }
+      }
+    }
+    process.stdout.write('\r\n');
+  }
 }
 
 module.exports = {

@@ -1,5 +1,6 @@
 
 #include <Arduino.h>
+#include "mbedtls/base64.h"
 #include "esp_websocket_client.h"
 #include "ControlSocket.h"
 #include "secrets.h"
@@ -33,29 +34,29 @@ void ControlSocket::sendAuth(){
   char buff[100];
   memset(buff, 0, 100);
   sprintf(buff, "id:%s\r\n", SIGN_TOKEN);
-  Serial.printf("(%d) Sending auth string: %s %d\r\n", (uintptr_t)ws, buff, strlen(buff));
+  // Serial.printf("(%d) Sending auth string: %s %d\r\n", (uintptr_t)ws, buff, strlen(buff));
   esp_websocket_client_send_text(ws, buff, strlen(buff), portMAX_DELAY);
 }
 
 void ControlSocket::disconnected(){
   Serial.println("WEBSOCKET_EVENT_DISCONNECTED");
-  ws = NULL;
+  // Keep ws forever...the framework reconnects every 10s anyway.
+  // ws = NULL;
 }
 
 void ControlSocket::dump(){
   Serial.println("Performing a memory dump");
   uint8_t buff[7*BYTES_PER_ROW];
-  char sendbuff[(7*2*BYTES_PER_ROW)+3];
   memset(buff, 0, 7*BYTES_PER_ROW);
-  memset(sendbuff, 0, (7*2*BYTES_PER_ROW)+3);
   auto rc = signCommands.dump(buff);
-  int offset = 0;
-  for(auto i = 0; i < rc; i++){
-    sprintf(sendbuff+offset, "%02X", buff[i]);
-    offset += 2;
-  }
-  sprintf(sendbuff+offset, "\r\n");
-  esp_websocket_client_send_text(ws, sendbuff, strlen(sendbuff), portMAX_DELAY);
+
+  size_t outlen;
+  mbedtls_base64_encode(NULL, 0, &outlen, (unsigned char*)buff, 7*BYTES_PER_ROW);
+  unsigned char sendbuff[outlen+5];
+  memcpy((char*)sendbuff, "dump:", 5);
+
+  mbedtls_base64_encode(sendbuff+5, outlen, &outlen,(unsigned char*)buff, 7*BYTES_PER_ROW);
+  esp_websocket_client_send_text(ws, (const char*)sendbuff, outlen+5, portMAX_DELAY);
 }
 
 static void ws_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data) {
