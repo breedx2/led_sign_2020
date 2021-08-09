@@ -45,7 +45,7 @@ void ControlSocket::disconnected(){
 }
 
 void ControlSocket::dump(){
-  Serial.println("Performing a memory dump");
+  // Serial.println("Performing a memory dump");
   uint8_t buff[7*BYTES_PER_ROW];
   memset(buff, 0, 7*BYTES_PER_ROW);
   auto rc = signCommands.dump(buff);
@@ -72,7 +72,7 @@ static void ws_event_handler(void *handler_args, esp_event_base_t base, int32_t 
         cs->disconnected();
         break;
     case WEBSOCKET_EVENT_DATA:
-        Serial.printf("WEBSOCKET_EVENT_DATA, opcode = %d\r\n", data->op_code);
+        // Serial.printf("WEBSOCKET_EVENT_DATA, opcode = %d\r\n", data->op_code);
 
         if (data->op_code == 0x08 && data->data_len == 2) {
             Serial.printf("Received closed message with code=%d\r\n", 256*data->data_ptr[0] + data->data_ptr[1]);
@@ -81,12 +81,14 @@ static void ws_event_handler(void *handler_args, esp_event_base_t base, int32_t 
           Serial.printf("Receied opcode 0x08 with data length = %d\r\n", data->data_len);
         }
         else if (data->op_code == 0x01) { // Text frame
-            Serial.printf("Received=%.*s\r\n", data->data_len, (char *)data->data_ptr);
+            // Serial.printf("Received=%.*s\r\n", data->data_len, (char *)data->data_ptr);
             if(strncmp((char *)data->data_ptr, "dump\r\n", 6) == 0){
               cs->dump();
             }
         }
-        Serial.printf("Total payload length=%d, data_len=%d, current payload offset=%d\r\n", data->payload_len, data->data_len, data->payload_offset);
+        else {
+          Serial.printf("Total payload length=%d, data_len=%d, current payload offset=%d\r\n", data->payload_len, data->data_len, data->payload_offset);
+        }
         // xTimerReset(shutdown_signal_timer, portMAX_DELAY);
         break;
     case WEBSOCKET_EVENT_ERROR:

@@ -54,6 +54,7 @@ function handleAuthLine(ws, msg){
       }
       signSocket = ws;
       dumpTimer = setInterval(() => {
+        if(!signSocket) return;
         console.log("Asking for a dump");
         signSocket.send("dump\r\n");
       }, 500);
@@ -63,11 +64,16 @@ function handleAuthLine(ws, msg){
 }
 
 function handleDumpReply(msg){
+  printDumpToConsole(msg);
+}
+
+function printDumpToConsole(msg){
   const buff = new Buffer(msg.substr(5), 'base64');
   for(let row=0; row < 7; row++){
-    for(let col=0; col < 19; col++){
-      const b = buff[(19*row) + col];
+    for(let rowbyte=0; rowbyte < 19; rowbyte++){
+      const b = buff[(19*row) + rowbyte];
       for(let bp = 0; bp < 8; bp++){
+        if((rowbyte == 0) && (bp < 8)) continue;
         if(b & (1 << bp)){
           process.stdout.write('*');
         }
