@@ -1,6 +1,7 @@
 'use strict';
 const secrets = require('./secrets');
 
+let sign;
 let signSocket;
 let pending = {};
 let dumpTimer;
@@ -18,12 +19,14 @@ function handleSignWsRequest(ws,req){
   });
   ws.on('message', msg => {
     msg = msg.toString().trim();
-    console.log(`Server got message ${msg}`);
     if(msg.startsWith("id:")){
       handleAuthLine(ws, msg);
     }
     else if(msg.startsWith("dump:")){
       handleDumpReply(msg);
+    }
+    else {
+      console.log(`Server got message ${msg}`);
     }
   });
   ws.on('close', (code,reason) => {
@@ -55,7 +58,7 @@ function handleAuthLine(ws, msg){
       signSocket = ws;
       dumpTimer = setInterval(() => {
         if(!signSocket) return;
-        console.log("Asking for a dump");
+        // console.log("Asking for a dump");
         signSocket.send("dump\r\n");
       }, 500);
       return ws.send('ACK\r\n');
@@ -68,7 +71,7 @@ function handleDumpReply(msg){
 }
 
 function printDumpToConsole(msg){
-  const buff = new Buffer(msg.substr(5), 'base64');
+  const buff = Buffer.from(msg.substr(5), 'base64');
   for(let row=0; row < 7; row++){
     for(let rowbyte=0; rowbyte < 19; rowbyte++){
       const b = buff[(19*row) + rowbyte];
@@ -86,6 +89,9 @@ function printDumpToConsole(msg){
   }
 }
 
-module.exports = {
-  handleSignWsRequest
+module.exports = theSign => {
+  sign = theSign;
+  return {
+    handleSignWsRequest
+  }
 }

@@ -1,0 +1,38 @@
+.offline {
+  color: #850c1e;
+}
+
+.online {
+  color: green;
+}
+
+#sign {
+  background-color: #222222;
+  padding-bottom: 0px;
+}
+
+.sign_svg {
+  background-color: #222222;
+}
+
+/* .sign_row {
+  padding: 0;
+  margin: 0;
+  row-height: 9px;
+} */
+
+/* .sign_row {
+  white-space: nowrap;
+  background-color: #222222;
+  margin: 0;
+  padding: 0;
+  line-height: 17px;
+} */
+
+.oneled-on {
+  color: #f73939;
+}
+
+/* .oneled-off {
+  fill: #333333;
+} */
