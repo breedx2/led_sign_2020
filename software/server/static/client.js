@@ -1,62 +1,68 @@
 
-console.log('client starting.');
-createSignGrid();
 
-let rescaleTimer;
-window.addEventListener('resize', event => {
-  if(rescaleTimer){
-    clearTimeout(rescaleTimer);
-    rescaleTimer = null;
-  }
-  rescaleTimer = setTimeout(doResize, 250);
-});
+let socket = null;
+let connected = false;
 
-function doResize(){
-  rescaleTimer = null;
-  const sign = document.getElementById('sign');
+console.log('client ws starting.');
 
-  const led_d = (sign.clientWidth-10)/145.0;
-  const led_r = led_d/2;
-  const signSvg = document.getElementById('signsvg');
-  signSvg.setAttribute('width', sign.clientWidth);
-  signSvg.setAttribute('height',(led_d+2) * 7);
+doConnect();
 
+function doConnect(){
 
-  document.querySelectorAll('.oneled').forEach((led,i) => {
-    const row = Math.floor(i / 145);
-    const col = i % 145;
-    led.setAttribute('r', led_r);
-    led.setAttribute('cx', led_d*(col+1));
-    led.setAttribute('cy', ((row+1)*(led_d))+1);
+  socket = new WebSocket('ws://localhost:8080/client');
 
+  socket.addEventListener('open', event => {
+    console.log('ws connection established');
+    connected = true;
   });
+
+  socket.addEventListener('message', onMessage);
+
+  socket.addEventListener('close', event => {
+    console.log('ws disconnected');
+    socket = null;
+    showSignOffline();
+    doConnect();
+  });
+
 }
 
+function onMessage(event){
+  console.log('Message from server ', event.data);
+  const message = JSON.parse(event.data);
+  if(message.event === "status"){
+    doStatusUpdate(message);
+  }
+}
 
-function createSignGrid(){
-  const sign = document.getElementById('sign');
-  console.log(`sign width = ${sign.clientWidth}`);
-  const led_d = (sign.clientWidth-10)/145.0;
-  const led_r = led_d/2;
+function doStatusUpdate(message){
+  if(message.online){
+    showSignOnline();
+  }
+  else {
+    showSignOffline();
+  }
+  updateDisplay(message.content);
+}
 
-  const signSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  signSvg.id = 'signsvg';
-  signSvg.setAttribute('width', sign.clientWidth);
-  signSvg.setAttribute('height',(led_d+2) * 7);
-
-  for(let row = 0; row < 7; row++){
-    for(let col = 0; col < 145; col++){
-      const led = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      led.id = `row_${row}_col_${col}`;
-      led.setAttribute('class', 'oneled oneled-off');
-      led.setAttribute('r', led_r);
-      led.setAttribute('cx', led_d*(col+1));
-      led.setAttribute('cy', ((row+1)*(led_d))+1);
-      led.setAttribute('stroke', "black");
-      led.setAttribute('fill', "#333333");
-      signSvg.appendChild(led);
+function updateDisplay(content){
+  const buff = atob(content); //base64 decode
+  for(let row=0; row < 7; row++){
+    for(let rowbyte=0; rowbyte < 19; rowbyte++){
+      const b = buff.charCodeAt((19*row) + rowbyte);
+      for(let bp = 0; bp < 8; bp++){
+        const col = (8 * rowbyte) + bp;
+        const col_adj = col - 6;
+        if((col_adj < 0) || (col_adj > 144)) continue;
+        const circle = document.getElementById(`row_${row}_col_${col_adj}`);
+        if((rowbyte == 0) && (bp < 8)) continue;
+        if(b & (1 << bp)){
+          circle.setAttribute('fill', '#850c1e');
+        }
+        else{
+          circle.setAttribute('fill', '#2e2e2e');
+        }
+      }
     }
   }
-  sign.appendChild(signSvg);
-
 }

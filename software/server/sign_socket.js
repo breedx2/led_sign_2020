@@ -17,23 +17,14 @@ function handleSignWsRequest(ws,req){
     }, 5000);
     pending[ws] = tmr;
   });
-  ws.on('message', msg => {
-    msg = msg.toString().trim();
-    if(msg.startsWith("id:")){
-      handleAuthLine(ws, msg);
-    }
-    else if(msg.startsWith("dump:")){
-      handleDumpReply(msg);
-    }
-    else {
-      console.log(`Server got message ${msg}`);
-    }
-  });
+  ws.on('message', msg => handleMessage(ws, msg));
+
   ws.on('close', (code,reason) => {
     console.log(`Server saw close`);
     if(ws === signSocket){
       signSocket = null;
       console.log('Sign has disconnected.');
+      sign.setOnline(false);
     }
   });
   ws.on('ping', data => {
@@ -56,6 +47,7 @@ function handleAuthLine(ws, msg){
         delete pending[ws];
       }
       signSocket = ws;
+      sign.setOnline(true);
       dumpTimer = setInterval(() => {
         if(!signSocket) return;
         // console.log("Asking for a dump");
@@ -66,8 +58,24 @@ function handleAuthLine(ws, msg){
   ws.close(); // invalid auth
 }
 
+function handleMessage(ws, msg){
+  msg = msg.toString().trim();
+  if(msg.startsWith("id:")){
+    handleAuthLine(ws, msg);
+  }
+  else if(msg.startsWith("dump:")){
+    handleDumpReply(msg);
+  }
+  else {
+    console.log(`Server got message ${msg}`);
+  }
+}
+
 function handleDumpReply(msg){
-  printDumpToConsole(msg);
+  // printDumpToConsole(msg);
+  // dispatchUpdateToClients(msg); xxxxxxx
+  sign.setLastUpdate(new Date());
+  sign.setContent(msg.substr(5));
 }
 
 function printDumpToConsole(msg){
