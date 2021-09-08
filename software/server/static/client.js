@@ -28,7 +28,7 @@ function doConnect(){
 }
 
 function onMessage(event){
-  console.log('Message from server ', event.data);
+  // console.log('Message from server ', event.data);
   const message = JSON.parse(event.data);
   if(message.event === "status"){
     doStatusUpdate(message);
@@ -54,15 +54,19 @@ function updateDisplay(content){
         const col = (8 * rowbyte) + bp;
         const col_adj = col - 6;
         if((col_adj < 0) || (col_adj > 144)) continue;
-        const circle = document.getElementById(`row_${row}_col_${col_adj}`);
         if((rowbyte == 0) && (bp < 8)) continue;
         if(b & (1 << bp)){
-          circle.setAttribute('fill', '#850c1e');
+          ledOn(col_adj, row);
         }
         else{
-          circle.setAttribute('fill', '#2e2e2e');
+          ledOff(col_adj, row);
         }
       }
     }
   }
+}
+
+function sendSingleLed(col, row, onOff){
+  const cmd = onOff ? 'on' : 'off';
+  return socket.send(`c:${cmd} ${col} ${row}\r\n`);
 }

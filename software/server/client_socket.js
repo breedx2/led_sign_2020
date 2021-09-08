@@ -2,6 +2,7 @@
 const secrets = require('./secrets');
 
 let sign;
+let signSocket;
 
 const statusTmr = setInterval(sendStatus, 500);
 const clientList = [];
@@ -14,7 +15,8 @@ function handleWsRequest(ws,req){
   });
   ws.on('message', msg => {
     msg = msg.toString().trim();
-    console.log(`Saw message from web client: %{msg}`);
+    console.log(`Saw message from web client: ${msg}`);
+    handleClientMessage(msg);
   });
   ws.on('close', (code,reason) => {
     console.log(`Server saw close`);
@@ -26,6 +28,13 @@ function handleWsRequest(ws,req){
   ws.on('ping', data => {
     ws.pong('ok');
   });
+}
+
+function handleClientMessage(msg){
+  if(msg.startsWith("c:")){
+    const cmd = msg.substring(2);
+    signSocket.sendCmd(cmd);
+  }
 }
 
 function sendStatus(){
@@ -42,8 +51,9 @@ function sendStatus(){
   });
 }
 
-module.exports = theSign => {
-  sign = theSign;
+module.exports = (aSign, aSignSocket) => {
+  sign = aSign;
+  signSocket = aSignSocket;
   return {
     handleWsRequest
   }

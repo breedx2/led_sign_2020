@@ -18,3 +18,8 @@
 .oneled-on {
   color: #f73939;
 }
+
+.pen {
+  cursor: url('/pen.png') 0 64, pointer;
+  /* cursor: help; */
+}

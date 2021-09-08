@@ -78,6 +78,10 @@ function handleDumpReply(msg){
   sign.setContent(msg.substr(5));
 }
 
+function sendCmd(cmd){
+  signSocket.send(cmd);
+}
+
 function printDumpToConsole(msg){
   const buff = Buffer.from(msg.substr(5), 'base64');
   for(let row=0; row < 7; row++){
@@ -100,6 +104,7 @@ function printDumpToConsole(msg){
 module.exports = theSign => {
   sign = theSign;
   return {
-    handleSignWsRequest
+    handleSignWsRequest,
+    sendCmd
   }
 }

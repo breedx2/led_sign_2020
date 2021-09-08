@@ -5,7 +5,7 @@ class Sign {
   constructor(){
     this.online = false;
     this.lastUpdate = '';
-    this.content = null;
+    this.content = [];
   }
 
   isOnline(){

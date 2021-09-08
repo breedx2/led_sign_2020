@@ -2,6 +2,9 @@
 console.log('client ui starting.');
 createSignGrid();
 
+const LED_ON_COLOR = '#850c1e';
+const LED_OFF_COLOR = '#2e2e2e';
+
 let rescaleTimer;
 window.addEventListener('resize', event => {
   if(rescaleTimer){
@@ -47,12 +50,17 @@ function createSignGrid(){
     for(let col = 0; col < 145; col++){
       const led = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       led.id = `row_${row}_col_${col}`;
-      led.setAttribute('class', 'oneled oneled-off');
+      led.setAttribute('class', 'oneled oneled-off pen');
       led.setAttribute('r', led_r);
       led.setAttribute('cx', led_d*(col+1));
       led.setAttribute('cy', ((row+1)*(led_d))+1);
       led.setAttribute('stroke', "black");
       led.setAttribute('fill', "#333333");
+      led.setAttribute('onclick', `ledClicked(${col}, ${row})`);
+      led.setAttribute('onmouseenter', `ledEnter(${col}, ${row})`);
+      led.setAttribute('onmouseleave', `ledLeave(${col}, ${row})`);
+      led.setAttribute('onmousedown', `ledMouseDown(${col}, ${row})`);
+      led.setAttribute('onmouseup', `ledMouseUp(${col}, ${row})`);
       signSvg.appendChild(led);
     }
   }
@@ -75,4 +83,32 @@ function showSignOffline(){
   status.classList.remove('bi-check-circle-fill')
   status.classList.add('bi-x-octagon-fill');
   document.getElementById('statustext').innerHTML = '&nbsp;offline';
+}
+
+function ledOn(col, row){
+  const circle = getLedCircle(col, row);
+  circle.setAttribute('fill', LED_ON_COLOR);
+  return true;
+}
+
+function ledOff(col, row){
+  const circle = getLedCircle(col, row);
+  circle.setAttribute('fill', LED_OFF_COLOR);
+  return false;
+}
+
+function toggleLed(col, row){
+  if(ledIsOn(col, row)){
+    return ledOff(col, row);
+  }
+  return ledOn(col, row);
+}
+
+function ledIsOn(col, row){
+  const circle = getLedCircle(col, row);
+  return circle.getAttribute('fill') === LED_ON_COLOR;
+}
+
+function getLedCircle(col, row){
+  return document.getElementById(`row_${row}_col_${col}`);
 }

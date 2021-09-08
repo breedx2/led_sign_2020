@@ -6,9 +6,10 @@ const client_socket = require('./client_socket');
 const Sign = require('./sign.js');
 
 const sign = new Sign();
-const signWsHandler = sign_socket(sign).handleSignWsRequest
+const signSocket = sign_socket(sign);
+const signWsHandler = signSocket.handleSignWsRequest;
 
-const clientWsHandler = client_socket(sign).handleWsRequest
+const clientWsHandler = client_socket(sign, signSocket).handleWsRequest;
 
 const app = express();
 var expressWs = require('express-ws')(app);
