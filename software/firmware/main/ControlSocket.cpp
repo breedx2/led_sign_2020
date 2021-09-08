@@ -59,6 +59,14 @@ void ControlSocket::dump(){
   esp_websocket_client_send_text(ws, (const char*)sendbuff, outlen+5, portMAX_DELAY);
 }
 
+// void ControlSocket::bufferCmd(const char *cmd){
+//
+// }
+
+void ControlSocket::parseCmd(const char *cmd, size_t len){
+  parser.parse(cmd, len);
+}
+
 static void ws_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data) {
     esp_websocket_event_data_t *data = (esp_websocket_event_data_t *)event_data;
     // Serial.printf("SEE WS EVENT YAY! (%d)\r\n", (uintptr_t)data->user_context);
@@ -84,6 +92,13 @@ static void ws_event_handler(void *handler_args, esp_event_base_t base, int32_t 
             // Serial.printf("Received=%.*s\r\n", data->data_len, (char *)data->data_ptr);
             if(strncmp((char *)data->data_ptr, "dump\r\n", 6) == 0){
               cs->dump();
+            }
+            else {
+              char cmd[1024];
+              memset(cmd, 0, 1024);
+              strncpy(cmd, data->data_ptr, data->data_len);
+              Serial.printf("Some rando command: %s\r\n", cmd);
+              cs->parseCmd(data->data_ptr, (size_t)data->data_len);
             }
         }
         else {

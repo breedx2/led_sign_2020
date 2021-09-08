@@ -28,6 +28,8 @@ private:
 public:
   CommandParser(SignCommands &sc, SignPrinter &printer): sc(sc), printer(printer){}
   void parse(const char *cmd);
+  void parse(const char *cmd, size_t n);
+  void parse(const std::string &cmd);
 };
 
 #endif

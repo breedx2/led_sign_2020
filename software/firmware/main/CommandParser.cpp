@@ -49,10 +49,19 @@ const std::map<std::string, string_speed_cmdinfo> CMD_STR_SPEED_CONFIGS {
   {"rwipe", {35, [](SignCommands &sc, const char *str, uint16_t speed){ sc.rwipe(str, speed); } } },
 };
 
+void CommandParser::parse(const char *commandstring, size_t n){
+  Serial.printf("Parsing: %s\r\n", commandstring);
+  const std::string cmd_str(commandstring, n);
+  parse(cmd_str);
+}
+
 void CommandParser::parse(const char *commandstring){
   Serial.printf("Parsing: %s\r\n", commandstring);
+  const std::string cmd_str = commandstring;
+  parse(cmd_str);
+}
 
-  const std::string &cmd_str = commandstring;
+void CommandParser::parse(const std::string &cmd_str){
 
   std::string cmd = parseCommandPart(cmd_str);
   Serial.printf("cmd = '%s'\r\n", cmd.c_str());

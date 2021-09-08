@@ -22,7 +22,7 @@ Demo demo = Demo(sc, printer);
 SerialCommander ser = SerialCommander();
 CommandParser parser = CommandParser(sc, printer);
 NetTools netTools = NetTools();
-ControlSocket controlSocket = ControlSocket(sc);
+ControlSocket controlSocket = ControlSocket(sc, parser);
 
 void setup(){
 	Serial.begin(115200);
