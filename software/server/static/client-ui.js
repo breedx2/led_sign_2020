@@ -45,6 +45,8 @@ function createSignGrid(){
   signSvg.id = 'signsvg';
   signSvg.setAttribute('width', sign.clientWidth);
   signSvg.setAttribute('height',(led_d+2) * 7);
+  signSvg.setAttribute('onmouseleave', 'setNotDragging()');
+  signSvg.setAttribute('onmouseup', 'setNotDragging()');
 
   for(let row = 0; row < 7; row++){
     for(let col = 0; col < 145; col++){

@@ -46,6 +46,8 @@ function doStatusUpdate(message){
 }
 
 function updateDisplay(content){
+  if(isDragging) return; //busy painting here
+
   const buff = atob(content); //base64 decode
   for(let row=0; row < 7; row++){
     for(let rowbyte=0; rowbyte < 19; rowbyte++){

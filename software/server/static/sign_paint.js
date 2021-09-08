@@ -5,6 +5,11 @@ function ledClicked(col, row){
   console.log(`saw sweet click: ${col}, ${row}`)
 }
 
+function setNotDragging(){
+  console.log('FU thinger');
+  isDragging = false;
+}
+
 function ledMouseDown(col, row){
   console.log(`mouse down ${col} ${row}`)
   isDragging = true;

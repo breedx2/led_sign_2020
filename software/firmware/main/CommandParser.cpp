@@ -50,7 +50,7 @@ const std::map<std::string, string_speed_cmdinfo> CMD_STR_SPEED_CONFIGS {
 };
 
 void CommandParser::parse(const char *commandstring, size_t n){
-  Serial.printf("Parsing: %s\r\n", commandstring);
+  Serial.printf("Parsing: %.*s\r\n", n, commandstring);
   const std::string cmd_str(commandstring, n);
   parse(cmd_str);
 }

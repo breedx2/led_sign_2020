@@ -94,10 +94,7 @@ static void ws_event_handler(void *handler_args, esp_event_base_t base, int32_t 
               cs->dump();
             }
             else {
-              char cmd[1024];
-              memset(cmd, 0, 1024);
-              strncpy(cmd, data->data_ptr, data->data_len);
-              Serial.printf("Some rando command: %s\r\n", cmd);
+              Serial.printf("Some rando command: %.*s\r\n", data->data_len, data->data_ptr);
               cs->parseCmd(data->data_ptr, (size_t)data->data_len);
             }
         }
