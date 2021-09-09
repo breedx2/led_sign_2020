@@ -52,7 +52,7 @@ function createSignGrid(){
     for(let col = 0; col < 145; col++){
       const led = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       led.id = `row_${row}_col_${col}`;
-      led.setAttribute('class', 'oneled oneled-off pen');
+      led.setAttribute('class', 'oneled oneled-off');
       led.setAttribute('r', led_r);
       led.setAttribute('cx', led_d*(col+1));
       led.setAttribute('cy', ((row+1)*(led_d))+1);
@@ -113,4 +113,13 @@ function ledIsOn(col, row){
 
 function getLedCircle(col, row){
   return document.getElementById(`row_${row}_col_${col}`);
+}
+
+function forEveryLed(cb){
+  for(let row = 0; row < 7; row++){
+    for(let col = 0; col < 145; col++){
+      const led = getLedCircle(col, row);
+      cb(led);
+    }
+  }
 }

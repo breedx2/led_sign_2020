@@ -1,8 +1,18 @@
 
 let isDragging = false;
+let drawMode = false;
+let eraseMode = false;
 
 function ledClicked(col, row){
   console.log(`saw sweet click: ${col}, ${row}`)
+  if(drawMode){
+    ledOn(col, row);
+    sendSingleLed(col, row, true);
+  }
+  else if (eraseMode){
+    ledOff(col, row);
+    sendSingleLed(col, row, false);
+  }
 }
 
 function setNotDragging(){
@@ -11,9 +21,16 @@ function setNotDragging(){
 
 function ledMouseDown(col, row){
   console.log(`mouse down ${col} ${row}`)
+  if(!drawMode && !eraseMode) return;
   isDragging = true;
-  ledOn(col, row);
-  sendSingleLed(col, row, true);
+  if(drawMode){
+    ledOn(col, row);
+    sendSingleLed(col, row, true);
+  }
+  else{
+    ledOff(col, row);
+    sendSingleLed(col, row, false);
+  }
 }
 
 function ledMouseUp(col, row){
@@ -24,8 +41,14 @@ function ledMouseUp(col, row){
 function ledEnter(col, row){
   console.log(`mouse enter ${col} ${row}`)
   if(isDragging){
-    ledOn(col, row);
-    sendSingleLed(col, row, true);
+    if(drawMode){
+      ledOn(col, row);
+      sendSingleLed(col, row, true);
+    }
+    else if(eraseMode){
+      ledOff(col, row);
+      sendSingleLed(col, row, false);
+    }
   }
 }
 
@@ -39,37 +62,58 @@ function clearClicked(){
 }
 
 function pencilClicked(){
-  toggleWidge('pencilbutton');
-  const eraser = document.getElementById('erasebutton');
-  eraser.classList.remove('btn-success');
-  eraser.classList.add('btn-secondary');
+  drawMode = toggleWidge('pencilbutton');
+  disableWidge('erasebutton');
+  eraseMode = false;
+  forEveryLed(led => {
+    if(drawMode){
+      led.classList.add('pen');
+    }
+    else {
+      led.classList.remove('pen');
+    }
+    led.classList.remove('eraser');
+  });
 }
 
 function eraserClicked(){
-  toggleWidge('erasebutton');
-  const pencil = document.getElementById('pencilbutton');
-  pencil.classList.remove('btn-success');
-  pencil.classList.add('btn-secondary');
+  eraseMode = toggleWidge('erasebutton');
+  disableWidge('pencilbutton');
+  drawMode = false;
+  forEveryLed(led => {
+    if(eraseMode){
+      led.classList.add('eraser');
+    }
+    else {
+      led.classList.remove('eraser');
+    }
+    led.classList.remove('pen');
+  });
+
 }
 
 function toggleWidge(id){
-  const pencil = document.getElementById(id);
-  if(pencil.classList.contains('btn-success')){
-    disableWidge(id);
+  if(isWidgeEnabled(id)){
+    return disableWidge(id);
   }
-  else{
-    enableWidge(id);
-  }
+  return enableWidge(id);
+}
+
+function isWidgeEnabled(id){
+  const widge = document.getElementById(id);
+  return widge.classList.contains('btn-success');
 }
 
 function enableWidge(id){
   const elem = document.getElementById(id);
   elem.classList.add('btn-success');
   elem.classList.remove('btn-secondary');
+  return true;
 }
 
 function disableWidge(id){
   const elem = document.getElementById(id);
   elem.classList.remove('btn-success');
   elem.classList.add('btn-secondary');
+  return false;
 }
