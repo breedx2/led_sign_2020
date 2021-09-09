@@ -6,7 +6,6 @@ function ledClicked(col, row){
 }
 
 function setNotDragging(){
-  console.log('FU thinger');
   isDragging = false;
 }
 
@@ -33,4 +32,44 @@ function ledEnter(col, row){
 function ledLeave(col, row){
   console.log(`mouse leave ${col} ${row}`)
 
+}
+
+function clearClicked(){
+  clearSign();
+}
+
+function pencilClicked(){
+  toggleWidge('pencilbutton');
+  const eraser = document.getElementById('erasebutton');
+  eraser.classList.remove('btn-success');
+  eraser.classList.add('btn-secondary');
+}
+
+function eraserClicked(){
+  toggleWidge('erasebutton');
+  const pencil = document.getElementById('pencilbutton');
+  pencil.classList.remove('btn-success');
+  pencil.classList.add('btn-secondary');
+}
+
+function toggleWidge(id){
+  const pencil = document.getElementById(id);
+  if(pencil.classList.contains('btn-success')){
+    disableWidge(id);
+  }
+  else{
+    enableWidge(id);
+  }
+}
+
+function enableWidge(id){
+  const elem = document.getElementById(id);
+  elem.classList.add('btn-success');
+  elem.classList.remove('btn-secondary');
+}
+
+function disableWidge(id){
+  const elem = document.getElementById(id);
+  elem.classList.remove('btn-success');
+  elem.classList.add('btn-secondary');
 }

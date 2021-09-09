@@ -72,3 +72,7 @@ function sendSingleLed(col, row, onOff){
   const cmd = onOff ? 'on' : 'off';
   return socket.send(`c:${cmd} ${col} ${row}\r\n`);
 }
+
+function clearSign(){
+  socket.send('c:clear\r\n');
+}
