@@ -15,6 +15,11 @@ function ledClicked(col, row){
   }
 }
 
+function startDragging(){
+  if(!drawMode && !eraseMode) return;
+  isDragging = true;
+}
+
 function setNotDragging(){
   isDragging = false;
 }
@@ -23,11 +28,15 @@ function ledMouseDown(col, row){
   console.log(`mouse down ${col} ${row}`)
   if(!drawMode && !eraseMode) return;
   isDragging = true;
-  if(drawMode){
+  if(drawMode) {
+    document.getElementById('signsvg').classList.add('pen');
+    document.getElementById('signsvg').classList.remove('eraser');
     ledOn(col, row);
     sendSingleLed(col, row, true);
   }
-  else{
+  else {
+    document.getElementById('signsvg').classList.add('eraser');
+    document.getElementById('signsvg').classList.remove('pen');
     ledOff(col, row);
     sendSingleLed(col, row, false);
   }
@@ -65,6 +74,8 @@ function pencilClicked(){
   drawMode = toggleWidge('pencilbutton');
   disableWidge('erasebutton');
   eraseMode = false;
+  document.getElementById('signsvg').classList.add('pen');
+  document.getElementById('signsvg').classList.remove('eraser');
   forEveryLed(led => {
     if(drawMode){
       led.classList.add('pen');
@@ -80,6 +91,8 @@ function eraserClicked(){
   eraseMode = toggleWidge('erasebutton');
   disableWidge('pencilbutton');
   drawMode = false;
+  document.getElementById('signsvg').classList.add('eraser');
+  document.getElementById('signsvg').classList.remove('pen');
   forEveryLed(led => {
     if(eraseMode){
       led.classList.add('eraser');
