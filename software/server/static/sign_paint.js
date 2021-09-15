@@ -74,7 +74,12 @@ function pencilClicked(){
   drawMode = toggleWidge('pencilbutton');
   disableWidge('erasebutton');
   eraseMode = false;
-  document.getElementById('signsvg').classList.add('pen');
+  if(drawMode){
+    document.getElementById('signsvg').classList.add('pen');
+  }
+  else {
+    document.getElementById('signsvg').classList.remove('pen');
+  }
   document.getElementById('signsvg').classList.remove('eraser');
   forEveryLed(led => {
     if(drawMode){
@@ -91,7 +96,12 @@ function eraserClicked(){
   eraseMode = toggleWidge('erasebutton');
   disableWidge('pencilbutton');
   drawMode = false;
-  document.getElementById('signsvg').classList.add('eraser');
+  if(eraseMode){
+    document.getElementById('signsvg').classList.add('eraser');
+  }
+  else {
+    document.getElementById('signsvg').classList.remove('eraser');
+  }
   document.getElementById('signsvg').classList.remove('pen');
   forEveryLed(led => {
     if(eraseMode){
