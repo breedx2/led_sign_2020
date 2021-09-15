@@ -25,7 +25,7 @@ function setNotDragging(){
 }
 
 function ledMouseDown(col, row){
-  console.log(`mouse down ${col} ${row}`)
+  // console.log(`mouse down ${col} ${row}`)
   if(!drawMode && !eraseMode) return;
   isDragging = true;
   if(drawMode) {
@@ -48,7 +48,7 @@ function ledMouseUp(col, row){
 }
 
 function ledEnter(col, row){
-  console.log(`mouse enter ${col} ${row}`)
+  // console.log(`mouse enter ${col} ${row}`)
   if(isDragging){
     if(drawMode){
       ledOn(col, row);
@@ -62,12 +62,13 @@ function ledEnter(col, row){
 }
 
 function ledLeave(col, row){
-  console.log(`mouse leave ${col} ${row}`)
+  // console.log(`mouse leave ${col} ${row}`)
 
 }
 
 function clearClicked(){
   clearSign();
+  clearRealText();
 }
 
 function pencilClicked(){

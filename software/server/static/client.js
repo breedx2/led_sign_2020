@@ -76,3 +76,41 @@ function sendSingleLed(col, row, onOff){
 function clearSign(){
   socket.send('c:clear\r\n');
 }
+
+let txtChngTmr = null;
+let lastTxt = '';
+
+function onTextTyped(event){
+  const inp = document.getElementById('realtext');
+  if(event.keyCode === 8){
+    if((inp.selectionStart !== 0) || (inp.selectionEnd !== inp.value.length)){
+      event.preventDefault();
+      return;
+    }
+  }
+  if(txtChngTmr){
+    clearTimeout(txtChngTmr);
+  }
+  txtChngTmr = setTimeout(() => {
+    console.log('okey timed');
+    console.log(`last value: ${lastTxt}`);
+    console.log(`cur value: ${inp.value}`);
+    if(inp.value === ''){
+      socket.send('c:clear');
+    }
+    else if(inp.value.length < lastTxt){ // shorter
+
+    }
+    else {
+      const newPart = inp.value.substr(lastTxt.length);
+      console.log(`newpart: ${newPart}`);
+      socket.send(`c:rin '${newPart}'`);
+    }
+    lastTxt = inp.value;
+  }, 100);
+}
+
+function clearRealText(){
+  document.getElementById('realtext').value = '';
+  lastTxt = '';
+}
