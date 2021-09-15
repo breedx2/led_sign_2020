@@ -45,6 +45,7 @@ const std::map<std::string, string_speed_cmdinfo> CMD_STR_SPEED_CONFIGS {
   {"randi", {10, [](SignCommands &sc, const char *str, uint16_t speed){ sc.randi(str, speed); } } },
   {"randt", {10, [](SignCommands &sc, const char *str, uint16_t speed){ sc.randt(str, speed); } } },
   {"rid",   {50, [](SignCommands &sc, const char *str, uint16_t speed){ sc.rid(str, speed); } } },
+  {"rin",   {50, [](SignCommands &sc, const char *str, uint16_t speed){ sc.rin(str, speed); } } },
   {"riu",   {50, [](SignCommands &sc, const char *str, uint16_t speed){ sc.riu(str, speed); } } },
   {"rwipe", {35, [](SignCommands &sc, const char *str, uint16_t speed){ sc.rwipe(str, speed); } } },
 };

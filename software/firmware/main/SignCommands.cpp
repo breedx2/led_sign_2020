@@ -196,18 +196,7 @@ void SignCommands::lwipe(const char *str, uint16_t speed){
 
 // message shift in left (from the right)
 void SignCommands::msl(const char *str, uint16_t speed){
-  for(uint8_t i = 0; i < strlen(str); i++){
-      char ch =  str[i];
-      GLYPH g = glyph(ch);
-      for(uint8_t j = 0; j < g.length; j++){
-        sir(g.cols[j]);
-        delay(speed);
-      }
-      if(ch != ' '){
-        sign.shift_left();
-        delay(speed);
-      }
-  }
+  rin(str, speed);
   for(uint8_t i = 0; i < SIGN_COLS; i++){
     sign.shift_left();
     delay(speed);
@@ -353,6 +342,22 @@ void SignCommands::rid(const char *str, uint16_t speed){
 // show message right-aligned
 void SignCommands::right(const char *str, bool clear_first){
   printer.right(str, clear_first);
+}
+
+// scroll some chars in from the right...
+void SignCommands::rin(const char *str, uint16_t speed){
+  for(uint8_t i = 0; i < strlen(str); i++){
+      char ch =  str[i];
+      GLYPH g = glyph(ch);
+      for(uint8_t j = 0; j < g.length; j++){
+        sir(g.cols[j]);
+        delay(speed);
+      }
+      if(ch != ' '){
+        sign.shift_left();
+        delay(speed);
+      }
+  }
 }
 
 // roll message in upwards
