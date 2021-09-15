@@ -50,7 +50,7 @@ class SignCommands {
     void randt(const char *str, uint16_t speed = 10);
     void rid(const char *str, uint16_t speed = 50);
     void right(const char *str, bool clear_first = false);
-    void rin(const char *str, uint16_t speed = 50);
+    void rin(const char *str, uint16_t speed = 7);
     void riu(const char *str, uint16_t speed = 50);
     void rod(uint16_t speed = 50);
     void rou(uint16_t speed = 50);
