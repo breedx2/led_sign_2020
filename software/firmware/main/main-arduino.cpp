@@ -31,7 +31,7 @@ void setup(){
 
 	Serial.println("LED sign is alive.");
 
-  printer.center("* hello world *", true);
+  printer.center("* noisybox.net *", true);
   start_updater();
   enable_output();
 
