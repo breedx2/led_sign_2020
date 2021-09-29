@@ -72,6 +72,7 @@ function clearClicked(){
 }
 
 function pencilClicked(){
+  if(signIsOffline()) return;
   drawMode = toggleWidge('pencilbutton');
   disableWidge('erasebutton');
   eraseMode = false;
@@ -94,6 +95,7 @@ function pencilClicked(){
 }
 
 function eraserClicked(){
+  if(signIsOffline()) return;
   eraseMode = toggleWidge('erasebutton');
   disableWidge('pencilbutton');
   drawMode = false;

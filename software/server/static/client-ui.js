@@ -100,6 +100,16 @@ function ledOff(col, row){
   return false;
 }
 
+function signIsOffline(){
+  const status = document.getElementById('signstatus');
+  return status.classList.contains('offline');
+}
+
+function signIsOnline(){
+  const status = document.getElementById('signstatus');
+  return status.classList.contains('online');
+}
+
 function toggleLed(col, row){
   if(ledIsOn(col, row)){
     return ledOff(col, row);

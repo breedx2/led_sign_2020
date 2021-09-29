@@ -79,7 +79,7 @@ function handleDumpReply(msg){
 }
 
 function sendCmd(cmd){
-  signSocket.send(cmd);
+  signSocket && signSocket.send(cmd);
 }
 
 function printDumpToConsole(msg){

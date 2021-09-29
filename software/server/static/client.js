@@ -114,3 +114,10 @@ function clearRealText(){
   document.getElementById('realtext').value = '';
   lastTxt = '';
 }
+
+function cmdargsKey(event){
+  if(event.keyCode === 13){
+    // enter pressed
+    console.log('Enter pressed!');
+  }
+}

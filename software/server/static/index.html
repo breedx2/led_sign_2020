@@ -37,8 +37,18 @@
 <div class="container text-white mt-4">
   <div class="row">
     <div class="col">
-      Type here:
-      <input id='realtext' type='text' size='100' onkeydown="onTextTyped(event)">
+      Scroll in from right:&nbsp;
+      <input id='realtext' type='text' size='66' onkeydown="onTextTyped(event)">
+    </div>
+  </div>
+</div>
+<div class="container text-white mt-4">
+  <div class="row">
+    <div class="col">
+      cmd:
+      <select id='cmd'>
+      </select>
+      <input id='cmdargs' type='text' size='66' onkeydown="cmdargsKey(event)">
     </div>
   </div>
 </div>
@@ -46,5 +56,6 @@
 <script src='/sign_paint.js'></script>
 <script src='/client-ui.js'></script>
 <script src='/client.js'></script>
+<script src='/commands.js'></script>
 </body>
 </html>
